@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">social-geha</string>
+    <string name="log_in_header">התחברות</string>
+    <string name="personal_code">קוד אישי</string>
+    <string name="or">או</string>
+    <string name="username">שם משתמש</string>
+    <string name="password">סיסמה</string>
+    <string name="remember_me">זכור אותי</string>
+    <string name="login_btn">כניסה</string>
+</resources>
