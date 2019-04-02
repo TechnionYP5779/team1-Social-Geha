@@ -1,14 +1,15 @@
-package com.example.ofir.social_geha;
+package com.example.ofir.social_geha.Activities;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
+
+import com.example.ofir.social_geha.R;
 
 public class Login extends AppCompatActivity {
     // ==================================
