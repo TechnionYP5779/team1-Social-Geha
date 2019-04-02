@@ -38,6 +38,39 @@
           ]
         }
       }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:813662253318:android:7351fe656cd96968",
+        "android_client_info": {
+          "package_name": "com.technion.social_geha"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "813662253318-avvsh2cn33hl9g04m93na1l20vt8ohf0.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.technion.social_geha",
+            "certificate_hash": "5109b19bfd2605f5f8e211a3a7b93fa5e7cc256b"
+          }
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAuIMHnlB9HYjHGcvayyIg0-fCt05P_D64"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "813662253318-hlj7e4kd07djofioc3lag0a605q8culg.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
     }
   ],
   "configuration_version": "1"

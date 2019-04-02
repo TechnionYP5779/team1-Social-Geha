@@ -4,7 +4,6 @@ import android.animation.ArgbEvaluator;
 import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
 import android.annotation.SuppressLint;
-import android.renderscript.Sampler;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.MotionEvent;
@@ -62,6 +61,7 @@ public class logIn extends AppCompatActivity {
                 colorAnim.setEvaluator(new ArgbEvaluator());
                 colorAnim.start();
                 Toast.makeText(logIn.this,"processing information...",Toast.LENGTH_SHORT).show();
+                Database.getInstance().sendMessage("Hello", username.getText().toString(), password.getText().toString());
             }
         });
     }
