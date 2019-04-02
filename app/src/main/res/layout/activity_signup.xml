@@ -31,35 +31,13 @@
             tools:context=".Login">
 
             <TextView
-                android:id="@+id/log_in_header"
+                android:id="@+id/signup_header"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="20dp"
-                android:text="@string/log_in_header"
+                android:text="@string/signup"
                 android:textColor="@color/white"
                 android:textSize="25sp" />
-
-            <EditText
-                android:textColor="@color/white"
-                android:id="@+id/personal_code"
-                android:layout_width="200dp"
-                android:layout_height="40dp"
-                android:background="@drawable/rounded_edittext"
-                android:drawableStart="@drawable/info"
-                android:hint="@string/personal_code"
-                android:inputType="number"
-                android:paddingLeft="5dp"
-                android:paddingRight="5dp"
-                android:singleLine="true" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="15dp"
-                android:layout_marginBottom="10dp"
-                android:text="@string/or"
-                android:textColor="@color/white"
-                android:textSize="20sp" />
 
             <EditText
                 android:textColor="@color/white"
@@ -88,25 +66,27 @@
                 android:paddingLeft="5dp"
                 android:paddingRight="5dp" />
 
-            <android.support.v7.widget.AppCompatCheckBox
-                android:id="@+id/remember_me"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+            <EditText
+                android:textColor="@color/white"
+                android:id="@+id/password_verify"
+                android:layout_width="200dp"
+                android:layout_height="40dp"
                 android:layout_marginBottom="10dp"
-                android:checked="false"
-                android:button="@null"
-                android:drawableEnd="?android:attr/listChoiceIndicatorMultiple"
-                android:text="@string/remember_me"
-                android:textColor="@color/colorAccent" />
+                android:background="@drawable/rounded_edittext"
+                android:drawableStart="@drawable/lock"
+                android:gravity="end|center_vertical"
+                android:hint="@string/verify_password"
+                android:inputType="textPassword"
+                android:paddingLeft="5dp"
+                android:paddingRight="5dp" />
 
             <Button
-                android:id="@+id/log_in_button"
+                android:id="@+id/signup_button"
                 android:layout_width="200dp"
                 android:layout_height="wrap_content"
                 android:background="@drawable/button_bg"
-                android:text="@string/login_btn"
+                android:text="@string/verify"
                 android:textColor="@color/colorPrimary" />
         </LinearLayout>
     </android.support.v7.widget.CardView>
-
 </android.support.constraint.ConstraintLayout>
