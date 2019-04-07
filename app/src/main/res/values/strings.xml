@@ -10,6 +10,7 @@
     <string name="signup">הרשמה</string>
     <string name="verify_password">אימות סיסמה</string>
     <string name="verify">אישור</string>
+    <string name="missing_fields_err_msg">אנא מלא את כל פרטי ההתחברות</string>
     <string name="profilePictur">תמונת פרופיל</string>
     <string name="matches">התאמות שנמצאו</string>
     <string name="signout">התנתק</string>

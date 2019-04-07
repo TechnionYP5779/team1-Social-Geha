@@ -43,6 +43,7 @@ public class Login extends AppCompatActivity {
         password = this.findViewById(R.id.password);
         personal_code = this.findViewById(R.id.personal_code);
         button = this.findViewById(R.id.log_in_button);
+        final String missing_fields_err = this.getString(R.string.missing_fields_err_msg);
 
         // setting listeners
         button.setOnClickListener(new View.OnClickListener() {
@@ -54,7 +55,7 @@ public class Login extends AppCompatActivity {
 
                 if (username_txt.equals("") || password_txt.equals("")) { // New User
                     if (personal_code_txt.equals("")) {
-                        Toast.makeText(Login.this, "Please fill all missing fields", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(Login.this, missing_fields_err, Toast.LENGTH_SHORT).show();
                     } else { // move to sign-up
                         Intent myIntent = new Intent(Login.this, Signup.class);
                         myIntent.putExtra("code", personal_code_txt);
