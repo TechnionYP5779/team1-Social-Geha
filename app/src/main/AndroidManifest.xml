@@ -26,6 +26,8 @@
             android:name=".Activities_and_Fragments.Signup"
             android:screenOrientation="portrait" />
         <activity android:name=".Activities_and_Fragments.AvailableMatches"/>
+        <activity android:name=".Activities_and_Fragments.IntroActivity"
+            android:screenOrientation="portrait"/>
     </application>
 
 </manifest>
