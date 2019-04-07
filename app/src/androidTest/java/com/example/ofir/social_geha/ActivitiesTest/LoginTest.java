@@ -6,7 +6,7 @@ import android.support.test.espresso.Espresso;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 
-import com.example.ofir.social_geha.Activities.Login;
+import com.example.ofir.social_geha.Activities_and_Fragments.Login;
 import com.example.ofir.social_geha.R;
 
 import org.junit.Rule;
@@ -28,7 +28,7 @@ import static android.support.test.espresso.matcher.ViewMatchers.withText;
 public class LoginTest {
 
     @Rule
-    public ActivityTestRule<Login> activityActivityTestRule = new ActivityTestRule<Login>(Login.class);
+    public ActivityTestRule<Login> activityActivityTestRule = new ActivityTestRule<>(Login.class);
 
     @Test
     public void useAppContext() {

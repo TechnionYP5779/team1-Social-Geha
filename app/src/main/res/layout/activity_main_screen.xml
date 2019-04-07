@@ -1,33 +1,33 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent" >
+    android:layout_height="match_parent">
 
     <RelativeLayout
         android:id="@+id/layoutTop"
         android:layout_width="match_parent"
-        android:background="@color/colorPrimaryDark"
-        android:layout_height="250dp" >
+        android:layout_height="250dp"
+        android:background="@color/colorPrimaryDark">
 
         <TextView
+            android:id="@+id/user_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/user_name"
-            android:text="שועל אנונימי"
-            android:textAlignment="center"
-            android:textSize="30sp"
             android:layout_marginTop="55dp"
             android:gravity="center_vertical"
-            android:textColor="@color/white"/>
+            android:text="שועל אנונימי"
+            android:textAlignment="center"
+            android:textColor="@color/white"
+            android:textSize="30sp" />
 
         <TextView
+            android:id="@+id/name"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:id="@+id/name"
+            android:layout_below="@id/user_name"
             android:text="חונך"
             android:textAlignment="center"
             android:textColor="@color/white"
-            android:textSize="20sp"
-            android:layout_below="@id/user_name"/>
+            android:textSize="20sp" />
 
     </RelativeLayout>
 
@@ -35,22 +35,22 @@
         android:id="@+id/layoutBottom"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_alignParentBottom="true"
-        android:layout_below="@id/layoutTop" >
+        android:layout_below="@id/layoutTop"
+        android:layout_alignParentBottom="true">
 
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="350dp"
+            android:layout_marginTop="60dp"
             android:orientation="vertical"
-            android:weightSum="2"
-            android:layout_marginTop="60dp">
+            android:weightSum="2">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:gravity="center_vertical"
                 android:layout_weight="1"
+                android:gravity="center_vertical"
                 android:orientation="horizontal"
                 android:weightSum="2">
 
@@ -59,8 +59,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:orientation="vertical"
-                    android:onClick="gotoScreen">
+                    android:onClick="gotoScreen"
+                    android:orientation="vertical">
 
                     <ImageView
                         android:layout_width="40dp"
@@ -81,8 +81,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:orientation="vertical"
-                    android:onClick="gotoScreen">
+                    android:onClick="gotoScreen"
+                    android:orientation="vertical">
 
                     <ImageView
                         android:layout_width="40dp"
@@ -112,8 +112,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:orientation="vertical"
-                    android:onClick="gotoScreen">
+                    android:onClick="gotoScreen"
+                    android:orientation="vertical">
 
                     <ImageView
                         android:layout_width="40dp"
@@ -134,8 +134,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:orientation="vertical"
-                    android:onClick="gotoScreen">
+                    android:onClick="gotoScreen"
+                    android:orientation="vertical">
 
                     <ImageView
                         android:layout_width="40dp"
@@ -152,8 +152,22 @@
                 </LinearLayout>
             </LinearLayout>
 
-        </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center">
 
+                <Button
+                    android:text="@string/signout"
+                    android:id="@+id/logout"
+                    android:onClick="gotoScreen"
+                    android:background="@color/colorAccent"
+                    android:textColor="@color/white"
+                    android:layout_width="match_parent"
+                    android:layout_height="60dp" />
+            </LinearLayout>
+
+        </LinearLayout>
     </RelativeLayout>
 
     <de.hdodenhof.circleimageview.CircleImageView
@@ -163,6 +177,6 @@
         android:layout_above="@id/layoutBottom"
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="-100dp"
-        android:src="@drawable/profilepic"/>
+        android:src="@drawable/profilepic" />
 
 </RelativeLayout>
