@@ -34,18 +34,30 @@
                 android:textColor="@color/white"
                 android:textSize="25sp" />
 
-            <EditText
-                android:textColor="@color/white"
-                android:id="@+id/personal_code"
-                android:layout_width="200dp"
-                android:layout_height="40dp"
-                android:background="@drawable/rounded_edittext"
-                android:drawableStart="@drawable/info"
-                android:hint="@string/personal_code"
-                android:inputType="number"
-                android:paddingLeft="5dp"
-                android:paddingRight="5dp"
-                android:singleLine="true" />
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+                <EditText
+                    android:textColor="@color/white"
+                    android:id="@+id/personal_code"
+                    android:layout_width="200dp"
+                    android:layout_height="40dp"
+                    android:background="@drawable/rounded_edittext"
+                    android:hint="@string/personal_code"
+                    android:inputType="number"
+                    android:paddingLeft="5dp"
+                    android:paddingRight="5dp"
+                    android:singleLine="true" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/whats_this"
+                    android:textColor="@color/white"
+                    android:onClick="personalCodeInfo"
+                    android:layout_gravity="end"/>
+            </LinearLayout>
 
             <TextView
                 android:layout_width="wrap_content"

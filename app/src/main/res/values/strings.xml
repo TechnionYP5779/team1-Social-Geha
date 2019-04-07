@@ -14,4 +14,30 @@
     <string name="profilePictur">תמונת פרופיל</string>
     <string name="matches">התאמות שנמצאו</string>
     <string name="signout">התנתק</string>
+    <string name="skip">Skip</string>
+    <string name="whats_this"><u>מה זה?</u></string>
+    <string name="findMatch">מצא התאמה</string>
+    <string name="religious">דת</string>
+    <string name="gender">מגדר</string>
+
+    <string-array name="chat_preferences">
+        <item>לא משנה</item>
+        <item>מטופל עבר</item>
+        <item>בן משפחה של מטופל עבר</item>
+    </string-array>
+
+    <string-array name="gender_preferences">
+        <item>לא משנה</item>
+        <item>זכר</item>
+        <item>נקבה</item>
+    </string-array>
+
+    <string-array name="religious_preferences">
+        <item>לא משנה</item>
+        <item>דתי</item>
+        <item>מסורתי</item>
+        <item>חילוני</item>
+        <item>ערבי</item>
+    </string-array>
+
 </resources>

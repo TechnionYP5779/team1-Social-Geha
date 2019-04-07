@@ -101,4 +101,8 @@ public class Login extends AppCompatActivity {
             }
         }
     }
+
+    public void personalCodeInfo(View view) {
+        Toast.makeText(this, "הקוד הראשוני שהתקבל מגהה",Toast.LENGTH_LONG).show();
+    }
 }
