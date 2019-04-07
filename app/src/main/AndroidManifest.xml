@@ -10,7 +10,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".Activities.Login"
+            android:name=".Activities_and_Fragments.Login"
             android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -19,9 +19,10 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".Activities.Signup"
+            android:name=".Activities_and_Fragments.Signup"
             android:screenOrientation="portrait" />
-        <activity android:name=".Activities.mainScreen"></activity>
+        <activity android:name=".Activities_and_Fragments.mainScreen"></activity>
+        <activity android:name=".Activities_and_Fragments.AvailableMatches"/>
     </application>
 
 </manifest>

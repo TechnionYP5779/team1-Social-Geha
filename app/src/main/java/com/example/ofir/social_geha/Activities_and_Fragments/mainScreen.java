@@ -1,5 +1,6 @@
-package com.example.ofir.social_geha.Activities;
+package com.example.ofir.social_geha.Activities_and_Fragments;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -34,6 +35,10 @@ public class mainScreen extends AppCompatActivity {
         if(view.equals(all_conversations))
             Toast.makeText(mainScreen.this, "all conversations", Toast.LENGTH_SHORT).show();
         if(view.equals(search_guide))
-            Toast.makeText(mainScreen.this, "search guide", Toast.LENGTH_SHORT).show();
+        {
+            // move to my new screen - TODO : is this the right place ?
+            Intent myIntent = new Intent(mainScreen.this, AvailableMatches.class);
+            mainScreen.this.startActivity(myIntent);
+        }
     }
 }

@@ -1,4 +1,4 @@
-package com.example.ofir.social_geha;
+package com.example.ofir.social_geha.Firebase;
 
 import android.support.annotation.NonNull;
 import android.util.Log;

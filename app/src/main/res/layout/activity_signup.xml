@@ -28,7 +28,7 @@
             android:layout_height="match_parent"
             android:gravity="center|center_vertical"
             android:orientation="vertical"
-            tools:context=".Activities.Login">
+            tools:context=".Activities_and_Fragments.Login">
 
             <TextView
                 android:id="@+id/signup_header"

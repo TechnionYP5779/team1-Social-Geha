@@ -10,4 +10,6 @@
     <string name="signup">הרשמה</string>
     <string name="verify_password">אימות סיסמה</string>
     <string name="verify">אישור</string>
+    <string name="profilePictur">תמונת פרופיל</string>
+    <string name="matches">התאמות שנמצאו</string>
 </resources>

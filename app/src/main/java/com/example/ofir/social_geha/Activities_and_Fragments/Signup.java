@@ -1,4 +1,4 @@
-package com.example.ofir.social_geha.Activities;
+package com.example.ofir.social_geha.Activities_and_Fragments;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
