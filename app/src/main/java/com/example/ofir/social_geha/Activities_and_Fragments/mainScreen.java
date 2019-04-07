@@ -45,7 +45,7 @@ public class mainScreen extends AppCompatActivity {
     public void gotoScreen(View view) {
         if (view.equals(settings_screen)){
             // move to intro pager screen - TODO : is this the right place ?
-            Intent myIntent = new Intent(mainScreen.this, IntroActivity.class);
+            Intent myIntent = new Intent(mainScreen.this, FilterMatchesActivity.class);
             mainScreen.this.startActivity(myIntent);
         }
         if (view.equals(edit_anonymous))

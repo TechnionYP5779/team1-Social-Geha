@@ -1,4 +1,5 @@
 package com.example.ofir.social_geha.Activities_and_Fragments;
+
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v4.view.PagerAdapter;
@@ -10,13 +11,12 @@ import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
-
 import com.example.ofir.social_geha.R;
 import com.example.ofir.social_geha.ScreenItem;
 
 import java.util.List;
 
-public class IntroViewPagerAdapter extends PagerAdapter {
+public class FilterMatchesPagerAdapter extends PagerAdapter {
 
     Context mContext ;
     List<ScreenItem> mListScreen;
@@ -26,7 +26,7 @@ public class IntroViewPagerAdapter extends PagerAdapter {
     Spinner mSpinnerGender;
     Spinner mSpinnerReligious;
 
-    public IntroViewPagerAdapter(Context mContext, List<ScreenItem> mListScreen) {
+    public FilterMatchesPagerAdapter(Context mContext, List<ScreenItem> mListScreen) {
         this.mContext = mContext;
         this.mListScreen = mListScreen;
     }
@@ -37,7 +37,7 @@ public class IntroViewPagerAdapter extends PagerAdapter {
     public Object instantiateItem(@NonNull ViewGroup container, int position) {
 
         LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        layoutScreen = inflater.inflate(R.layout.layout_screen,null);
+        layoutScreen = inflater.inflate(R.layout.activity_filter_match,null);
 
         ImageView imgSlide = layoutScreen.findViewById(R.id.intro_img);
         TextView title = layoutScreen.findViewById(R.id.intro_title);
@@ -92,5 +92,6 @@ public class IntroViewPagerAdapter extends PagerAdapter {
             }
         }
     }
+
 
 }
