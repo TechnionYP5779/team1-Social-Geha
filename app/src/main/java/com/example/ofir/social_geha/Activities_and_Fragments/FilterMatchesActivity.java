@@ -1,14 +1,12 @@
 package com.example.ofir.social_geha.Activities_and_Fragments;
+
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -19,10 +17,10 @@ import com.example.ofir.social_geha.ScreenItem;
 import java.util.ArrayList;
 import java.util.List;
 
-public class IntroActivity extends AppCompatActivity {
+public class FilterMatchesActivity extends AppCompatActivity {
 
     private ViewPager screenPager;
-    IntroViewPagerAdapter introViewPagerAdapter ;
+    FilterMatchesPagerAdapter introViewPagerAdapter ;
     TabLayout tabIndicator;
     Button btnNext;
     int position = 0 ;
@@ -38,7 +36,7 @@ public class IntroActivity extends AppCompatActivity {
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
-        setContentView(R.layout.activity_intro);
+        setContentView(R.layout.filter_match_buttons);
 
         // ini views
         btnNext = findViewById(R.id.btn_next);
@@ -49,13 +47,14 @@ public class IntroActivity extends AppCompatActivity {
         // fill list screen
         // ALL PHOTOS FROM https://pixabay.com/
         mList = new ArrayList<>();
-        mList.add(new ScreenItem("יצירת שיחה חדשה","מלא/י את הפרטים הבאים על האדם שאיתו תרצה/י לשוחח, על מנת שנוכל למצוא לך את ההתאמה הטובה ביותר.",R.drawable.chat_icon));
-        mList.add(new ScreenItem("פרטים בסיסיים","",R.drawable.people));
+        String description = "מלא/י את הפרטים הבאים על האדם שאיתו תרצה/י לשוחח, על מנת שנוכל למצוא לך את ההתאמה הטובה ביותר.";
+        mList.add(new ScreenItem("יצירת שיחה חדשה",description, R.drawable.chat_icon));
+        mList.add(new ScreenItem("פרטים בסיסיים", description, R.drawable.people));
         mList.add(new ScreenItem("בחירת שפה","בחר/י את השפות בהן תרצה/י לשוחח",R.drawable.world_icon));
 
         // setup viewpager
         screenPager = findViewById(R.id.screen_viewpager);
-        introViewPagerAdapter = new IntroViewPagerAdapter(this,mList);
+        introViewPagerAdapter = new FilterMatchesPagerAdapter(this,mList);
         screenPager.setAdapter(introViewPagerAdapter);
 
         // setup tablayout with viewpager
@@ -102,13 +101,10 @@ public class IntroActivity extends AppCompatActivity {
     }
 
     private void showScreen(int position){
-        Log.d("fetch", " in showScreen position is "+String.valueOf(position));
-
         if( position == mList.size() - 1){ // at the languages window
-            btnNext.setVisibility(View.INVISIBLE);
+            btnNext.setVisibility(View.GONE);
             tvSkip.setVisibility(View.INVISIBLE);
-            tabIndicator.setVisibility(View.INVISIBLE);
-            // setup animation
+            tabIndicator.setVisibility(View.GONE);
         }
         else{
             btnNext.setVisibility(View.VISIBLE);
@@ -118,6 +114,6 @@ public class IntroActivity extends AppCompatActivity {
     }
 
     public void findMatch(View view) {
-        Toast.makeText(IntroActivity.this, "clicked", Toast.LENGTH_LONG).show();
+        Toast.makeText(FilterMatchesActivity.this, "bring out the unicorns !", Toast.LENGTH_LONG).show();
     }
 }
