@@ -1,13 +1,15 @@
 package com.example.ofir.social_geha.ActivitiesTest;
 
 import android.os.IBinder;
-import android.support.test.espresso.Root;
 import android.view.WindowManager;
 
 import org.hamcrest.Description;
+import org.hamcrest.Matcher;
 import org.hamcrest.TypeSafeMatcher;
 
-public class ToastMatcher extends TypeSafeMatcher<Root> {
+import androidx.test.espresso.Root;
+
+public class ToastMatcher extends TypeSafeMatcher<Root> implements Matcher<Root> {
     @Override public void describeTo(Description description) {
         description.appendText("is toast");
     }

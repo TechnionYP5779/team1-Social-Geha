@@ -85,7 +85,7 @@ public class Login extends AppCompatActivity {
                             setResult(RESULT_OK);
                             finish();
                         } else {
-                            Toast.makeText(Login.this, "המשתמש לא קיים או שהסיסמה לא נכונה", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(Login.this, getString(R.string.wrong_credentials_err), Toast.LENGTH_SHORT).show();
                         }
                     }
                 });
@@ -103,6 +103,6 @@ public class Login extends AppCompatActivity {
     }
 
     public void personalCodeInfo(View view) {
-        Toast.makeText(this, "הקוד הראשוני שהתקבל מגהה",Toast.LENGTH_LONG).show();
+        Toast.makeText(this, this.getString(R.string.whats_this_msg),Toast.LENGTH_LONG).show();
     }
 }

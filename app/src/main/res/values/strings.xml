@@ -16,9 +16,11 @@
     <string name="signout">התנתק</string>
     <string name="skip">Skip</string>
     <string name="whats_this"><u>מה זה?</u></string>
+    <string name="whats_this_msg">"הקוד הראשוני שהתקבל מגהה"</string>
     <string name="findMatch">מצא התאמה</string>
     <string name="religious">דת</string>
     <string name="gender">מגדר</string>
+    <string name="wrong_credentials_err">"המשתמש לא קיים או שהסיסמה לא נכונה"</string>
 
     <string-array name="chat_preferences">
         <item>לא משנה</item>
