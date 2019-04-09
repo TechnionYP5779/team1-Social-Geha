@@ -2,11 +2,11 @@ package com.example.ofir.social_geha;
 
 public class User {
     private String name;
-    private String userID;
+    private String personalCode;
 
-    public User(String name, String userID){
+    public User(String name, String personalCode){
         this.name = name;
-        this.userID = userID;
+        this.personalCode = personalCode;
     }
 
     public String getName() {
@@ -17,11 +17,11 @@ public class User {
         this.name = name;
     }
 
-    public String getUserID() {
-        return userID;
+    public String getPersonalCode() {
+        return personalCode;
     }
 
-    public void setUserID(String userID) {
-        this.userID = userID;
+    public void setPersonalCode(String personalCode) {
+        this.personalCode = personalCode;
     }
 }

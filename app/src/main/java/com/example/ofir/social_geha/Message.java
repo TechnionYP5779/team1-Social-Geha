@@ -17,12 +17,6 @@ public class Message {
         this.toUserID = toUserID;
     }
 
-    public Message(String message, User fromUser, User toUser){
-        this.message = message;
-        this.fromUserID = fromUser.getUserID();
-        this.toUserID = toUser.getUserID();
-    }
-
     public String getFromUserID() {
         return fromUserID;
     }
