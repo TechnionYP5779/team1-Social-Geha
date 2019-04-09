@@ -50,6 +50,8 @@ class GehaUser(object):
         self.fullname = fullname
         self.usercode = usercode
 
+        
+        
     @staticmethod
     def from_dict(source):
         return GehaUser(source[u'id'],source[u'fullname'],source[u'usercode'])
@@ -70,9 +72,9 @@ class StartFrame(Frame):
         self.label1.grid(row=0, column=0, columnspan=4, sticky=E)
 
         self.button1 = Button(self, text="Add user", command=lambda: controller.show_frame(AddUserFrame), width=15)
-        self.button1.grid(row=1, column=0,columnspan=2, sticky=S)
-        self.button1 = Button(self, text="Get user", command=lambda: print("COOL"), width=15)
-        self.button1.grid(row=1, column=2,columnspan=2, sticky=S)
+        self.button1.grid(row=2, column=0,columnspan=2, sticky=S)
+        self.button1 = Button(self, text="Get user", command=lambda: controller.show_frame(GetUserFrame), width=15)
+        self.button1.grid(row=2, column=2,columnspan=2, sticky=S)
 
         
 class AddUserFrame(Frame):
@@ -80,8 +82,10 @@ class AddUserFrame(Frame):
         Frame.__init__(self)
         self.fname = None
         self.controller = controller
-        self.labelGetUser = Label(self,text='Get user info:',height=0, width=20)
-        self.labelGetUser.grid(row=0, columnspan=4, sticky=N)
+        self.buttonHome = Button(self, text="Back", command=lambda: controller.show_frame(StartFrame), width=10)
+        self.buttonHome.grid(row=0, column=0, columnspan=2 , sticky=W)
+        self.labelGetUser = Label(self,text='Fill in user info:',height=0, width=20)
+        self.labelGetUser.grid(row=0, column=1,columnspan=3, sticky=N)
 
         self.labelUserId = Label(self,text='ID:',height=0)
         self.labelUserId.grid(row=1, column=0, sticky=W)
@@ -105,7 +109,7 @@ class AddUserFrame(Frame):
         self.buttonAdd = Button(self, text="Add user", command=self.handleAddUser, width=15)
         self.buttonAdd.grid(row=3, column=0 ,columnspan=4, sticky=S)
 
-        self.controlLabel = Label(self,text='File not loaded',height=0, width=40)
+        self.controlLabel = Label(self,text='',height=0, width=40)
         self.controlLabel.grid(row=4, column=0,columnspan=4, sticky=E)        
 
 
@@ -129,12 +133,12 @@ class AddUserFrame(Frame):
         self.change_label("Success!","green")
         
     def create_code(self,id,fullName):
-        return hash_dn(id+fullName,'1')
+        return hash_dn(id+fullName.lower(),'1')
         
     def check_input(self):
         id = self.userIdContents.get()
         if not( id.isdigit() and (len(id) == 9) ): 
-            return "Invalid ID please try again."
+            return "Invalid ID"
         fullname = self.userNameContents.get()
         if len(fullname.split(' ')) < 2:
             return "Please enter FULL name"
@@ -146,6 +150,122 @@ class AddUserFrame(Frame):
         self.controlLabel['text'] = msg
         self.controlLabel['bg'] = color
         
+        
+        
+class GetUserFrame(Frame):
+    def __init__(self,parent,controller):
+        Frame.__init__(self)
+        self.fname = None
+        self.controller = controller
+
+        self.buttonHome = Button(self, text="Back", command=lambda: controller.show_frame(StartFrame), width=10)
+        self.buttonHome.grid(row=0, column=0, columnspan=2 , sticky=W)
+
+        self.labelGetUser = Label(self,text='Get user info:',height=0, width=20)
+        self.labelGetUser.grid(row=0, column=1, columnspan=3, sticky=N)
+
+        self.labelUserId = Label(self,text='ID:',height=1)
+        self.labelUserId.grid(row=1, column=0, sticky=W)
+        self.entryUserId = Entry(self,width=30)
+        self.entryUserId.grid(row=1, column=1, sticky=W)
+        self.userIdContents = StringVar()
+        self.userIdContents.set("")
+        self.entryUserId["textvariable"] = self.userIdContents
+        self.entryUserId.bind('<Key-Return>',self.print_contents)
+        
+        self.buttonAdd = Button(self, text="Get user", command=self.handleGetUser, width=10)
+        self.buttonAdd.grid(row=1, column=2 , sticky=W)
+
+        self.controlLabel = Label(self,text='',height=0, width=40)
+        self.controlLabel.grid(row=2, column=0,columnspan=4, sticky=E)
+        
+        ttk.Separator(self,orient=HORIZONTAL).grid(row=3, columnspan=4, sticky="ew")
+
+        self.userInfoLabel = Label(self,text='User data:',height=0)
+        #self.userInfoLabel.grid(row=4, column=0, sticky=W)        
+        
+        self.userIdLabel = Label(self,text='ID:',height=0)
+        #self.userIdLabel.grid(row=5, column=0, sticky=W)        
+        self.userIdEntry = Entry(self,width=30)
+        #self.userIdEntry.grid(row=5, column=1, columnspan=2, sticky=W)
+        self.userInfoIdContents = StringVar()
+        self.userInfoIdContents.set("")
+        self.userIdEntry["textvariable"] = self.userInfoIdContents
+        
+        self.userNameLabel = Label(self,text='Full Name:',height=0)
+        #self.userNameLabel.grid(row=6, column=0, sticky=W)        
+        self.userNameEntry = Entry(self,width=30)
+        #self.userNameEntry.grid(row=6, column=1, columnspan=2, sticky=W)
+        self.userNameContents = StringVar()
+        self.userNameContents.set("")
+        self.userNameEntry["textvariable"] = self.userNameContents
+        
+
+        self.userCodeLabel = Label(self,text='Personal code:',height=0)
+        #self.userCodeLabel.grid(row=7, column=0, sticky=W)        
+        self.userCodeEntry = Entry(self,width=30)
+        #self.userCodeEntry.grid(row=7, column=1, columnspan=2, sticky=W)
+        self.userCodeContents = StringVar()
+        self.userCodeContents.set("")
+        self.userCodeEntry["textvariable"] = self.userCodeContents
+
+
+        
+    def enable_user_info(self):
+        self.userInfoLabel.grid(row=4, column=0, sticky=W)        
+        self.userIdLabel.grid(row=5, column=0, sticky=W) 
+        self.userIdEntry.grid(row=5, column=1, columnspan=2, sticky=W)
+        self.userNameLabel.grid(row=6, column=0, sticky=W)
+        self.userNameEntry.grid(row=6, column=1, columnspan=2, sticky=W)
+        self.userCodeLabel.grid(row=7, column=0, sticky=W)
+        self.userCodeEntry.grid(row=7, column=1, columnspan=2, sticky=W)      
+
+    def disable_user_info(self):
+        self.userInfoLabel.grid_forget()        
+        self.userIdLabel.grid_forget()
+        self.userIdEntry.grid_forget()
+        self.userNameLabel.grid_forget()
+        self.userNameEntry.grid_forget()
+        self.userCodeLabel.grid_forget()
+        self.userCodeEntry.grid_forget()
+        
+    def fill_in_user_info(self, user):   
+        self.userInfoIdContents.set(user.id)
+        self.userNameContents.set(user.fullname)
+        self.userCodeContents.set(user.usercode)
+        
+    def print_contents(self, event):
+        print("hi. contents of entry is now ---->",
+              self.userIdContents.get())
+              
+    def handleGetUser(self):
+        print("User")
+        error = self.check_input()
+        if error != None:
+            self.change_label("Error: {}".format(error),"red")
+            self.disable_user_info()
+            return
+        user_dict = self.controller.geha.getUser(self.userIdContents.get())
+        if user_dict == None:
+            self.change_label("Error: There is no registered user with ID:".format(self.userIdContents.get()),"red")
+            self.disable_user_info()
+            return
+        user = GehaUser.from_dict(user_dict)
+        self.fill_in_user_info(user)
+        self.enable_user_info()
+        
+        
+    def check_input(self):
+        id = self.userIdContents.get()
+        if not( id.isdigit() and (len(id) == 9) ): 
+            return "Invalid ID"
+        return None    
+            
+            
+            
+    def change_label(self,msg,color):
+        self.controlLabel['text'] = msg
+        self.controlLabel['bg'] = color
     
 
 class GenerateCodesFrame(Frame):
@@ -254,7 +374,7 @@ class GehaAdminApp(Tk):
         self.geha = GehaFirebase("../../socialGehaPrivateKey.json")
         self.frames = {}
         
-        for frameType in (StartFrame,GenerateCodesFrame,AddUserFrame):
+        for frameType in (StartFrame,GenerateCodesFrame,AddUserFrame,GetUserFrame):
             self.frames[frameType] = frameType(container,self)
             self.frames[frameType].grid(row=0,column=0,sticky=W+E+N+S)
         
