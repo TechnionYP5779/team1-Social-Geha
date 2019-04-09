@@ -1,4 +1,4 @@
-package com.example.ofir.social_geha;
+package com.example.ofir.social_geha.Firebase;
 
 import com.google.firebase.firestore.ServerTimestamp;
 

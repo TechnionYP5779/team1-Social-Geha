@@ -1,4 +1,4 @@
-package com.example.ofir.social_geha.Activities;
+package com.example.ofir.social_geha.Activities_and_Fragments;
 
 import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
@@ -43,6 +43,7 @@ public class Login extends AppCompatActivity {
         password = this.findViewById(R.id.password);
         personal_code = this.findViewById(R.id.personal_code);
         button = this.findViewById(R.id.log_in_button);
+        final String missing_fields_err = this.getString(R.string.missing_fields_err_msg);
 
         // setting listeners
         button.setOnClickListener(new View.OnClickListener() {
@@ -54,7 +55,7 @@ public class Login extends AppCompatActivity {
 
                 if (username_txt.equals("") || password_txt.equals("")) { // New User
                     if (personal_code_txt.equals("")) {
-                        Toast.makeText(Login.this, "Please fill all missing fields", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(Login.this, missing_fields_err, Toast.LENGTH_SHORT).show();
                     } else { // move to sign-up
                         Intent myIntent = new Intent(Login.this, Signup.class);
                         myIntent.putExtra("code", personal_code_txt);
@@ -84,7 +85,7 @@ public class Login extends AppCompatActivity {
                             setResult(RESULT_OK);
                             finish();
                         } else {
-                            Toast.makeText(Login.this, "המשתמש לא קיים או שהסיסמה לא נכונה", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(Login.this, getString(R.string.wrong_credentials_err), Toast.LENGTH_SHORT).show();
                         }
                     }
                 });
@@ -99,5 +100,9 @@ public class Login extends AppCompatActivity {
                 finish();
             }
         }
+    }
+
+    public void personalCodeInfo(View view) {
+        Toast.makeText(this, this.getString(R.string.whats_this_msg),Toast.LENGTH_LONG).show();
     }
 }

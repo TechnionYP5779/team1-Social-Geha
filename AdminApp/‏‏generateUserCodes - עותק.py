@@ -74,6 +74,30 @@ class MyFrame(Frame):
         
         self.labeldone = Label(self,text='',height=0)
         self.labeldone.grid(row=7, column=0, sticky=S)
+        
+        ttk.Separator(self,orient=HORIZONTAL).grid(row=8, columnspan=5, sticky="ew")
+
+        self.label3 = Label(self,text='Cool:',height=0)
+        self.label3.grid(row=9, column=0, sticky=W)
+        self.entrythingy = Entry(self,text='cake')
+        self.entrythingy.grid(row=9, column=1, sticky=W)
+
+        # here is the application variable
+        self.contents = StringVar()
+        # set it to some value
+        self.contents.set("this is a variable")
+        # tell the entry widget to watch this variable
+        self.entrythingy["textvariable"] = self.contents
+
+        # and here we get a callback when the user hits return.
+        # we will have the program print out the value of the
+        # application variable when the user hits return
+        self.entrythingy.bind('<Key-Return>',
+                              self.print_contents)
+
+    def print_contents(self, event):
+        print("hi. contents of entry is now ---->",
+              self.contents.get())
 
     def load_file(self):
         fname = askopenfilename(filetypes=(("CSV files", "*.csv"),
@@ -96,8 +120,6 @@ class MyFrame(Frame):
             return None
 
     def create_code(self,row):
-        #hash_object = hashlib.md5(row[0].encode(encoding='UTF-8',errors='strict'))
-        #return hash_object.hexdigest()
         return hash_dn(row[0]+row[1],'1')
     
     def myhash(self,s):

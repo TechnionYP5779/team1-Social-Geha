@@ -154,12 +154,15 @@
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:gravity="center">
 
                 <Button
-                    android:text="התנתק"
+                    android:text="@string/signout"
                     android:id="@+id/logout"
                     android:onClick="gotoScreen"
+                    android:background="@color/colorAccent"
+                    android:textColor="@color/white"
                     android:layout_width="match_parent"
                     android:layout_height="60dp" />
             </LinearLayout>

@@ -1,4 +1,4 @@
-package com.example.ofir.social_geha.Activities;
+package com.example.ofir.social_geha.Activities_and_Fragments;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
