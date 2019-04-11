@@ -11,6 +11,10 @@ public class Message {
     private @ServerTimestamp
     Date messageDate;
 
+    public Message(){
+
+    }
+
     public Message(String message, String fromUserID, String toUserID){
         this.message = message;
         this.fromUserID = fromUserID;

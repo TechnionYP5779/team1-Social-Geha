@@ -36,7 +36,7 @@ public final class Database {
                 .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
                     @Override
                     public void onSuccess(DocumentReference documentReference) {
-                        Log.d(TAG, "onSuccess: Added the new message to the DB" + documentReference.getId());
+                        Log.d(TAG, "onSuccess: Added the new message_layout to the DB" + documentReference.getId());
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
