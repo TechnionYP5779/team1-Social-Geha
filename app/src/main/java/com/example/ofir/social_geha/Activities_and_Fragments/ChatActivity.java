@@ -28,6 +28,7 @@ public class ChatActivity extends AppCompatActivity {
     private RecyclerView mMessageRecycler;
     private FirebaseFirestore mFirestore;
     private MessageListAdapter mMessageListAdapter;
+    private String mOtherPersonId;
 
     private List<Message> messageList;
     @Override
@@ -36,6 +37,8 @@ public class ChatActivity extends AppCompatActivity {
         setContentView(R.layout.activity_chat2);
         messageList = new ArrayList<>();
         mMessageListAdapter = new MessageListAdapter(messageList);
+
+        mOtherPersonId = getIntent().getStringExtra("EXTRA_PERSON_ID");
 
         mMessageEdit = findViewById(R.id.message_text);
 
@@ -47,6 +50,7 @@ public class ChatActivity extends AppCompatActivity {
         mFirestore = FirebaseFirestore.getInstance();
 
         mFirestore.collection(MESSAGES).whereEqualTo("toUserID",Database.getInstance().getLoggedInUserID())
+                .whereEqualTo("fromUserID",mOtherPersonId)
                 .addSnapshotListener(new EventListener<QuerySnapshot>() {
             @Override
             public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
@@ -70,6 +74,7 @@ public class ChatActivity extends AppCompatActivity {
         });
 
         mFirestore.collection(MESSAGES).whereEqualTo("fromUserID",Database.getInstance().getLoggedInUserID())
+                .whereEqualTo("toUserID",mOtherPersonId)
                 .addSnapshotListener(new EventListener<QuerySnapshot>() {
                     @Override
                     public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
@@ -95,7 +100,7 @@ public class ChatActivity extends AppCompatActivity {
 
     public void onSendButtonClick(View v) {
         String message = mMessageEdit.getText().toString();
-        Database.getInstance().sendMessage(message,Database.getInstance().getLoggedInUserID(),"Bamba");
+        Database.getInstance().sendMessage(message,Database.getInstance().getLoggedInUserID(),mOtherPersonId);
         mMessageEdit.setText("");
     }
 }

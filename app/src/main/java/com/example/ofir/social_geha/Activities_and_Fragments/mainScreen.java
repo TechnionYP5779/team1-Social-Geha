@@ -51,8 +51,7 @@ public class mainScreen extends AppCompatActivity {
         if (view.equals(edit_anonymous))
             Toast.makeText(mainScreen.this, "edit anonymous", Toast.LENGTH_SHORT).show();
         if (view.equals(all_conversations)){
-            Intent myIntent = new Intent(mainScreen.this, ChatActivity.class);
-            mainScreen.this.startActivity(myIntent);
+            Toast.makeText(mainScreen.this, "All conversations", Toast.LENGTH_SHORT).show();
         }
         if(view.equals(search_guide)) {
             // move to available matches screen - TODO : is this the right place ?
