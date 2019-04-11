@@ -1,12 +1,9 @@
 package com.example.ofir.social_geha.Activities_and_Fragments;
 
 import android.content.Context;
-import android.media.Image;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -19,8 +16,6 @@ import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.nostra13.universalimageloader.core.assist.ImageScaleType;
 import com.nostra13.universalimageloader.core.display.FadeInBitmapDisplayer;
-
-import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 
@@ -47,7 +42,7 @@ public class MatchesListAdapter extends ArrayAdapter<Person> {
 
         String name = getItem(position).getName();
         String description = getItem(position).getDescription();
-        String imageUrl = getItem(position).getImageUrl();
+        String imageUrl = getItem(position).getImageURL();
 
         // Create the view result for showing the animation
         final View result;
