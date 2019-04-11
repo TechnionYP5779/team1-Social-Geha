@@ -1,5 +1,6 @@
 package com.example.ofir.social_geha.Firebase;
 
+import com.example.ofir.social_geha.Person;
 import com.google.firebase.firestore.ServerTimestamp;
 
 import java.util.Date;
@@ -17,25 +18,25 @@ public class Message {
         this.toUserID = toUserID;
     }
 
-    public Message(String message, User fromUser, User toUser){
+    public Message(String message, Person fromPerson, Person toPerson){
         this.message = message;
-        this.fromUserID = fromUser.getUserID();
-        this.toUserID = toUser.getUserID();
+        this.fromUserID = fromPerson.getPersonID();
+        this.toUserID = toPerson.getPersonID();
     }
 
-    public String getFromUserID() {
+    public String getFromPersonID() {
         return fromUserID;
     }
 
-    public void setFromUserID(String fromUserID) {
+    public void setFromPersonID(String fromUserID) {
         this.fromUserID = fromUserID;
     }
 
-    public String getToUserID() {
+    public String getToPersonID() {
         return toUserID;
     }
 
-    public void setToUserID(String toUserID) {
+    public void setToPersonID(String toUserID) {
         this.toUserID = toUserID;
     }
 

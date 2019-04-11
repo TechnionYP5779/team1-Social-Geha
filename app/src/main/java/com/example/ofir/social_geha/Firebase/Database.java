@@ -3,11 +3,9 @@ package com.example.ofir.social_geha.Firebase;
 import android.support.annotation.NonNull;
 import android.util.Log;
 
-import com.google.android.gms.tasks.OnCompleteListener;
+import com.example.ofir.social_geha.Person;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -26,8 +24,8 @@ public final class Database {
         return DB;
     }
 
-    public void sendMessage(String message, User from, User to) {
-        sendMessage(message, from.getUserID(), to.getUserID());
+    public void sendMessage(String message, Person from, Person to) {
+        sendMessage(message, from.getPersonID(), to.getPersonID());
     }
 
     public void sendMessage(String message, String fromUser, String toUser) {
