@@ -1,17 +1,22 @@
 package com.example.ofir.social_geha;
 
 import java.util.EnumSet;
+import java.util.List;
 
 public class Person<Date> {
     // ==================================
     //          CLASS VARIABLES
     // ==================================
     public enum Gender {
-        MALE, FEMALE
+        MALE, FEMALE, IRRELEVANT
     }
 
     public enum Language {
         HEBREW, ENGLISH, RUSSIAN, FRENCH, ARABIC, AMHARIC
+    }
+
+    public enum Religion {
+        RELIGIOUS, TRADITIONAL, SECULAR, ARABIC, IRRELEVANT
     }
 
     private String name;
@@ -20,7 +25,10 @@ public class Person<Date> {
     private String personID;
     private Gender gender;
     private Date birthDate;
+    private Religion religion;
     private EnumSet<Language> spokenLanguages;
+    //List of personIDs to whom this person is willing to expose details to
+    private List<String> whiteList;
 
     // ==================================
     //          CONSTRUCTORS
@@ -37,7 +45,7 @@ public class Person<Date> {
         imageURL = imageUrl;
     }
 
-    public Person(String name, String description, String imageUrl, Date birthDate, Gender g, EnumSet<Language> l) {
+    public Person(String name, String description, String imageUrl, Date birthDate, Gender g, EnumSet<Language> l,Religion r ) {
 
         this.name = name;
         this.description = description;
@@ -45,6 +53,7 @@ public class Person<Date> {
         this.birthDate = birthDate;
         this.gender = g;
         this.spokenLanguages = l;
+        this.religion = r;
     }
 
     // ==================================
@@ -80,6 +89,26 @@ public class Person<Date> {
 
     public void setPersonID(String personID) {
         this.personID = personID;
+    }
+
+    // ==================================
+    //          MODIFIERS & UTILITY METHODS
+    // ==================================
+
+    public void approve(String personID){
+        //ADD CHECK THAT PERSONID IS VALID
+        if(!whiteList.contains(personID)){
+            whiteList.add(personID);
+        }
+    }
+
+    public void disapprove(String personID){
+        //ADD CHECK THAT PERSONID IS VALID
+        whiteList.remove(personID);
+    }
+
+    public boolean isApproved(String personID){
+        return whiteList.contains(personID);
     }
 
 }

@@ -24,9 +24,12 @@ import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.action.ViewActions.closeSoftKeyboard;
 import static androidx.test.espresso.action.ViewActions.typeText;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
+import static androidx.test.espresso.intent.matcher.IntentMatchers.toPackage;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
+import static androidx.test.espresso.intent.Intents.intended;
+import static androidx.test.espresso.intent.Intents.intending;
 import static org.hamcrest.Matchers.notNullValue;
 import static org.junit.Assert.*;
 
@@ -84,6 +87,7 @@ public class LoginTest {
 //    public void wrongCodeMayNotRegister() throws Exception {
 //        onView(withId(R.id.personal_code)).perform(typeText("1234567890"), closeSoftKeyboard()); //if this is an actual code, then come on...
 //        onView(withId(R.id.log_in_button)).perform(click());
+//        intending(toPackage("com.example.ofir.social_geha.Activities_and_Fragments.Signup")).respondWith(result);
 //        TimeUnit.SECONDS.sleep(1);
 //    }
 }
