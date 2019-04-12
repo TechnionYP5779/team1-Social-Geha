@@ -1,5 +1,7 @@
 package com.example.ofir.social_geha;
 
+import android.util.Pair;
+
 import java.util.EnumSet;
 import java.util.List;
 
@@ -21,7 +23,7 @@ public class Person<Date> {
 
     private String name;
     private String description;
-    private String imageURL;
+    //private String imageURL;
     private String personID;
     private Gender gender;
     private Date birthDate;
@@ -29,7 +31,9 @@ public class Person<Date> {
     private EnumSet<Language> spokenLanguages;
     //List of personIDs to whom this person is willing to expose details to
     private List<String> whiteList;
-
+    // Immutable - Given at initialization
+    // Pair(imageName in drawable, fictitious name)
+    private Pair<String, String> anonymousIdentity;
     // ==================================
     //          CONSTRUCTORS
     // ==================================
