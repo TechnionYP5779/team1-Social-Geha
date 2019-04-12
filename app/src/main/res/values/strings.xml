@@ -1,12 +1,18 @@
 <resources>
     <string name="app_name">CatchApp</string>
     <string name="log_in_header">התחברות</string>
+    <string name="settings_header">הגדרות</string>
+    <string name="settings_info_edit_header">עריכת מידע</string>
     <string name="personal_code">קוד אישי</string>
     <string name="or">או</string>
     <string name="username">שם משתמש</string>
     <string name="password">סיסמה</string>
     <string name="remember_me">זכור אותי</string>
     <string name="login_btn">כניסה</string>
+    <string name="settings_info_edit_btn">עריכת מידע</string>
+    <string name="settings_info_share_btn">שיתוף מידע</string>
+    <string name="settings_password_change_btn">שינוי סיסמה</string>
+    <string name="settings_delete_account_btn">מחק את חשבונך</string>
     <string name="signup">הרשמה</string>
     <string name="verify_password">אימות סיסמה</string>
     <string name="verify">אישור</string>
