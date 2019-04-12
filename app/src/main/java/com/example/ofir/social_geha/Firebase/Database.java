@@ -83,8 +83,8 @@ public final class Database {
         for (Task<QuerySnapshot> task : queryResults) {
             QuerySnapshot result = task.getResult();
             if (result == null) continue;
-            for (DocumentSnapshot user : result.getDocuments()) {
-
+            for (DocumentSnapshot documentSnapshot : result.getDocuments()) {
+                resultSet.add(new Person(documentSnapshot));
             }
         }
         return resultSet;
