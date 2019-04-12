@@ -7,11 +7,15 @@ public class Person<Date> {
     //          CLASS VARIABLES
     // ==================================
     public enum Gender {
-        MALE, FEMALE
+        MALE, FEMALE, IRRELEVANT
     }
 
     public enum Language {
         HEBREW, ENGLISH, RUSSIAN, FRENCH, ARABIC, AMHARIC
+    }
+
+    public enum Religion {
+        RELIGIOUS, TRADITIONAL, SECULAR, ARABIC, IRRELEVANT
     }
 
     private String name;
@@ -20,6 +24,7 @@ public class Person<Date> {
     private String personID;
     private Gender gender;
     private Date birthDate;
+    private Religion religion;
     private EnumSet<Language> spokenLanguages;
 
     // ==================================
@@ -37,7 +42,7 @@ public class Person<Date> {
         imageURL = imageUrl;
     }
 
-    public Person(String name, String description, String imageUrl, Date birthDate, Gender g, EnumSet<Language> l) {
+    public Person(String name, String description, String imageUrl, Date birthDate, Gender g, EnumSet<Language> l,Religion r ) {
 
         this.name = name;
         this.description = description;
@@ -45,6 +50,7 @@ public class Person<Date> {
         this.birthDate = birthDate;
         this.gender = g;
         this.spokenLanguages = l;
+        this.religion = r;
     }
 
     // ==================================
