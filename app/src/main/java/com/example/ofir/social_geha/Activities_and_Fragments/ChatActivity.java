@@ -49,8 +49,8 @@ public class ChatActivity extends AppCompatActivity {
 
         mFirestore = FirebaseFirestore.getInstance();
 
-        mFirestore.collection(MESSAGES).whereEqualTo("toUserID",Database.getInstance().getLoggedInUserID())
-                .whereEqualTo("fromUserID",mOtherPersonId)
+        mFirestore.collection(MESSAGES).whereEqualTo("toPersonID",Database.getInstance().getLoggedInUserID())
+                .whereEqualTo("fromPersonID",mOtherPersonId)
                 .addSnapshotListener(new EventListener<QuerySnapshot>() {
             @Override
             public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
@@ -61,11 +61,10 @@ public class ChatActivity extends AppCompatActivity {
 
                 for(DocumentChange doc : queryDocumentSnapshots.getDocumentChanges()){
                     if(doc.getType() == DocumentChange.Type.ADDED){
-                        //String message = doc.getDocument().getString("message");
-                        //Log.d("COOLTEST","Content: " + message);
+                        String message_text = doc.getDocument().getString("message");
+                        Log.d("COOLTEST","Content: " + message_text);
                         Message message = doc.getDocument().toObject(Message.class);
                         messageList.add(message);
-
                         mMessageListAdapter.notifyDataSetChanged();
                     }
                 }
@@ -73,8 +72,8 @@ public class ChatActivity extends AppCompatActivity {
             }
         });
 
-        mFirestore.collection(MESSAGES).whereEqualTo("fromUserID",Database.getInstance().getLoggedInUserID())
-                .whereEqualTo("toUserID",mOtherPersonId)
+        mFirestore.collection(MESSAGES).whereEqualTo("fromPersonD",Database.getInstance().getLoggedInUserID())
+                .whereEqualTo("toPersonID",mOtherPersonId)
                 .addSnapshotListener(new EventListener<QuerySnapshot>() {
                     @Override
                     public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
