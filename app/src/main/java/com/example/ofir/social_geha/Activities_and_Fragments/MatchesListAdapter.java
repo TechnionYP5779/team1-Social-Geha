@@ -40,9 +40,9 @@ public class MatchesListAdapter extends ArrayAdapter<Person> {
     public View getView(int position, View convertView, ViewGroup parent){
         setupImageLoader();
 
-        String name = getItem(position).getName();
+        String name = getItem(position).getAnonymousName();
         String description = getItem(position).getDescription();
-        String imageUrl = getItem(position).getImageURL();
+        String imageUrl = getItem(position).getAnonymousImageURL();
 
         // Create the view result for showing the animation
         final View result;

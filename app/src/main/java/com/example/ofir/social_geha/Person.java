@@ -6,6 +6,9 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import java.util.EnumSet;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
+
+import static java.util.Optional.empty;
 
 public class Person<Date> {
     // ==================================
@@ -23,9 +26,9 @@ public class Person<Date> {
         RELIGIOUS, TRADITIONAL, SECULAR, ARABIC, UNDISCLOSED
     }
 
-    private String name;
+    private String realName;
+    private Optional<String> realImageURL; //may not exist
     private String description;
-    //private String imageURL;
     private String personID;
     private Gender gender;
     private Date birthDate;
@@ -51,9 +54,10 @@ public class Person<Date> {
         imageURL = imageUrl;
     }*/
 
-    public Person(String name, String description, Date birthDate, Gender g, EnumSet<Language> l, Religion r) {
+    public Person(String realname, String description, Date birthDate, Gender g, EnumSet<Language> l, Religion r) {
 
-        this.name = name;
+        this.realName = realname;
+        this.realImageURL = Optional.empty();
         this.description = description;
         this.anonymousIdentity = FictitiousIdentityGenerator.getAnonymousIdentity(g);
         this.birthDate = birthDate;
@@ -70,25 +74,34 @@ public class Person<Date> {
     // ==================================
     //          GETTERS & SETTERS
     // ==================================
-    public String getName() {
-        return name;
+    public String getRealName() {
+        return realName;
+    }
+
+    public Optional<String> getRealImage(){
+        return realImageURL;
+    }
+
+    public String getAnonymousName(){
+        return anonymousIdentity.name;
+    }
+
+    public String getAnonymousImageURL() {
+        return "drawable://" + anonymousIdentity.imageName;
     }
 
 //    public void setName(String name) {
 //        this.name = name;
+
 //    }
 
     public String getDescription() {
         return description;
     }
-
 //    public void setDescription(String description) {
 //        this.description = description;
-//    }
 
-    public String getImageURL() {
-        return anonymousIdentity.imageName;
-    }
+//    }
 
 //    public void setImageURL(String imageURL) {
 //        this.imageURL = imageURL;
