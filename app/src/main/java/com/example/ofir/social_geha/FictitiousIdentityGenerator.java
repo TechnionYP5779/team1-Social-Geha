@@ -14,10 +14,10 @@ public class FictitiousIdentityGenerator {
 
     private static int numberColor = 5;
 
-    static Pair<String, String> getAnonymousIdentity(Person.Gender gender){
+    static AnonymousIdentity getAnonymousIdentity(Person.Gender gender){
         String randomPicture;
         String name;
-        if(gender == Person.Gender.IRRELEVANT || gender == Person.Gender.MALE){
+        if(gender == Person.Gender.UNDISCLOSED || gender == Person.Gender.MALE){
             int randomAdjective = (int)(Math.random()*male_adjectives.length);
             int randomAnimal = (int)(Math.random()*male_adjectives.length);
             int randomColor = 1 + (int)(Math.random()*numberColor);
@@ -30,6 +30,7 @@ public class FictitiousIdentityGenerator {
             name = female_adjectives[randomAdjective] + female_animals[randomAnimal];
             randomPicture = female_animals_eng[randomAnimal] + "_" + randomColor + ".jpg";
         }
-        return new Pair<>(name, randomPicture);
+        return new AnonymousIdentity(name, randomPicture);
     }
 }
+
