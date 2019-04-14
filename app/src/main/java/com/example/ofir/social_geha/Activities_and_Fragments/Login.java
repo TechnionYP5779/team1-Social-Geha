@@ -53,7 +53,7 @@ public class Login extends AppCompatActivity {
                 String username_txt = username.getText().toString();
                 String password_txt = password.getText().toString();
 
-                if (username_txt.equals("") || password_txt.equals("")) { // New User
+                if (username_txt.equals("") || password_txt.equals("")) { // New Person
                     if (personal_code_txt.equals("")) {
                         Toast.makeText(Login.this, missing_fields_err, Toast.LENGTH_SHORT).show();
                     } else { // move to sign-up

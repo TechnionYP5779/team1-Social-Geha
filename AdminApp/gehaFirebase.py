@@ -25,9 +25,9 @@ class GehaFirebase(object):
 
     
 example_user = {
-    u'name': u'Itamar Ordani2',
+    u'fullname': u'Itamar Ordani2',
     u'id' : u'318301273',
-    u'personalCode' : u'12345678'
+    u'usercode' : u'12345678'
 }
 
 #firegeha = GehaFirebase("../../socialGehaPrivateKey.json")

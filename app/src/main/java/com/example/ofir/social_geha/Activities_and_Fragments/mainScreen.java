@@ -9,6 +9,7 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
+import com.example.ofir.social_geha.Activities_and_Fragments.Settings.SettingsActivity;
 import com.example.ofir.social_geha.Firebase.Database;
 import com.example.ofir.social_geha.R;
 
@@ -45,13 +46,14 @@ public class mainScreen extends AppCompatActivity {
     public void gotoScreen(View view) {
         if (view.equals(settings_screen)){
             // move to intro pager screen - TODO : is this the right place ?
-            Intent myIntent = new Intent(mainScreen.this, FilterMatchesActivity.class);
+            Intent myIntent = new Intent(mainScreen.this, SettingsActivity.class);
             mainScreen.this.startActivity(myIntent);
         }
         if (view.equals(edit_anonymous))
             Toast.makeText(mainScreen.this, "edit anonymous", Toast.LENGTH_SHORT).show();
-        if (view.equals(all_conversations))
-            Toast.makeText(mainScreen.this, "all conversations", Toast.LENGTH_SHORT).show();
+        if (view.equals(all_conversations)){
+            Toast.makeText(mainScreen.this, "All conversations", Toast.LENGTH_SHORT).show();
+        }
         if(view.equals(search_guide)) {
             // move to available matches screen - TODO : is this the right place ?
             Intent myIntent = new Intent(mainScreen.this, AvailableMatches.class);

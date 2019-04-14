@@ -47,7 +47,7 @@ public class Main {
                     if (cipherRSA == null)
                         System.out.println("The keys were not initialized");
                     else {
-                        System.out.println("What is the message?");
+                        System.out.println("What is the message_layout?");
                         cipherText = cipherRSA.encrypt(reader.nextLine());
                         storeCipher(cipherText);
                     }
