@@ -25,11 +25,10 @@ public class Person<Date> {
     public enum Religion {
         RELIGIOUS, TRADITIONAL, SECULAR, ARABIC, UNDISCLOSED
     }
-
+    private String personID;
     private String realName;
     private Optional<String> realImageURL; //may not exist
     private String description;
-    private String personID;
     private Gender gender;
     private Date birthDate;
     private Religion religion;
@@ -42,17 +41,17 @@ public class Person<Date> {
     // ==================================
     //          CONSTRUCTORS
     // ==================================
-    /*public Person(String name, String personID) {
-        this.name = name;
+    public Person(String name, String personID) {
+        anonymousIdentity = new AnonymousIdentity(name, null);
         this.personID = personID;
-    }*/
+    }
 
-    /*public Person(String name, String description, String imageUrl) {
-
-        this.name = name;
+    public Person(String name, String description, String imageUrl) {
+        anonymousIdentity = new AnonymousIdentity(name, imageUrl);
+        this.realName = name;
         this.description = description;
-        imageURL = imageUrl;
-    }*/
+        //realImageURL = imageUrl;
+    }
 
     public Person(String realname, String description, Date birthDate, Gender g, EnumSet<Language> l, Religion r) {
 

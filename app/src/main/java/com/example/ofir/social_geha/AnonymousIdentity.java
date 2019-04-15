@@ -9,4 +9,11 @@ public class AnonymousIdentity {
         imageName = im;
     }
 
+    public String getName() {
+        return name;
+    }
+
+    public String getImageName() {
+        return imageName;
+    }
 }

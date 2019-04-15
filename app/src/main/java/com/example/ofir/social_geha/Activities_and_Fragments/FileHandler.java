@@ -1,6 +1,7 @@
 package com.example.ofir.social_geha.Activities_and_Fragments;
 
 import android.content.Context;
+import android.util.Log;
 
 import com.example.ofir.social_geha.Firebase.Message;
 
@@ -26,8 +27,12 @@ public class FileHandler {
     }
 
     public ArrayList<Message> writeMessage(Message message){
+        Log.d("POPO", "writeMessage: DOES THIS");
         ArrayList<Message> messages = getMessages();
         messages.add(message);
+        for(Message msg : messages){
+            Log.d("POPO", "writeMessage: "+msg.getMessage());
+        }
         try {
             outputStream = context.openFileOutput(messagesFile, Context.MODE_PRIVATE);
             ObjectOutputStream oos = new ObjectOutputStream(outputStream);
