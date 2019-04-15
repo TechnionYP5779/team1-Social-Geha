@@ -29,7 +29,7 @@ public class ChatActivity extends AppCompatActivity {
     private FirebaseFirestore mFirestore;
     private MessageListAdapter mMessageListAdapter;
     private String mOtherPersonId;
-
+    private FileHandler fileHandler;
     private List<Message> messageList;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,8 +37,10 @@ public class ChatActivity extends AppCompatActivity {
         setContentView(R.layout.activity_chat2);
         messageList = new ArrayList<>();
         mMessageListAdapter = new MessageListAdapter(messageList);
+        fileHandler = new FileHandler(this);
 
         mOtherPersonId = getIntent().getStringExtra("EXTRA_PERSON_ID");
+        Log.d("POPO", "onCreate: "+mOtherPersonId);
 
         mMessageEdit = findViewById(R.id.message_text);
 
@@ -63,8 +65,10 @@ public class ChatActivity extends AppCompatActivity {
                     if(doc.getType() == DocumentChange.Type.ADDED){
                         String message_text = doc.getDocument().getString("message");
                         Log.d("COOLTEST","Content: " + message_text);
+                        Log.d("POPO", "onEvent: DOES THIS");
                         Message message = doc.getDocument().toObject(Message.class);
-                        messageList.add(message);
+                        mFirestore.collection(MESSAGES).document(doc.getDocument().getId()).delete();
+                        messageList = fileHandler.writeMessage(message);
                         mMessageListAdapter.notifyDataSetChanged();
                     }
                 }
@@ -72,7 +76,7 @@ public class ChatActivity extends AppCompatActivity {
             }
         });
 
-        mFirestore.collection(MESSAGES).whereEqualTo("fromPersonD",Database.getInstance().getLoggedInUserID())
+        mFirestore.collection(MESSAGES).whereEqualTo("fromPersonID",Database.getInstance().getLoggedInUserID())
                 .whereEqualTo("toPersonID",mOtherPersonId)
                 .addSnapshotListener(new EventListener<QuerySnapshot>() {
                     @Override
@@ -87,8 +91,9 @@ public class ChatActivity extends AppCompatActivity {
                                 //String message = doc.getDocument().getString("message");
                                 //Log.d("COOLTEST","Content: " + message);
                                 Message message = doc.getDocument().toObject(Message.class);
-                                messageList.add(message);
-
+                                mFirestore.collection(MESSAGES).document(doc.getDocument().getId()).delete();
+                                Log.d("POPO", "onEvent: DOES THIS");
+                                messageList = fileHandler.writeMessage(message);
                                 mMessageListAdapter.notifyDataSetChanged();
                             }
                         }

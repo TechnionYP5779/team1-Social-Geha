@@ -3,9 +3,11 @@ package com.example.ofir.social_geha.Firebase;
 import com.example.ofir.social_geha.Person;
 import com.google.firebase.firestore.ServerTimestamp;
 
+import java.io.Serializable;
 import java.util.Date;
 
-public class Message {
+public class Message implements Serializable {
+    private static final long serialVersionUID = 1L;
     private String message;
     private String fromUserID;
     private String toUserID;
@@ -32,6 +34,8 @@ public class Message {
         return fromUserID;
     }
 
+
+
     public void setFromPersonID(String fromUserID) {
         this.fromUserID = fromUserID;
     }
@@ -50,5 +54,10 @@ public class Message {
 
     public void setMessage(String message) {
         this.message = message;
+    }
+
+    @Override
+    public String toString() {
+        return fromUserID+"##"+toUserID+"##"+message+"##";
     }
 }

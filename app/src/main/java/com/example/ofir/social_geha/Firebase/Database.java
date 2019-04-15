@@ -58,6 +58,21 @@ public final class Database {
                 });
     }
 
+    public void addUser(final String username, String personalCode) {
+        db.collection(USERS).document(username).set(new User(username, personalCode)).
+                addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        Log.d(TAG, "onSuccess: Added the new user to the DB" + username);
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.d(TAG, "onFailure: FAILED " + e.getMessage());
+                    }
+                });
+    }
     @RequiresApi(api = Build.VERSION_CODES.N)
     public Set<Person> queryUsers(Boolean isPreviousPatient,
                                   Person.Gender genderPref,

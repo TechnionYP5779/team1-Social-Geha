@@ -11,6 +11,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.example.ofir.social_geha.Firebase.Database;
 import com.example.ofir.social_geha.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -113,7 +114,7 @@ public class Signup extends AppCompatActivity {
         return true;
     }
 
-    public void register(String username, String password, String personalCode) {
+    public void register(final String username, String password, final String personalCode) {
         FirebaseAuth auth = FirebaseAuth.getInstance();
         final ProgressDialog progressDialog = new ProgressDialog(this);
         progressDialog.setTitle("נרשם");
@@ -126,6 +127,7 @@ public class Signup extends AppCompatActivity {
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         progressDialog.dismiss();
                         if (task.isSuccessful()) {
+                            Database.getInstance().addUser(username, personalCode);
                             setResult(RESULT_OK);
                             finish();
                             Toast.makeText(Signup.this, "נרשמת", Toast.LENGTH_SHORT).show();
