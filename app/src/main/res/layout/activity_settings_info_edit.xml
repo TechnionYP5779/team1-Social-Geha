@@ -1,80 +1,344 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/colorPrimaryDark">
 
     <android.support.v7.widget.CardView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginLeft="0dp"
-        android:layout_marginTop="0dp"
-        android:layout_marginRight="0dp"
-        android:layout_marginBottom="0dp"
+        android:id="@+id/cardView"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginEnd="8dp"
         android:backgroundTint="@color/colorPrimaryDark"
         app:cardBackgroundColor="@color/colorPrimaryDark"
         app:cardCornerRadius="10dp"
-        app:cardElevation="0dp">
+        app:cardElevation="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.0">
 
-        <LinearLayout xmlns:tools="http://schemas.android.com/tools"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:gravity="center|center_vertical"
-            android:orientation="vertical"
-            tools:context=".Activities_and_Fragments.Login">
+        <LinearLayout
+            android:id="@+id/linearLayout"
+            android:layout_width="368dp"
+            android:layout_height="690dp"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="20dp"
+            android:orientation="vertical">
 
             <TextView
-                android:id="@+id/settings_header"
-                android:layout_width="wrap_content"
+                android:id="@+id/log_in_header2"
+                android:layout_width="260dp"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="30dp"
+                android:layout_marginTop="40dp"
+                android:layout_marginBottom="20dp"
                 android:text="@string/settings_info_edit_header"
                 android:textColor="@color/white"
-                android:textSize="40sp" />
+                android:textSize="25sp" />
+
+            <ScrollView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <android.support.design.widget.TextInputLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textColorHint="@color/white">
+
+                        <EditText
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:autofillHints=""
+                            android:hint="@string/your_name"
+                            android:imeOptions="actionNext"
+                            android:inputType=""
+                            android:textColorHint="@color/white"
+                            android:textSize="18sp" />
+
+                    </android.support.design.widget.TextInputLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="horizontal">
+
+                        <android.support.design.widget.FloatingActionButton
+                            android:id="@+id/floatingActionButton"
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:clickable="true"
+                            android:focusable="true"
+                            android:hint="Select your birthdate"
+                            app:srcCompat="@android:drawable/ic_menu_my_calendar" />
+
+                        <EditText
+                            android:id="@+id/editText"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:autofillHints=""
+                            android:ems="10"
+                            android:inputType="date" />
+
+                        <TextView
+                            android:id="@+id/birthDate"
+                            android:layout_width="99dp"
+                            android:layout_height="wrap_content"
+                            android:text="@string/birth_date"
+                            android:textColor="@color/white"
+                            android:textSize="18sp" />
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="35dp"
+                        android:orientation="horizontal">
+
+                        <Spinner
+                            android:id="@+id/spinner_gender"
+
+                            android:layout_width="253dp"
+                            android:layout_height="35dp"
+                            android:layout_marginEnd="10dp"
+                            android:entries="@array/gender_preferences" />
+
+                        <TextView
+                            android:id="@+id/gender"
+                            android:layout_width="96dp"
+                            android:layout_height="wrap_content"
+                            android:text="@string/gender"
+                            android:textColor="@color/white"
+                            android:textSize="18sp" />
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="35dp"
+                        android:orientation="horizontal">
+
+                        <Spinner
+                            android:id="@+id/spinner_religion"
+
+                            android:layout_width="253dp"
+                            android:layout_height="35dp"
+                            android:layout_marginEnd="10dp"
+                            android:entries="@array/religious_preferences" />
+
+                        <TextView
+                            android:id="@+id/religion"
+                            android:layout_width="96dp"
+                            android:layout_height="wrap_content"
+                            android:text="@string/religious"
+                            android:textColor="@color/white"
+                            android:textSize="18sp" />
+
+                    </LinearLayout>
 
 
-            <Button
-                android:id="@+id/info_edit_button"
-                android:layout_width="200dp"
-                android:layout_height="wrap_content"
-                android:layout_margin="10dp"
-                android:background="@drawable/button_bg"
-                android:text="@string/settings_info_edit_btn"
-                android:textColor="@color/colorPrimary" />
+                    <?xml version="1.0" encoding="utf-8"?>
 
+                    <TableLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent">
 
-            <Button
-                android:id="@+id/info_share_button"
-                android:layout_width="200dp"
-                android:layout_height="wrap_content"
-                android:layout_margin="10dp"
-                android:background="@drawable/button_bg"
-                android:text="@string/settings_info_share_btn"
-                android:textColor="@color/colorPrimary" />
+                            <TableRow
+                                android:id="@+id/tableRow1"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:gravity="center_horizontal"
+                                android:layout_marginTop="10dp">
 
+                                <TextView
+                                    android:id="@+id/spokenlang"
+                                    android:layout_width="132dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginLeft="0dp"
+                                    android:text="שפות מדוברות"
+                                    android:textColor="@color/white"
+                                    android:textSize="18sp" />
 
-            <Button
-                android:id="@+id/password_change_button"
-                android:layout_width="200dp"
-                android:layout_height="wrap_content"
-                android:layout_margin="10dp"
-                android:background="@drawable/button_bg"
-                android:text="@string/settings_password_change_btn"
-                android:textColor="@color/colorPrimary" />
+                            </TableRow>
 
-            <Button
-                android:id="@+id/account_deactivate_button"
-                android:layout_width="200dp"
-                android:layout_height="wrap_content"
-                android:layout_margin="10dp"
-                android:background="@color/red"
-                android:shadowColor="@color/red"
-                android:text="@string/settings_delete_account_btn"
-                android:textColor="@color/white" />
+                            <TableRow
+                                android:id="@+id/tableRow2"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="0dp">
+
+                                <CheckBox
+                                    android:id="@+id/chkFrench"
+                                    android:layout_width="77dp"
+                                    android:layout_height="wrap_content"
+                                    android:onClick="onCheckboxClicked"
+                                    android:padding="10dp"
+                                    android:text="צרפתית" />
+
+                                <CheckBox
+                                    android:id="@+id/chkHebrew"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:onClick="onCheckboxClicked"
+                                    android:padding="10dp"
+                                    android:text="עברית" />
+
+                                <CheckBox
+                                    android:id="@+id/chkEnglish"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginLeft="10dp"
+                                    android:onClick="onCheckboxClicked"
+                                    android:padding="10dp"
+                                    android:text="אנגלית" />
+                            </TableRow>
+                            <TableRow
+                                android:id="@+id/tableRow3"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="0dp">
+
+                                <CheckBox
+                                    android:id="@+id/chkAmhar"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:onClick="onCheckboxClicked"
+                                    android:padding="10dp"
+                                    android:text="אמהרית" />
+
+                                <CheckBox
+                                    android:id="@+id/chkRussian"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:onClick="onCheckboxClicked"
+                                    android:padding="10dp"
+                                    android:text="רוסית" />
+
+                                <CheckBox
+                                    android:id="@+id/chkArab"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginLeft="10dp"
+                                    android:onClick="onCheckboxClicked"
+                                    android:padding="10dp"
+                                    android:text="ערבית" />
+                            </TableRow>
+
+                        </TableLayout>
+
+                    <android.support.design.widget.TextInputLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:textColorHint="@color/white">
+
+                        <EditText
+                            android:layout_width="match_parent"
+                            android:layout_height="96dp"
+                            android:autofillHints=""
+                            android:hint="כל דבר שתרצה לשתף / תחומי עניין"
+                            android:imeOptions="actionNext"
+                            android:inputType=""
+                            android:textColorHint="@color/white"
+                            android:textSize="18sp" />
+
+                    </android.support.design.widget.TextInputLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+
+                        <Button
+                            android:id="@+id/info_save_button"
+                            android:layout_width="200dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="50dp"
+                            android:layout_marginLeft="80dp"
+                            android:layout_weight="1"
+                            android:background="@drawable/button_bg"
+                            android:text="שמירה"
+                            android:textColor="@color/colorPrimary" />
+                    </LinearLayout>
+
+                    <TextView
+                        android:id="@+id/mini_save_title"
+                        android:layout_width="260dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="0dp"
+                        android:layout_marginLeft="38dp"
+                        android:layout_marginBottom="8dp"
+                        android:text="ניתן לחזור ולערוך את המידע בכל שלב"
+                        android:textColor="@color/white"
+                        android:textSize="14sp" />
+
+                    <!--<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"-->
+                    <!--android:layout_width="fill_parent"-->
+                    <!--android:layout_height="fill_parent"-->
+                    <!--android:orientation="vertical" >-->
+
+                    <!--<Button-->
+                    <!--android:id="@+id/btnChangeDate"-->
+                    <!--android:layout_width="wrap_content"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:text="Change Date" />-->
+
+                    <!--<TextView-->
+                    <!--android:id="@+id/lblDate"-->
+                    <!--android:layout_width="wrap_content"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:text="Current Date (M-D-YYYY): "-->
+                    <!--android:textAppearance="?android:attr/textAppearanceLarge" />-->
+
+                    <!--<TextView-->
+                    <!--android:id="@+id/tvDate"-->
+                    <!--android:layout_width="wrap_content"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:text=""-->
+                    <!--android:textAppearance="?android:attr/textAppearanceLarge" />-->
+
+                    <!--<DatePicker-->
+                    <!--android:id="@+id/dpResult"-->
+                    <!--android:layout_width="wrap_content"-->
+                    <!--android:layout_height="wrap_content" />-->
+
+                    <!--</LinearLayout>-->
+
+                    <!--<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"-->
+                    <!--android:id="@+id/lay_main"-->
+                    <!--android:layout_width="fill_parent"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:orientation="vertical"-->
+                    <!--&gt;-->
+
+                    <!--<TextView-->
+                    <!--android:layout_width="fill_parent"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:text="Date : " >-->
+                    <!--</TextView>-->
+
+                    <!--<DatePicker-->
+                    <!--android:layout_width="wrap_content"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:endYear="2100"-->
+                    <!--android:startYear="1900"></DatePicker>-->
+
+                    <!--</LinearLayout>-->
+                </LinearLayout>
+
+            </ScrollView>
 
 
         </LinearLayout>
+
     </android.support.v7.widget.CardView>
 
 </android.support.constraint.ConstraintLayout>
