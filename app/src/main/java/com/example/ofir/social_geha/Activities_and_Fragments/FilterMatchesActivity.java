@@ -116,6 +116,7 @@ public class FilterMatchesActivity extends AppCompatActivity {
 
     public void findMatch(View view) {
         Intent myIntent = new Intent(FilterMatchesActivity.this, AvailableMatches.class);
+        myIntent.setFlags(myIntent.getFlags() | Intent.FLAG_ACTIVITY_NO_HISTORY);
         FilterMatchesActivity.this.startActivity(myIntent);
     }
 }

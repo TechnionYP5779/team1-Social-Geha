@@ -44,13 +44,14 @@ public class mainScreen extends AppCompatActivity {
         }
         if (view.equals(edit_anonymous))
             Toast.makeText(mainScreen.this, "edit anonymous", Toast.LENGTH_SHORT).show();
+
         if (view.equals(all_conversations)){
-            Intent myIntent = new Intent(mainScreen.this, AllConversationsActivity.class);
+            Intent myIntent = new Intent(mainScreen.this, AllChatsActivity.class);
             mainScreen.this.startActivity(myIntent);
         }
         if(view.equals(search_guide)) {
-            // move to available matches screen - TODO : is this the right place ?
             Intent myIntent = new Intent(mainScreen.this, FilterMatchesActivity.class);
+            myIntent.setFlags(myIntent.getFlags() | Intent.FLAG_ACTIVITY_NO_HISTORY);
             mainScreen.this.startActivity(myIntent);
         }
     }
@@ -75,4 +76,5 @@ public class mainScreen extends AppCompatActivity {
             }
         }
     }
+
 }

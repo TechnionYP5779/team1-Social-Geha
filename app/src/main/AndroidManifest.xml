@@ -38,6 +38,7 @@
         <activity
             android:name=".Activities_and_Fragments.FilterMatchesActivity"
             android:screenOrientation="portrait" />
+        <activity android:name=".Activities_and_Fragments.AllChatsActivity" />
     </application>
 
 </manifest>

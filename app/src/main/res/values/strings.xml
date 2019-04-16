@@ -122,5 +122,22 @@
 
     <string name="pref_title_vibrate">Vibrate</string>
     <string name="birth_date">תאריך לידה</string>
+    <string name="search">חיפוש</string>
+    <string name="no_results">No Results</string>
+
+    <string-array name="months_array">
+    <item>January</item>
+    <item>February</item>
+    <item>March</item>
+    <item>April</item>
+    <item>May</item>
+    <item>June</item>
+    <item>July</item>
+    <item>August</item>
+    <item>September</item>
+    <item>October</item>
+    <item>November</item>
+    <item>December</item>
+    </string-array>
 
 </resources>

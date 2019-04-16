@@ -101,7 +101,7 @@ public class AllConversationsActivity extends AppCompatActivity {
         populateConversationsList();
 
         //Attach to adapter
-        MatchesListAdapter adapter = new MatchesListAdapter(this, R.layout.match_row_layout, mConversations);
+        MatchesListAdapter adapter = new MatchesListAdapter(this, R.layout.match_row_layout, mConversations, true);
         mListView.setAdapter(adapter);
     }
 
