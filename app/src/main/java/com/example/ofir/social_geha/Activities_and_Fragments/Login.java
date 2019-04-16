@@ -5,8 +5,10 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -22,7 +24,7 @@ public class Login extends AppCompatActivity {
     // ==================================
     //          CLASS VARIABLES
     // ==================================
-    Button button;
+    FloatingActionButton button;
     EditText personal_code;
 
     private int REGISTER_RETURN_CODE = 100;
@@ -46,7 +48,7 @@ public class Login extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 String personal_code_txt = personal_code.getText().toString();
-                if (personal_code.equals("")) { // missing personal code
+                if (personal_code_txt.equals("")) { // missing personal code
                     Toast.makeText(Login.this, missing_fields_err, Toast.LENGTH_SHORT).show();
                 } else {
                     Intent myIntent = new Intent(Login.this, Signup.class);
