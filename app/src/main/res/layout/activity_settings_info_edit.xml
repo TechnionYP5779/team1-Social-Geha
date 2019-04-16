@@ -145,91 +145,91 @@
                     </LinearLayout>
 
                     <TableLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent">
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent">
 
-                            <TableRow
-                                android:id="@+id/tableRow1"
+                        <TableRow
+                            android:id="@+id/tableRow1"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:gravity="center_horizontal"
+                            android:layout_marginTop="10dp">
+
+                            <TextView
+                                android:id="@+id/spokenlang"
+                                android:layout_width="132dp"
+                                android:layout_height="wrap_content"
+                                android:layout_marginLeft="0dp"
+                                android:text="שפות מדוברות"
+                                android:textColor="@color/white"
+                                android:textSize="18sp" />
+
+                        </TableRow>
+
+                        <TableRow
+                            android:id="@+id/tableRow2"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="0dp">
+
+                            <CheckBox
+                                android:id="@+id/chkFrench"
+                                android:layout_width="77dp"
+                                android:layout_height="wrap_content"
+                                android:onClick="onCheckboxClicked"
+                                android:padding="10dp"
+                                android:text="צרפתית" />
+
+                            <CheckBox
+                                android:id="@+id/chkHebrew"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:gravity="center_horizontal"
-                                android:layout_marginTop="10dp">
+                                android:onClick="onCheckboxClicked"
+                                android:padding="10dp"
+                                android:text="עברית" />
 
-                                <TextView
-                                    android:id="@+id/spokenlang"
-                                    android:layout_width="132dp"
-                                    android:layout_height="wrap_content"
-                                    android:layout_marginLeft="0dp"
-                                    android:text="שפות מדוברות"
-                                    android:textColor="@color/white"
-                                    android:textSize="18sp" />
-
-                            </TableRow>
-
-                            <TableRow
-                                android:id="@+id/tableRow2"
+                            <CheckBox
+                                android:id="@+id/chkEnglish"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:layout_marginTop="0dp">
+                                android:layout_marginLeft="10dp"
+                                android:onClick="onCheckboxClicked"
+                                android:padding="10dp"
+                                android:text="אנגלית" />
+                        </TableRow>
+                        <TableRow
+                            android:id="@+id/tableRow3"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="0dp">
 
-                                <CheckBox
-                                    android:id="@+id/chkFrench"
-                                    android:layout_width="77dp"
-                                    android:layout_height="wrap_content"
-                                    android:onClick="onCheckboxClicked"
-                                    android:padding="10dp"
-                                    android:text="צרפתית" />
-
-                                <CheckBox
-                                    android:id="@+id/chkHebrew"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:onClick="onCheckboxClicked"
-                                    android:padding="10dp"
-                                    android:text="עברית" />
-
-                                <CheckBox
-                                    android:id="@+id/chkEnglish"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:layout_marginLeft="10dp"
-                                    android:onClick="onCheckboxClicked"
-                                    android:padding="10dp"
-                                    android:text="אנגלית" />
-                            </TableRow>
-                            <TableRow
-                                android:id="@+id/tableRow3"
+                            <CheckBox
+                                android:id="@+id/chkAmhar"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:layout_marginTop="0dp">
+                                android:onClick="onCheckboxClicked"
+                                android:padding="10dp"
+                                android:text="אמהרית" />
 
-                                <CheckBox
-                                    android:id="@+id/chkAmhar"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:onClick="onCheckboxClicked"
-                                    android:padding="10dp"
-                                    android:text="אמהרית" />
+                            <CheckBox
+                                android:id="@+id/chkRussian"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:onClick="onCheckboxClicked"
+                                android:padding="10dp"
+                                android:text="רוסית" />
 
-                                <CheckBox
-                                    android:id="@+id/chkRussian"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:onClick="onCheckboxClicked"
-                                    android:padding="10dp"
-                                    android:text="רוסית" />
+                            <CheckBox
+                                android:id="@+id/chkArab"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginLeft="10dp"
+                                android:onClick="onCheckboxClicked"
+                                android:padding="10dp"
+                                android:text="ערבית" />
+                        </TableRow>
 
-                                <CheckBox
-                                    android:id="@+id/chkArab"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:layout_marginLeft="10dp"
-                                    android:onClick="onCheckboxClicked"
-                                    android:padding="10dp"
-                                    android:text="ערבית" />
-                            </TableRow>
-
-                        </TableLayout>
+                    </TableLayout>
 
                     <android.support.design.widget.TextInputLayout
                         android:layout_width="match_parent"
@@ -276,58 +276,6 @@
                         android:textColor="@color/white"
                         android:textSize="14sp" />
 
-                    <!--<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"-->
-                    <!--android:layout_width="fill_parent"-->
-                    <!--android:layout_height="fill_parent"-->
-                    <!--android:orientation="vertical" >-->
-
-                    <!--<Button-->
-                    <!--android:id="@+id/btnChangeDate"-->
-                    <!--android:layout_width="wrap_content"-->
-                    <!--android:layout_height="wrap_content"-->
-                    <!--android:text="Change Date" />-->
-
-                    <!--<TextView-->
-                    <!--android:id="@+id/lblDate"-->
-                    <!--android:layout_width="wrap_content"-->
-                    <!--android:layout_height="wrap_content"-->
-                    <!--android:text="Current Date (M-D-YYYY): "-->
-                    <!--android:textAppearance="?android:attr/textAppearanceLarge" />-->
-
-                    <!--<TextView-->
-                    <!--android:id="@+id/tvDate"-->
-                    <!--android:layout_width="wrap_content"-->
-                    <!--android:layout_height="wrap_content"-->
-                    <!--android:text=""-->
-                    <!--android:textAppearance="?android:attr/textAppearanceLarge" />-->
-
-                    <!--<DatePicker-->
-                    <!--android:id="@+id/dpResult"-->
-                    <!--android:layout_width="wrap_content"-->
-                    <!--android:layout_height="wrap_content" />-->
-
-                    <!--</LinearLayout>-->
-
-                    <!--<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"-->
-                    <!--android:id="@+id/lay_main"-->
-                    <!--android:layout_width="fill_parent"-->
-                    <!--android:layout_height="wrap_content"-->
-                    <!--android:orientation="vertical"-->
-                    <!--&gt;-->
-
-                    <!--<TextView-->
-                    <!--android:layout_width="fill_parent"-->
-                    <!--android:layout_height="wrap_content"-->
-                    <!--android:text="Date : " >-->
-                    <!--</TextView>-->
-
-                    <!--<DatePicker-->
-                    <!--android:layout_width="wrap_content"-->
-                    <!--android:layout_height="wrap_content"-->
-                    <!--android:endYear="2100"-->
-                    <!--android:startYear="1900"></DatePicker>-->
-
-                    <!--</LinearLayout>-->
                 </LinearLayout>
 
             </ScrollView>

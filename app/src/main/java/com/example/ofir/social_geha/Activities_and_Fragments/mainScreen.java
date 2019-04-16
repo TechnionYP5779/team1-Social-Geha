@@ -9,7 +9,6 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
-import com.example.ofir.social_geha.Activities_and_Fragments.Settings.SettingsActivity;
 import com.example.ofir.social_geha.Firebase.Database;
 import com.example.ofir.social_geha.R;
 
@@ -39,7 +38,8 @@ public class mainScreen extends AppCompatActivity {
 
     public void gotoScreen(View view) {
         if (view.equals(settings_screen)){
-            Intent myIntent = new Intent(mainScreen.this, SettingsActivity.class);
+            // move to intro pager screen - TODO : is this the right place ?
+            Intent myIntent = new Intent(mainScreen.this, SettingsMainActivity.class);
             mainScreen.this.startActivity(myIntent);
         }
         if (view.equals(edit_anonymous))
