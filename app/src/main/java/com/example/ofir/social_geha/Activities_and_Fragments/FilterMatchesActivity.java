@@ -1,5 +1,6 @@
 package com.example.ofir.social_geha.Activities_and_Fragments;
 
+import android.content.Intent;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
@@ -114,6 +115,7 @@ public class FilterMatchesActivity extends AppCompatActivity {
     }
 
     public void findMatch(View view) {
-        Toast.makeText(FilterMatchesActivity.this, "bring out the unicorns !", Toast.LENGTH_LONG).show();
+        Intent myIntent = new Intent(FilterMatchesActivity.this, AvailableMatches.class);
+        FilterMatchesActivity.this.startActivity(myIntent);
     }
 }

@@ -20,9 +20,6 @@ public class mainScreen extends AppCompatActivity {
     LinearLayout all_conversations;
     LinearLayout search_guide;
 
-    //TODO: REMOVE LATER ON - FOR TESTING
-    Button Btn;
-
     private static final int LOGIN_RETURN_CODE = 1;
 
     @Override
@@ -35,9 +32,6 @@ public class mainScreen extends AppCompatActivity {
         all_conversations = this.findViewById(R.id.current_conversations);
         search_guide = this.findViewById(R.id.search_guide);
 
-        Btn = findViewById(R.id.logout);
-
-
         if(!Database.getInstance().isLoggedIn()){
             promptLogin();
         }
@@ -45,7 +39,6 @@ public class mainScreen extends AppCompatActivity {
 
     public void gotoScreen(View view) {
         if (view.equals(settings_screen)){
-            // move to intro pager screen - TODO : is this the right place ?
             Intent myIntent = new Intent(mainScreen.this, SettingsActivity.class);
             mainScreen.this.startActivity(myIntent);
         }
@@ -56,12 +49,8 @@ public class mainScreen extends AppCompatActivity {
         }
         if(view.equals(search_guide)) {
             // move to available matches screen - TODO : is this the right place ?
-            Intent myIntent = new Intent(mainScreen.this, AvailableMatches.class);
+            Intent myIntent = new Intent(mainScreen.this, FilterMatchesActivity.class);
             mainScreen.this.startActivity(myIntent);
-        }
-        if (view.equals(Btn)){
-            Database.getInstance().disconnectUser();
-            promptLogin();
         }
     }
 
