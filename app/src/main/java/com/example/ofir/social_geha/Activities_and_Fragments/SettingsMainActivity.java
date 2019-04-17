@@ -58,20 +58,20 @@ public class SettingsMainActivity extends AppCompatActivity {
         if(view.equals(delete_data_screen)) {
             Toast.makeText(SettingsMainActivity.this , "Delete Account", Toast.LENGTH_SHORT).show();
         }
-        if (view.equals(Btn)){
-            Database.getInstance().disconnectUser();
-            promptLogin();
-        }
+//        if (view.equals(Btn)){
+//            Database.getInstance().disconnectUser();
+//            promptLogin();
+//        }
     }
 
 
-    public void promptLogin() {
-        Intent intent = new Intent(SettingsMainActivity.this, Login.class);
-        startActivityForResult(intent, LOGIN_RETURN_CODE);
-    }
-
-    private void loginSuccess() {
-        Toast.makeText(getApplicationContext(), "מחובר בהצלחה!", Toast.LENGTH_SHORT).show();
-    }
+//    public void promptLogin() {
+//        Intent intent = new Intent(SettingsMainActivity.this, Login.class);
+//        startActivityForResult(intent, LOGIN_RETURN_CODE);
+//    }
+//
+//    private void loginSuccess() {
+//        Toast.makeText(getApplicationContext(), "מחובר בהצלחה!", Toast.LENGTH_SHORT).show();
+//    }
 
 }
