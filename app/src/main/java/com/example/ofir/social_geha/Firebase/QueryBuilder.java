@@ -16,6 +16,18 @@ class QueryBuilder {
         return this;
     }
 
+    QueryBuilder addLowerBound(String field, Object value) {
+        if (value != null)
+            query = query.whereGreaterThanOrEqualTo(field, value);
+        return this;
+    }
+
+    QueryBuilder addUpperBound(String field, Object value) {
+        if (value != null)
+            query = query.whereLessThanOrEqualTo(field, value);
+        return this;
+    }
+
     Query build() {
         return query;
     }
