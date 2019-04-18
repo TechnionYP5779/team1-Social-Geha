@@ -5,8 +5,10 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -22,9 +24,7 @@ public class Login extends AppCompatActivity {
     // ==================================
     //          CLASS VARIABLES
     // ==================================
-    Button button;
-    EditText username;
-    EditText password;
+    FloatingActionButton button;
     EditText personal_code;
 
     private int REGISTER_RETURN_CODE = 100;
@@ -39,8 +39,6 @@ public class Login extends AppCompatActivity {
         setContentView(R.layout.activity_log_in);
 
         // get views
-        username = this.findViewById(R.id.user_name);
-        password = this.findViewById(R.id.password);
         personal_code = this.findViewById(R.id.personal_code);
         button = this.findViewById(R.id.log_in_button);
         final String missing_fields_err = this.getString(R.string.missing_fields_err_msg);
@@ -50,45 +48,15 @@ public class Login extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 String personal_code_txt = personal_code.getText().toString();
-                String username_txt = username.getText().toString();
-                String password_txt = password.getText().toString();
-
-                if (username_txt.equals("") || password_txt.equals("")) { // New Person
-                    if (personal_code_txt.equals("")) {
-                        Toast.makeText(Login.this, missing_fields_err, Toast.LENGTH_SHORT).show();
-                    } else { // move to sign-up
-                        Intent myIntent = new Intent(Login.this, Signup.class);
-                        myIntent.putExtra("code", personal_code_txt);
-                        startActivityForResult(myIntent, REGISTER_RETURN_CODE);
-                    }
+                if (personal_code_txt.equals("")) { // missing personal code
+                    Toast.makeText(Login.this, missing_fields_err, Toast.LENGTH_SHORT).show();
                 } else {
-                    // move to main screen (sign in)
-                    signIn(username_txt, password_txt);
+                    Intent myIntent = new Intent(Login.this, Signup.class);
+                    myIntent.putExtra("code", personal_code_txt);
+                    startActivityForResult(myIntent, REGISTER_RETURN_CODE);
                 }
             }
         });
-    }
-
-    private void signIn(String username, String password) {
-        FirebaseAuth auth = FirebaseAuth.getInstance();
-        final ProgressDialog progressDialog = new ProgressDialog(this);
-        progressDialog.setTitle("מתחבר");
-        progressDialog.setMessage("אנא המתן...");
-        String email = username.concat("@geha-technion.temp.com");
-        progressDialog.show();
-        auth.signInWithEmailAndPassword(email, password)
-                .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        progressDialog.dismiss();
-                        if (task.isSuccessful()) {
-                            setResult(RESULT_OK);
-                            finish();
-                        } else {
-                            Toast.makeText(Login.this, getString(R.string.wrong_credentials_err), Toast.LENGTH_SHORT).show();
-                        }
-                    }
-                });
     }
 
     @Override

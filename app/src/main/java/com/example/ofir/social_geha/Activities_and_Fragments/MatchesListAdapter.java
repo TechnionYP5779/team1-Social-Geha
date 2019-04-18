@@ -6,6 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.example.ofir.social_geha.Person;
@@ -17,6 +18,7 @@ import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.nostra13.universalimageloader.core.assist.ImageScaleType;
 import com.nostra13.universalimageloader.core.display.FadeInBitmapDisplayer;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 
@@ -24,17 +26,23 @@ public class MatchesListAdapter extends ArrayAdapter<Person> {
     private Context mContext;
     private int mResource;
     private int lastPosition = -1;
+    private Boolean isChat = false;
 
     private static class ViewHolder{
         TextView name;
         TextView description;
         ImageView image;
+        TextView unread_msg_count;
+        TextView msg_time;
+        RelativeLayout chat_message_layout;
+        ImageView pick_arrow;
     }
 
-    public MatchesListAdapter(Context ctxt, int resource, ArrayList<Person> objects){
+    public MatchesListAdapter(Context ctxt, int resource, ArrayList<Person> objects, Boolean isChat){
         super(ctxt, resource, objects);
-        mContext = ctxt;
-        mResource = resource;
+        this.mContext = ctxt;
+        this.mResource = resource;
+        this.isChat = isChat;
     }
 
     public View getView(int position, View convertView, ViewGroup parent){
@@ -55,6 +63,10 @@ public class MatchesListAdapter extends ArrayAdapter<Person> {
             holder.name = (TextView) convertView.findViewById(R.id.row_name);
             holder.description = (TextView) convertView.findViewById(R.id.row_description);
             holder.image = (ImageView) convertView.findViewById(R.id.row_image);
+            holder.msg_time = (TextView) convertView.findViewById(R.id.message_time);
+            holder.unread_msg_count = (TextView) convertView.findViewById(R.id.unread_messages_icon);
+            holder.chat_message_layout = (RelativeLayout) convertView.findViewById(R.id.chat_message_layout);
+            holder.pick_arrow = (ImageView) convertView.findViewById(R.id.pick_arrow);
 
             result = convertView;
             convertView.setTag(holder);
@@ -83,6 +95,19 @@ public class MatchesListAdapter extends ArrayAdapter<Person> {
 
         holder.name.setText(name);
         holder.description.setText(description);
+
+        if(isChat){
+            holder.pick_arrow.setVisibility(View.GONE);
+            holder.chat_message_layout.setVisibility(View.VISIBLE);
+            holder.msg_time.setText("10:24");
+            holder.unread_msg_count.setText("5");
+            holder.description.setText("super large message so we will see that everything is fine with the screen"); //change description to last msg
+        }
+        else{
+            holder.chat_message_layout.setVisibility(View.GONE);
+            holder.pick_arrow.setVisibility(View.VISIBLE);
+        }
+
 
         return convertView;
     }

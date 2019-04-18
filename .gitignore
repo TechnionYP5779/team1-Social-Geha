@@ -7,6 +7,7 @@ local.properties
 .idea/modules.xml
 .idea/workspace.xml
 .idea/caches/gradle_models.ser
+.idea/*
 .DS_Store
 build/
 captures/

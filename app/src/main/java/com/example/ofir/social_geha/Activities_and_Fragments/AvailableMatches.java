@@ -78,7 +78,7 @@ public class AvailableMatches extends AppCompatActivity {
         InstantiateList();
 
         //Attach to adapter
-        MatchesListAdapter adapter = new MatchesListAdapter(this, R.layout.match_row_layout, matches_list);
+        MatchesListAdapter adapter = new MatchesListAdapter(this, R.layout.match_row_layout, matches_list, false);
         listView.setAdapter(adapter);
     }
 
@@ -110,10 +110,10 @@ public class AvailableMatches extends AppCompatActivity {
     private void InstantiateList(){
         // https://github.com/wayou/anonymous-animals
         matches_list.add(new Person("איתמר אורדני","0Db5erk4lVe9GFmgWgAbasHbahw1"));
-        matches_list.add(new Person("שמוליק שמוליק","מטופל עבר, בן 31, יהודי, דובר עברית","drawable://" + R.drawable.profilepic));
-        matches_list.add(new Person("קיפוד אנונימי","אמא של מטופל עבר, בת 58, יהודיה, דוברת עברית ורוסית","drawable://" + R.drawable.hedgehog));
-        matches_list.add(new Person("לוטרה אנונימית","מטופלת עבר, בת 22, נוצריה, דוברת עברית ואנגלית","drawable://" + R.drawable.otter));
-        matches_list.add(new Person("שמוליק שמוליק","מטופל עבר, בן 31, יהודי, דובר עברית","drawable://" + R.drawable.profilepic));
-        matches_list.add(new Person("קיפוד אנונימי","אמא של מטופל עבר, בת 58, יהודיה, דוברת עברית ורוסית","drawable://" + R.drawable.hedgehog));
+//        matches_list.add(new Person("שמוליק שמוליק","מטופל עבר, בן 31, יהודי, דובר עברית","drawable://" + R.drawable.profilepic));
+//        matches_list.add(new Person("קיפוד אנונימי","אמא של מטופל עבר, בת 58, יהודיה, דוברת עברית ורוסית","drawable://" + R.drawable.hedgehog));
+//        matches_list.add(new Person("לוטרה אנונימית","מטופלת עבר, בת 22, נוצריה, דוברת עברית ואנגלית","drawable://" + R.drawable.otter));
+//        matches_list.add(new Person("שמוליק שמוליק","מטופל עבר, בן 31, יהודי, דובר עברית","drawable://" + R.drawable.profilepic));
+//        matches_list.add(new Person("קיפוד אנונימי","אמא של מטופל עבר, בת 58, יהודיה, דוברת עברית ורוסית","drawable://" + R.drawable.hedgehog));
     }
 }

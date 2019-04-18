@@ -9,7 +9,6 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
-import com.example.ofir.social_geha.Activities_and_Fragments.Settings.SettingsActivity;
 import com.example.ofir.social_geha.Firebase.Database;
 import com.example.ofir.social_geha.R;
 
@@ -19,9 +18,6 @@ public class mainScreen extends AppCompatActivity {
     LinearLayout edit_anonymous;
     LinearLayout all_conversations;
     LinearLayout search_guide;
-
-    //TODO: REMOVE LATER ON - FOR TESTING
-    Button Btn;
 
     private static final int LOGIN_RETURN_CODE = 1;
 
@@ -35,9 +31,6 @@ public class mainScreen extends AppCompatActivity {
         all_conversations = this.findViewById(R.id.current_conversations);
         search_guide = this.findViewById(R.id.search_guide);
 
-        Btn = findViewById(R.id.logout);
-
-
         if(!Database.getInstance().isLoggedIn()){
             promptLogin();
         }
@@ -46,22 +39,20 @@ public class mainScreen extends AppCompatActivity {
     public void gotoScreen(View view) {
         if (view.equals(settings_screen)){
             // move to intro pager screen - TODO : is this the right place ?
-            Intent myIntent = new Intent(mainScreen.this, SettingsActivity.class);
+            Intent myIntent = new Intent(mainScreen.this, SettingsMainActivity.class);
             mainScreen.this.startActivity(myIntent);
         }
         if (view.equals(edit_anonymous))
             Toast.makeText(mainScreen.this, "edit anonymous", Toast.LENGTH_SHORT).show();
+
         if (view.equals(all_conversations)){
-            Toast.makeText(mainScreen.this, "All conversations", Toast.LENGTH_SHORT).show();
-        }
-        if(view.equals(search_guide)) {
-            // move to available matches screen - TODO : is this the right place ?
-            Intent myIntent = new Intent(mainScreen.this, AvailableMatches.class);
+            Intent myIntent = new Intent(mainScreen.this, AllChatsActivity.class);
             mainScreen.this.startActivity(myIntent);
         }
-        if (view.equals(Btn)){
-            Database.getInstance().disconnectUser();
-            promptLogin();
+        if(view.equals(search_guide)) {
+            Intent myIntent = new Intent(mainScreen.this, FilterMatchesActivity.class);
+            myIntent.setFlags(myIntent.getFlags() | Intent.FLAG_ACTIVITY_NO_HISTORY);
+            mainScreen.this.startActivity(myIntent);
         }
     }
 
@@ -85,4 +76,5 @@ public class mainScreen extends AppCompatActivity {
             }
         }
     }
+
 }

@@ -32,6 +32,7 @@ public class Person<Date> {
         PATIENT, FAMILY_MEMBER, PAST_PATIENT, PAST_FAMILY_MEMBER
     }
 
+    private String personID;
     private String realName;
     private AnonymousIdentity anonymousIdentity;
     private long birthDate;

@@ -29,19 +29,21 @@ public class ChatActivity extends AppCompatActivity {
     private FirebaseFirestore mFirestore;
     private MessageListAdapter mMessageListAdapter;
     private String mOtherPersonId;
-
+    private String mLoggedInPersonId;
+    private FileHandler fileHandler;
     private List<Message> messageList;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chat2);
+        mLoggedInPersonId = Database.getInstance().getLoggedInUserID();
         messageList = new ArrayList<>();
+        fileHandler = new FileHandler(this);
         mMessageListAdapter = new MessageListAdapter(messageList);
-
         mOtherPersonId = getIntent().getStringExtra("EXTRA_PERSON_ID");
-
+        Log.d("POPO", "onCreate: "+mOtherPersonId);
         mMessageEdit = findViewById(R.id.message_text);
-
         mMessageRecycler = findViewById(R.id.message_list);
         mMessageRecycler.setHasFixedSize(true);
         mMessageRecycler.setLayoutManager(new LinearLayoutManager(this));
@@ -49,7 +51,7 @@ public class ChatActivity extends AppCompatActivity {
 
         mFirestore = FirebaseFirestore.getInstance();
 
-        mFirestore.collection(MESSAGES).whereEqualTo("toPersonID",Database.getInstance().getLoggedInUserID())
+        mFirestore.collection(MESSAGES).whereEqualTo("toPersonID", mLoggedInPersonId)
                 .whereEqualTo("fromPersonID",mOtherPersonId)
                 .addSnapshotListener(new EventListener<QuerySnapshot>() {
             @Override
@@ -63,8 +65,11 @@ public class ChatActivity extends AppCompatActivity {
                     if(doc.getType() == DocumentChange.Type.ADDED){
                         String message_text = doc.getDocument().getString("message");
                         Log.d("COOLTEST","Content: " + message_text);
+                        Log.d("POPO", "onEvent: DOES THIS");
                         Message message = doc.getDocument().toObject(Message.class);
+                        mFirestore.collection(MESSAGES).document(doc.getDocument().getId()).delete();
                         messageList.add(message);
+                        fileHandler.writeMessage(message);
                         mMessageListAdapter.notifyDataSetChanged();
                     }
                 }
@@ -72,7 +77,7 @@ public class ChatActivity extends AppCompatActivity {
             }
         });
 
-        mFirestore.collection(MESSAGES).whereEqualTo("fromPersonD",Database.getInstance().getLoggedInUserID())
+        mFirestore.collection(MESSAGES).whereEqualTo("fromPersonID", mLoggedInPersonId)
                 .whereEqualTo("toPersonID",mOtherPersonId)
                 .addSnapshotListener(new EventListener<QuerySnapshot>() {
                     @Override
@@ -88,18 +93,26 @@ public class ChatActivity extends AppCompatActivity {
                                 //Log.d("COOLTEST","Content: " + message);
                                 Message message = doc.getDocument().toObject(Message.class);
                                 messageList.add(message);
-
                                 mMessageListAdapter.notifyDataSetChanged();
                             }
                         }
 
                     }
                 });
+
+        for(Message msg : fileHandler.getMessages()){
+            Log.d("COOLTEST", "readMessage: "+msg.getMessage() + "from: " + msg.getFromPersonID());
+            if(msg.getFromPersonID().equals(mOtherPersonId) || msg.getToPersonID().equals(mOtherPersonId) ) {
+                messageList.add(msg);
+            }
+        }
+        mMessageListAdapter.notifyDataSetChanged();
     }
 
     public void onSendButtonClick(View v) {
         String message = mMessageEdit.getText().toString();
-        Database.getInstance().sendMessage(message,Database.getInstance().getLoggedInUserID(),mOtherPersonId);
+        Database.getInstance().sendMessage(message,mLoggedInPersonId,mOtherPersonId);
+        fileHandler.writeMessage(new Message(message,mLoggedInPersonId,mOtherPersonId));
         mMessageEdit.setText("");
     }
 }

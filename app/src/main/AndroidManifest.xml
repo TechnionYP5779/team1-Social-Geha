@@ -9,8 +9,11 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <activity android:name=".Activities_and_Fragments.AllConversationsActivity"></activity>
+
+        <activity android:name=".Activities_and_Fragments.SettingsInfoEditActivity"></activity>
         <activity
-            android:name=".Activities_and_Fragments.Settings.SettingsActivity"
+            android:name=".Activities_and_Fragments.SettingsMainActivity"
             android:label="@string/title_activity_settings"
             android:parentActivityName=".Activities_and_Fragments.mainScreen">
             <meta-data
@@ -37,6 +40,7 @@
         <activity
             android:name=".Activities_and_Fragments.FilterMatchesActivity"
             android:screenOrientation="portrait" />
+        <activity android:name=".Activities_and_Fragments.AllChatsActivity" />
     </application>
 
 </manifest>

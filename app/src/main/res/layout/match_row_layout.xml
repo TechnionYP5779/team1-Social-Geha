@@ -4,18 +4,48 @@
     android:layout_height="60dp">
 
     <ImageView
-        android:contentDescription="@string/profilePictur"
+        android:id="@+id/pick_arrow"
         android:layout_alignParentStart="true"
         android:layout_centerVertical="true"
         android:layout_width="60dp"
-        android:layout_height="30dp"
+        android:layout_height=  "30dp"
         android:layout_gravity="center"
+        android:visibility="gone"
         android:src="@drawable/ic_keyboard_arrow_left_black_24dp"/>
 
+
+    <RelativeLayout
+        android:id="@+id/chat_message_layout"
+        android:layout_width="50dp"
+        android:layout_height="60dp"
+        android:layout_alignParentStart="true"
+        android:layout_centerVertical="true"
+        android:paddingTop="5dp">
+
+        <TextView
+            android:id="@+id/unread_messages_icon"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:text="2"
+            android:textColor="@color/white"
+            android:background="@drawable/round_text"
+            android:gravity="center"
+            android:layout_centerInParent="true"
+            android:layout_below="@id/message_time" />
+
+        <TextView
+            android:id="@+id/message_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="10:24"
+            android:textColor="@color/transparentBlack"
+            android:layout_centerHorizontal="true"/>
+    </RelativeLayout>
 
     <LinearLayout
         android:id="@+id/text_layout"
         android:layout_toStartOf="@id/row_image"
+        android:layout_marginStart="55dp"
         android:layout_width="match_parent"
         android:layout_height="60dp"
         android:orientation="vertical"
@@ -37,16 +67,18 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="טקסט כלשהו על הפנדה האנונימית"
+            android:scrollHorizontally="true"
+            android:ellipsize="end"
+            android:maxLines="1"
             android:textColor="@color/black"/>
     </LinearLayout>
 
-    <ImageView
+    <de.hdodenhof.circleimageview.CircleImageView
         android:layout_alignParentEnd="true"
         android:id="@+id/row_image"
         android:layout_width="60dp"
         android:layout_height="60dp"
-        android:src="@drawable/hedgehog"
-        android:background="@color/colorPrimaryDark"
-        android:layout_marginEnd="4dp" />
+        android:src="@drawable/profilepic"
+        android:layout_marginEnd="1dp" />
 
 </RelativeLayout>
