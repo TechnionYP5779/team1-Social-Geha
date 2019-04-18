@@ -54,7 +54,7 @@ public class AllConversationsActivity extends AppCompatActivity {
                 Object o = mListView.getItemAtPosition(position);
                 Person person = (Person)o; //As you are using Default String Adapter
                 Intent myIntent = new Intent(AllConversationsActivity.this, ChatActivity.class);
-                myIntent.putExtra("EXTRA_PERSON_ID", person.getPersonID());
+                myIntent.putExtra("EXTRA_PERSON_ID", person.getUserID());
                 AllConversationsActivity.this.startActivity(myIntent);
                 //Toast.makeText(getBaseContext(),person.getPersonID(),Toast.LENGTH_SHORT).show();
             }
@@ -138,7 +138,7 @@ public class AllConversationsActivity extends AppCompatActivity {
         }
         for(String id : personIdList){
             //TODO: get person data from server for each id
-            mConversations.add(new Person(id,id));
+//            mConversations.add(new Person(id,id));
         }
     }
 }

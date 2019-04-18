@@ -38,7 +38,7 @@ public class AvailableMatches extends AppCompatActivity {
                 Object o = listView.getItemAtPosition(position);
                 Person person = (Person)o; //As you are using Default String Adapter
                 Intent myIntent = new Intent(AvailableMatches.this, ChatActivity.class);
-                myIntent.putExtra("EXTRA_PERSON_ID", person.getPersonID());
+                myIntent.putExtra("EXTRA_PERSON_ID", person.getUserID());
                 AvailableMatches.this.startActivity(myIntent);
                 //Toast.makeText(getBaseContext(),person.getPersonID(),Toast.LENGTH_SHORT).show();
             }
@@ -109,7 +109,7 @@ public class AvailableMatches extends AppCompatActivity {
 
     private void InstantiateList(){
         // https://github.com/wayou/anonymous-animals
-        matches_list.add(new Person("איתמר אורדני","0Db5erk4lVe9GFmgWgAbasHbahw1"));
+//        matches_list.add(new Person("איתמר אורדני","0Db5erk4lVe9GFmgWgAbasHbahw1"));
 //        matches_list.add(new Person("שמוליק שמוליק","מטופל עבר, בן 31, יהודי, דובר עברית","drawable://" + R.drawable.profilepic));
 //        matches_list.add(new Person("קיפוד אנונימי","אמא של מטופל עבר, בת 58, יהודיה, דוברת עברית ורוסית","drawable://" + R.drawable.hedgehog));
 //        matches_list.add(new Person("לוטרה אנונימית","מטופלת עבר, בת 22, נוצריה, דוברת עברית ואנגלית","drawable://" + R.drawable.otter));

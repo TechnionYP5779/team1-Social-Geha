@@ -26,8 +26,8 @@ public class Message implements Serializable {
 
     public Message(String message, Person fromPerson, Person toPerson){
         this.message = message;
-        this.fromPersonID = fromPerson.getPersonID();
-        this.toPersonID = toPerson.getPersonID();
+        this.fromPersonID = fromPerson.getUserID();
+        this.toPersonID = toPerson.getUserID();
     }
 
     public String getFromPersonID() {
