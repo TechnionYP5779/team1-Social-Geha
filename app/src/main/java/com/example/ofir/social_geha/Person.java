@@ -12,7 +12,7 @@ import java.util.Optional;
 
 import static java.util.Optional.empty;
 
-public class Person<Date> {
+public class Person {
     // ==================================
     //          CLASS VARIABLES
     // ==================================
@@ -38,7 +38,7 @@ public class Person<Date> {
     private long birthDate;
     private Gender gender;
     private Religion religion;
-    private EnumSet<Language> spokenLanguages;
+    private List<Language> spokenLanguages;
     private Kind kind;
     private String userID;
     private String description;
@@ -50,13 +50,18 @@ public class Person<Date> {
     //          CONSTRUCTORS
     // ==================================
 
+
+    public Person() {
+
+    }
+
     public Person(String realName, AnonymousIdentity anonymousIdentity,
-                  Calendar birthDate, Gender gender, Religion religion,
-                  EnumSet<Language> spokenLanguages, Kind kind, String userID,
+                  long birthDate, Gender gender, Religion religion,
+                  List<Language> spokenLanguages, Kind kind, String userID,
                   String description, List<Integer> whiteList) {
         this.realName = realName;
         this.anonymousIdentity = anonymousIdentity;
-        this.birthDate = birthDate.getTimeInMillis();
+        this.birthDate = birthDate;
         this.gender = gender;
         this.religion = religion;
         this.spokenLanguages = spokenLanguages;
@@ -74,7 +79,7 @@ public class Person<Date> {
         return anonymousIdentity;
     }
 
-    public Calendar getBirthDate() {
+    public Calendar getCalendarBirthDate() {
         Calendar date = Calendar.getInstance();
         date.setTimeInMillis(birthDate);
         return date;
@@ -88,9 +93,7 @@ public class Person<Date> {
         return religion;
     }
 
-    public EnumSet<Language> getSpokenLanguages() {
-        return spokenLanguages;
-    }
+    public List<Language> getSpokenLanguages() { return spokenLanguages; }
 
     public Kind getKind() {
         return kind;
@@ -114,7 +117,7 @@ public class Person<Date> {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        Person<?> person = (Person<?>) o;
+        Person person = (Person) o;
         return Objects.equals(userID, person.userID);
     }
 

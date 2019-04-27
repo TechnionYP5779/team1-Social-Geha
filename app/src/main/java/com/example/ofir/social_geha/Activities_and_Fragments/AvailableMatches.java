@@ -13,10 +13,18 @@ import android.widget.ProgressBar;
 import android.widget.Toast;
 import android.widget.Toolbar;
 
+import com.example.ofir.social_geha.AnonymousIdentity;
+import com.example.ofir.social_geha.FictitiousIdentityGenerator;
+import com.example.ofir.social_geha.Firebase.Database;
 import com.example.ofir.social_geha.Person;
 import com.example.ofir.social_geha.R;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.auth.User;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Calendar;
+import java.util.EnumSet;
 import java.util.Objects;
 
 public class AvailableMatches extends AppCompatActivity {
@@ -109,7 +117,10 @@ public class AvailableMatches extends AppCompatActivity {
 
     private void InstantiateList(){
         // https://github.com/wayou/anonymous-animals
-//        matches_list.add(new Person("איתמר אורדני","0Db5erk4lVe9GFmgWgAbasHbahw1"));
+        long birthDate = 123;
+        Person itamar = new Person("Itamar",FictitiousIdentityGenerator.getAnonymousIdentity(Person.Gender.MALE),birthDate,Person.Gender.MALE, Person.Religion.ARABIC, Arrays.asList(Person.Language.HEBREW), Person.Kind.PAST_PATIENT,"MkmNn4l4FIQx6uiI50yxnOhDDG63","Loves bamba.",new ArrayList<Integer>());
+        FirebaseFirestore.getInstance().collection("users").add(itamar);
+        matches_list.add(itamar);
 //        matches_list.add(new Person("שמוליק שמוליק","מטופל עבר, בן 31, יהודי, דובר עברית","drawable://" + R.drawable.profilepic));
 //        matches_list.add(new Person("קיפוד אנונימי","אמא של מטופל עבר, בת 58, יהודיה, דוברת עברית ורוסית","drawable://" + R.drawable.hedgehog));
 //        matches_list.add(new Person("לוטרה אנונימית","מטופלת עבר, בת 22, נוצריה, דוברת עברית ואנגלית","drawable://" + R.drawable.otter));

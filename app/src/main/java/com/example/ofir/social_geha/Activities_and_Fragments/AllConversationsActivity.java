@@ -2,6 +2,7 @@ package com.example.ofir.social_geha.Activities_and_Fragments;
 
 import android.content.Intent;
 import android.graphics.PorterDuff;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -14,7 +15,13 @@ import com.example.ofir.social_geha.Firebase.Database;
 import com.example.ofir.social_geha.Firebase.Message;
 import com.example.ofir.social_geha.Person;
 import com.example.ofir.social_geha.R;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentChange;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
@@ -31,8 +38,10 @@ import javax.annotation.Nullable;
 public class AllConversationsActivity extends AppCompatActivity {
 
     private static final String MESSAGES = "messages";
+    private static final String USERS = "users";
     private ListView mListView;
     private ArrayList<Person> mConversations;
+    private MatchesListAdapter adapter;
     private FileHandler mFileHandler;
     private FirebaseFirestore mFirestore;
     private ProgressBar mProgressBar;
@@ -101,7 +110,7 @@ public class AllConversationsActivity extends AppCompatActivity {
         populateConversationsList();
 
         //Attach to adapter
-        MatchesListAdapter adapter = new MatchesListAdapter(this, R.layout.match_row_layout, mConversations, true);
+        adapter = new MatchesListAdapter(this, R.layout.match_row_layout, mConversations, true);
         mListView.setAdapter(adapter);
     }
 
@@ -122,7 +131,7 @@ public class AllConversationsActivity extends AppCompatActivity {
                                 //String message = doc.getDocument().getString("message");
                                 //Log.d("COOLTEST","Content: " + message);
                                 Message message = doc.getDocument().toObject(Message.class);
-                                //mFirestore.collection(MESSAGES).document(doc.getDocument().getId()).delete();
+                                mFirestore.collection(MESSAGES).document(doc.getDocument().getId()).delete();
                                 mFileHandler.writeMessage(message);
 
                             }
@@ -134,11 +143,24 @@ public class AllConversationsActivity extends AppCompatActivity {
 
         Set<String> personIdList = new HashSet<>();
         for(Message msg : mFileHandler.getMessages()){
+            Log.d("COOLTEST","found msg:" + msg.getFromPersonID());
             personIdList.add(msg.getFromPersonID());
         }
         for(String id : personIdList){
-            //TODO: get person data from server for each id
-//            mConversations.add(new Person(id,id));
+            Task<QuerySnapshot> personQueryTask = mFirestore.collection(USERS).whereEqualTo("userID", id).get();
+            personQueryTask.addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                @Override
+                public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                    QuerySnapshot person = task.getResult();
+                    Log.d("COOLTEST","get user Complete");
+                    if(!person.isEmpty()) {
+                        Person myPerson = person.toObjects(Person.class).get(0);
+                        Log.d("COOLTEST","got user: " + myPerson.getDescription());
+                        mConversations.add(myPerson);
+                        adapter.notifyDataSetChanged();
+                    }
+                }
+            });
         }
     }
 }
