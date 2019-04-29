@@ -51,7 +51,7 @@ public class FilterMatchesActivity extends AppCompatActivity {
         String description = "מלא/י את הפרטים הבאים על האדם שאיתו תרצה/י לשוחח, על מנת שנוכל למצוא לך את ההתאמה הטובה ביותר.";
         mList.add(new ScreenItem("יצירת שיחה חדשה",description, R.drawable.chat_icon));
         mList.add(new ScreenItem("פרטים בסיסיים", description, R.drawable.people));
-        mList.add(new ScreenItem("בחירת שפה","בחר/י את השפות בהן תרצה/י לשוחח",R.drawable.world_icon));
+        mList.add(new ScreenItem("בחירת שפה","בחר/י את השפות בהן תרצה/י לשוחח",R.drawable.earth_round));
 
         // setup viewpager
         screenPager = findViewById(R.id.screen_viewpager);

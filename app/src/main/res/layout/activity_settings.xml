@@ -57,13 +57,14 @@
         android:layout_margin="10dp"
         android:background="@drawable/button_bg"
         android:backgroundTint="@color/design_default_color_primary"
-        android:drawableEnd= "@drawable/baseline_help_black_18dp"
         android:drawablePadding="2dip"
         android:drawableTint="@color/white"
         android:paddingStart="30dip"
         android:paddingEnd="26dip"
         android:text="@string/help_button"
         android:textColor="@color/white" />
+
+    <!--android:drawableEnd= "@drawable/baseline_help_black_18dp"-->
 
     <Button
         android:id="@+id/account_deactivate_button"
