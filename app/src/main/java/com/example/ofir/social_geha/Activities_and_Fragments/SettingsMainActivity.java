@@ -1,6 +1,8 @@
 package com.example.ofir.social_geha.Activities_and_Fragments;
 
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -9,6 +11,8 @@ import android.widget.Toast;
 
 import com.example.ofir.social_geha.Firebase.Database;
 import com.example.ofir.social_geha.R;
+
+import java.util.ArrayList;
 
 public class SettingsMainActivity extends AppCompatActivity {
 
@@ -25,12 +29,59 @@ public class SettingsMainActivity extends AppCompatActivity {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings);
+        share_info_screen=findViewById(R.id.info_share_button);
+        password_change_screen=findViewById(R.id.password_change_button)  ;
+        ask_for_help= findViewById(R.id.account_help_button);
+        delete_data_screen=findViewById(R.id.account_deactivate_button);
 
     }
-
+    String[] usersAll = {"אבי ישראלי", "ענת רימון"};
+    boolean[] usersChecked ={true, true};
+    ArrayList<Integer> mUserItems = new ArrayList<>();
     public void gotoScreen(View view) {
-        if (view.equals(share_info_screen))
-            Toast.makeText(SettingsMainActivity.this , "Share Info", Toast.LENGTH_SHORT).show();
+        if (view.equals(share_info_screen)){
+
+
+            AlertDialog.Builder mBuilder = new AlertDialog.Builder(SettingsMainActivity.this, R.style.AlertDialogCustom);
+            mBuilder.setMultiChoiceItems(usersAll, usersChecked, new DialogInterface.OnMultiChoiceClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int position, boolean isChecked) {
+                if (isChecked) {
+                    mUserItems.add(position);
+                } else {
+                    mUserItems.remove((Integer.valueOf(position)));
+                }
+            }
+            });
+
+            mBuilder.setCancelable(false);
+            mBuilder.setPositiveButton(R.string.ok_label, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int which) {
+                }
+            });
+
+        mBuilder.setNegativeButton(R.string.dismiss_label, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                dialogInterface.dismiss();
+            }
+        });
+
+        mBuilder.setNeutralButton(R.string.clear_all_label, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int which) {
+                for (int i = 0; i < usersChecked.length; i++) {
+                    usersChecked[i] = false;
+                    mUserItems.clear();
+//                            mItemSelected.setText("");
+                }
+            }
+        });
+
+        AlertDialog mDialog = mBuilder.create();
+        mDialog.show();
+    }
         if (view.equals(password_change_screen)){
             Toast.makeText(SettingsMainActivity.this , "Password Change", Toast.LENGTH_SHORT).show();
         }
