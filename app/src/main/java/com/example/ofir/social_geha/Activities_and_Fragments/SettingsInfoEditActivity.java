@@ -1,6 +1,7 @@
 package com.example.ofir.social_geha.Activities_and_Fragments;
 
 import android.app.DatePickerDialog;
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
@@ -24,6 +25,7 @@ public class SettingsInfoEditActivity extends AppCompatActivity {
     Button genderButton;
     Button religionButton;
     Button bioButton;
+    Button doneButton;
 
     //Language related fields
     String[] languagesAll;
@@ -65,6 +67,20 @@ public class SettingsInfoEditActivity extends AppCompatActivity {
         setUpGenderButton();
         setUpReligionButton();
         setUpBioButton();
+        setUpDoneButton();
+    }
+
+    private void setUpDoneButton() {
+        doneButton = findViewById(R.id.done_button);
+        doneButton.setOnClickListener(new View.OnClickListener(){
+
+            @Override
+            public void onClick(View v) {
+                //TODO: check if this is the right way to return to main menu
+                Intent myIntent = new Intent(SettingsInfoEditActivity.this, mainScreen.class);
+                SettingsInfoEditActivity.this.startActivity(myIntent);
+            }
+        });
     }
 
     private void setUpBioButton() {
