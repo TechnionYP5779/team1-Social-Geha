@@ -3,6 +3,7 @@
     <string name="log_in_header">התחברות</string>
     <string name="settings_header">הגדרות</string>
     <string name="settings_info_edit_header">עריכת מידע</string>
+    <string name="info_edit_header">ערוך מידע</string>
     <string name="settings_info_edit_name_btn">שם</string>
     <string name="personal_code">קוד אישי</string>
     <string name="username">שם משתמש</string>
