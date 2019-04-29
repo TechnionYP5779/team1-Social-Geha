@@ -39,7 +39,7 @@
         android:textColor="@color/colorPrimary" />
 
     <Button android:text="@string/settings_password_change_btn"
-        android:id="@+id/buttonId"
+        android:id="@+id/password_change_button"
         android:layout_width="200dp"
         android:layout_height="wrap_content"
         android:backgroundTint="@color/colorPrimaryDark"
