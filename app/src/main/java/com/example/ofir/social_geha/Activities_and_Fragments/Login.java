@@ -51,7 +51,7 @@ public class Login extends AppCompatActivity {
                 if (personal_code_txt.equals("")) { // missing personal code
                     Toast.makeText(Login.this, missing_fields_err, Toast.LENGTH_SHORT).show();
                 } else {
-                    Intent myIntent = new Intent(Login.this, Signup.class);
+                    Intent myIntent = new Intent(Login.this, SettingsInfoEditActivity.class);
                     myIntent.putExtra("code", personal_code_txt);
                     startActivityForResult(myIntent, REGISTER_RETURN_CODE);
                 }

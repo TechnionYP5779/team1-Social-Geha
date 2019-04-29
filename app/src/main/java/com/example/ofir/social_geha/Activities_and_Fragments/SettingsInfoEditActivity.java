@@ -1,11 +1,19 @@
 package com.example.ofir.social_geha.Activities_and_Fragments;
 
 import android.app.DatePickerDialog;
+import android.app.ProgressDialog;
 import android.content.Intent;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
+import com.example.ofir.social_geha.Firebase.Database;
 import com.example.ofir.social_geha.R;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
+
 import android.content.DialogInterface;
 import android.support.v7.app.AlertDialog;
 import android.text.InputType;
@@ -13,6 +21,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -76,12 +85,43 @@ public class SettingsInfoEditActivity extends AppCompatActivity {
 
             @Override
             public void onClick(View v) {
-                //TODO: check if this is the right way to return to main menu
-                Intent myIntent = new Intent(SettingsInfoEditActivity.this, mainScreen.class);
-                SettingsInfoEditActivity.this.startActivity(myIntent);
+                if(!getIntent().getStringExtra("code").equals("")){
+                    // we need to preform register
+                        register("ofira", "123456", getIntent().getStringExtra("code"));
+                }
+                else {
+                    Intent myIntent = new Intent(SettingsInfoEditActivity.this, mainScreen.class);
+                    SettingsInfoEditActivity.this.startActivity(myIntent);
+                }
             }
         });
     }
+
+    public void register(final String username, String password, final String personalCode) {
+        FirebaseAuth auth = FirebaseAuth.getInstance();
+        final ProgressDialog progressDialog = new ProgressDialog(SettingsInfoEditActivity.this);
+        progressDialog.setTitle("נרשם");
+        progressDialog.setMessage("אנא המתן...");
+        String email = username.concat("@geha-technion.temp.com");
+        progressDialog.show();
+        auth.createUserWithEmailAndPassword(email, password)
+                .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        progressDialog.dismiss();
+                        if (task.isSuccessful()) {
+                            Database.getInstance().addUser(username, personalCode);
+                            setResult(RESULT_OK);
+                            finish();
+                            Intent myIntent = new Intent(SettingsInfoEditActivity.this, mainScreen.class);
+                            SettingsInfoEditActivity.this.startActivity(myIntent);
+                        } else {
+                            Toast.makeText(SettingsInfoEditActivity.this, "שם המשתמש כבר תפוס!", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
+    }
+
 
     private void setUpBioButton() {
         bioButton = findViewById(R.id.bio_button);
