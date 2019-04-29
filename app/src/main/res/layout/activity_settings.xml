@@ -22,6 +22,7 @@
         android:layout_height="wrap_content"
         android:layout_margin="10dp"
         android:background="@drawable/button_bg"
+        android:onClick="gotoScreen"
         android:text="@string/settings_info_edit_btn"
         android:textColor="@color/colorPrimary" />
 
@@ -29,6 +30,8 @@
     <Button
         android:id="@+id/info_share_button"
         android:layout_width="200dp"
+
+        android:onClick="gotoScreen"
         android:layout_height="wrap_content"
         android:layout_margin="10dp"
         android:background="@drawable/button_bg"
@@ -47,7 +50,9 @@
         android:drawableTint="@color/white"
         android:textColor="@color/white"
         android:layout_margin="10dp"
-        android:background="@drawable/button_bg" />
+        android:background="@drawable/button_bg"
+
+        android:onClick="gotoScreen"/>
 
 
     <Button android:text="@string/settings_delete_account_btn"
@@ -62,6 +67,7 @@
         android:paddingEnd="26dip"
         android:drawableTint="@color/white"
         android:textColor="@color/white"
-        android:background="@drawable/button_bg" />
+        android:background="@drawable/button_bg"
+        android:onClick="gotoScreen" />
 
 </LinearLayout>

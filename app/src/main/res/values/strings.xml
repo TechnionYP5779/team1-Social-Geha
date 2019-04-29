@@ -3,7 +3,7 @@
     <string name="log_in_header">התחברות</string>
     <string name="settings_header">הגדרות</string>
     <string name="settings_info_edit_header">עריכת מידע</string>
-    <string name="your_name">שמך</string>
+    <string name="settings_info_edit_name_btn">שם</string>
     <string name="personal_code">קוד אישי</string>
     <string name="or">או</string>
     <string name="username">שם משתמש</string>
@@ -27,6 +27,9 @@
     <string name="findMatch">מצא התאמה</string>
     <string name="religious">דת</string>
     <string name="gender">מגדר</string>
+    <string name="additional_info">מידע נוסף</string>
+    <string name="language">שפה</string>
+    <string name="languages">שפות</string>
     <string name="wrong_credentials_err">"המשתמש לא קיים או שהסיסמה לא נכונה"</string>
 
     <string-array name="chat_preferences">
@@ -62,6 +65,15 @@
 
     <string name="pref_title_display_name">Display name</string>
     <string name="pref_default_display_name">John Smith</string>
+
+    <string-array name="languages">
+        <item>עברית</item>
+        <item>אנגלית</item>
+        <item>צרפתית</item>
+        <item>ערבית</item>
+        <item>רוסית</item>
+        <item>אמהרית</item>
+    </string-array>
 
     <string name="pref_title_add_friends_to_messages">Add friends to messages</string>
     <string-array name="pref_example_list_titles">
@@ -124,6 +136,10 @@
     <string name="birth_date">תאריך לידה</string>
     <string name="search">חיפוש</string>
     <string name="no_results">No Results</string>
+    <string name="you_may_return_and_edit">ניתן לחזור ולערוך את המידע בכל שלב</string>
+    <string name="ok_label">שמור</string>
+    <string name="dismiss_label">חזור</string>
+    <string name="clear_all_label">נקה הכל</string>
 
     <string-array name="months_array">
     <item>January</item>
