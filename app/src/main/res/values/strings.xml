@@ -23,7 +23,7 @@
     <string name="findMatch">מצא התאמה</string>
     <string name="religious">דת</string>
     <string name="gender">מגדר</string>
-    <string name="additional_info">מידע נוסף</string>
+    <string name="additional_info">אודות</string>
     <string name="language">שפה</string>
     <string name="languages">שפות</string>
     <string name="wrong_credentials_err">"המשתמש לא קיים או שהסיסמה לא נכונה"</string>

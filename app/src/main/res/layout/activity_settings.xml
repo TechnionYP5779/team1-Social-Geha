@@ -30,7 +30,6 @@
     <Button
         android:id="@+id/info_share_button"
         android:layout_width="200dp"
-
         android:onClick="gotoScreen"
         android:layout_height="wrap_content"
         android:layout_margin="10dp"
@@ -65,6 +64,7 @@
         android:drawablePadding="2dip"
         android:drawableTint="@color/white"
         android:paddingStart="30dip"
+        android:onClick="gotoScreen"
         android:paddingEnd="26dip"
         android:text="@string/help_button"
         android:drawableEnd= "@drawable/baseline_help_black_18dp"
