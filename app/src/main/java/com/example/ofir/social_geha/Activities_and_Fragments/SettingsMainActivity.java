@@ -15,6 +15,7 @@ public class SettingsMainActivity extends AppCompatActivity {
     private Button edit_info_screen;
     private Button share_info_screen;
     private Button password_change_screen;
+    private Button ask_for_help;
     private Button delete_data_screen;
 
     //TODO: REMOVE LATER ON - FOR TESTING
@@ -55,6 +56,12 @@ public class SettingsMainActivity extends AppCompatActivity {
         if (view.equals(password_change_screen)){
             Toast.makeText(SettingsMainActivity.this , "Password Change", Toast.LENGTH_SHORT).show();
         }
+
+        if(view.equals(ask_for_help)) {
+            Intent myIntent = new Intent(SettingsMainActivity.this , SettingsHelp.class);
+            SettingsMainActivity.this.startActivity(myIntent);
+        }
+
         if(view.equals(delete_data_screen)) {
             Toast.makeText(SettingsMainActivity.this , "Delete Account", Toast.LENGTH_SHORT).show();
         }

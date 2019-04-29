@@ -9,9 +9,9 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".Activities_and_Fragments.AllConversationsActivity"></activity>
-
-        <activity android:name=".Activities_and_Fragments.SettingsInfoEditActivity"></activity>
+        <activity android:name=".Activities_and_Fragments.SettingsHelp"></activity>
+        <activity android:name=".Activities_and_Fragments.AllConversationsActivity" />
+        <activity android:name=".Activities_and_Fragments.SettingsInfoEditActivity" />
         <activity
             android:name=".Activities_and_Fragments.SettingsMainActivity"
             android:label="@string/title_activity_settings"
