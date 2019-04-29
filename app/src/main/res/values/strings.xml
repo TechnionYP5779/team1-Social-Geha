@@ -5,11 +5,8 @@
     <string name="settings_info_edit_header">עריכת מידע</string>
     <string name="your_name">שמך</string>
     <string name="personal_code">קוד אישי</string>
-    <string name="or">או</string>
     <string name="username">שם משתמש</string>
     <string name="password">סיסמה</string>
-    <string name="remember_me">זכור אותי</string>
-    <string name="login_btn">כניסה</string>
     <string name="settings_info_edit_btn">עריכת מידע</string>
     <string name="settings_info_share_btn">שיתוף מידע</string>
     <string name="settings_password_change_btn">שינוי סיסמה</string>
@@ -18,9 +15,7 @@
     <string name="verify_password">אימות סיסמה</string>
     <string name="verify">אישור</string>
     <string name="missing_fields_err_msg">אנא הזן קוד אישי</string>
-    <string name="profilePictur">תמונת פרופיל</string>
     <string name="matches">התאמות שנמצאו</string>
-    <string name="signout">התנתק</string>
     <string name="skip">Skip</string>
     <string name="whats_this"><u>מה זה?</u></string>
     <string name="whats_this_msg">"הקוד הראשוני שהתקבל מגהה"</string>
@@ -53,91 +48,19 @@
     <!-- Strings related to Settings -->
 
     <!-- Example General settings -->
-    <string name="pref_header_general">General</string>
-
-    <string name="pref_title_social_recommendations">Enable social recommendations</string>
-    <string name="pref_description_social_recommendations">Recommendations for people to contact
-        based on your message history
-    </string>
-
-    <string name="pref_title_display_name">Display name</string>
-    <string name="pref_default_display_name">John Smith</string>
-
-    <string name="pref_title_add_friends_to_messages">Add friends to messages</string>
-    <string-array name="pref_example_list_titles">
-        <item>Always</item>
-        <item>When possible</item>
-        <item>Never</item>
-    </string-array>
-    <string-array name="pref_example_list_values">
-        <item>1</item>
-        <item>0</item>
-        <item>-1</item>
-    </string-array>
 
     <!-- Example settings for Data & Sync -->
-    <string name="pref_header_data_sync">Data &amp; sync</string>
-
-    <string name="pref_title_sync_frequency">Sync frequency</string>
-    <string-array name="pref_sync_frequency_titles">
-        <item>15 minutes</item>
-        <item>30 minutes</item>
-        <item>1 hour</item>
-        <item>3 hours</item>
-        <item>6 hours</item>
-        <item>Never</item>
-    </string-array>
-    <string-array name="pref_sync_frequency_values">
-        <item>15</item>
-        <item>30</item>
-        <item>60</item>
-        <item>180</item>
-        <item>360</item>
-        <item>-1</item>
-    </string-array>
-
-    <string-array name="list_preference_entries">
-        <item>Entry 1</item>
-        <item>Entry 2</item>
-        <item>Entry 3</item>
-    </string-array>
-
-    <string-array name="list_preference_entry_values">
-        <item>1</item>
-        <item>2</item>
-        <item>3</item>
-    </string-array>
-
-    <string-array name="multi_select_list_preference_default_value" />
-
-    <string name="pref_title_system_sync_settings">System sync settings</string>
 
     <!-- Example settings for Notifications -->
-    <string name="pref_header_notifications">Notifications</string>
 
-    <string name="pref_title_new_message_notifications">New message notifications</string>
-
-    <string name="pref_title_ringtone">Ringtone</string>
-    <string name="pref_ringtone_silent">Silent</string>
-
-    <string name="pref_title_vibrate">Vibrate</string>
     <string name="birth_date">תאריך לידה</string>
     <string name="search">חיפוש</string>
     <string name="no_results">No Results</string>
-
-    <string-array name="months_array">
-    <item>January</item>
-    <item>February</item>
-    <item>March</item>
-    <item>April</item>
-    <item>May</item>
-    <item>June</item>
-    <item>July</item>
-    <item>August</item>
-    <item>September</item>
-    <item>October</item>
-    <item>November</item>
-    <item>December</item>
-    </string-array>
+    <string name="headline_about"><b><i>המטרה שלנו</i></b></string>
+    <string name="info_our_purpose">מטרת האפליקציה היא לספק תמיכה לשוהי המרכז הרפואי גהה ומשפחותיהם על ידי מטופלי עבר ומשפחותיהם\n
+        בעזרת אפליקציה זו תוכלו לשוחח באנונימיות מוחלטת עם מטופלי עבר בגהה ועם קרובי משפחה של אנשים שהיו מטופלים\n\n שימוש באפליקציה מותנה באישור של גהה.</string>
+    <string name="terms_of_use_headline">תנאי שימוש</string>
+    <string name="terms_of_use">נא להתבטא בצורה הולמת בשיחות עם אנשים אחרים\n\nנא להשתמש באפליקציה אך ורק למטרתה המיועדת\n\nשימוש באפליקציה מותנה באישור מכון בריאות הנפש גהה</string>
+    <string name="help_button">בקש עזרה</string>
 
 </resources>
