@@ -130,8 +130,8 @@
                 </LinearLayout>
 
                 <LinearLayout
-                    android:id="@+id/edit_anonymous"
-                    android:layout_width="wrap_content"
+                    android:id="@+id/edit_info"
+                    android:layout_width="100dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:onClick="gotoScreen"
@@ -148,7 +148,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
-                        android:text="ערוך אנונימיות" />
+                        android:text="@string/info_edit_header" />
                 </LinearLayout>
             </LinearLayout>
         </LinearLayout>

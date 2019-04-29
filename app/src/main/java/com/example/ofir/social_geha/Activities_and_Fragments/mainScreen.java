@@ -5,7 +5,6 @@ import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
@@ -15,7 +14,7 @@ import com.example.ofir.social_geha.R;
 public class mainScreen extends AppCompatActivity {
 
     LinearLayout settings_screen;
-    LinearLayout edit_anonymous;
+    LinearLayout edit_info;
     LinearLayout all_conversations;
     LinearLayout search_guide;
 
@@ -27,7 +26,7 @@ public class mainScreen extends AppCompatActivity {
         setContentView(R.layout.activity_main_screen);
 
         settings_screen = this.findViewById(R.id.settings);
-        edit_anonymous = this.findViewById(R.id.edit_anonymous);
+        edit_info = this.findViewById(R.id.edit_info);
         all_conversations = this.findViewById(R.id.current_conversations);
         search_guide = this.findViewById(R.id.search_guide);
 
@@ -37,14 +36,15 @@ public class mainScreen extends AppCompatActivity {
     }
 
     public void gotoScreen(View view) {
-        if (view.equals(settings_screen)){
+        if (view.equals(settings_screen)) {
             // move to intro pager screen - TODO : is this the right place ?
             Intent myIntent = new Intent(mainScreen.this, SettingsMainActivity.class);
             mainScreen.this.startActivity(myIntent);
         }
-        if (view.equals(edit_anonymous))
-            Toast.makeText(mainScreen.this, "edit anonymous", Toast.LENGTH_SHORT).show();
-
+        if (view.equals(edit_info)){
+            Intent myIntent = new Intent(mainScreen.this, SettingsInfoEditActivity.class);
+            mainScreen.this.startActivity(myIntent);
+         }
         if (view.equals(all_conversations)){
             Intent myIntent = new Intent(mainScreen.this, AllChatsActivity.class);
             mainScreen.this.startActivity(myIntent);
