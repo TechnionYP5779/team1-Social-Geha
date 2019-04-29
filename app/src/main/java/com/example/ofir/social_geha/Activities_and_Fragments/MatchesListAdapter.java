@@ -1,6 +1,8 @@
 package com.example.ofir.social_geha.Activities_and_Fragments;
 
 import android.content.Context;
+import android.content.res.Resources;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -51,7 +53,10 @@ public class MatchesListAdapter extends ArrayAdapter<Person> {
         String name = getItem(position).getAnonymousIdentity().getName();
         String description = getItem(position).getDescription();
         String imageUrl = getItem(position).getAnonymousIdentity().getImageName();
-        imageUrl = "@drawable/" + imageUrl;
+        Log.d("imageBug1", imageUrl);
+        int image_id = mContext.getResources().getIdentifier("@drawable/" + imageUrl, null, mContext.getPackageName() );
+        imageUrl = "drawable://" + image_id;
+        Log.d("imageBug", imageUrl);
 
         // Create the view result for showing the animation
         final View result;
