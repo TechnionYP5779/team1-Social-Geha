@@ -2,8 +2,8 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="horizontal"
-    android:layout_gravity="end"
-    android:gravity="end"
+    android:layout_gravity="start"
+    android:gravity="start"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
@@ -14,12 +14,12 @@
         android:layout_height="wrap_content"
         android:paddingStart="7dp"
         android:paddingEnd="7dp"
-        app:bl_arrowDirection="right"
+        app:bl_arrowDirection="left"
         app:bl_arrowHeight="8dp"
         app:bl_arrowPosition="16dp"
         app:bl_arrowWidth="8dp"
         app:bl_cornersRadius="6dp"
-        app:bl_bubbleColor="@color/message_sent">
+        app:bl_bubbleColor="@color/message_recieved">
 
         <TextView
             android:id="@+id/message_text_view"

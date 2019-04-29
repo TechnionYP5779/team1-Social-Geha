@@ -4,9 +4,7 @@ public class AnonymousIdentity {
     public String name;
     public String imageName;
 
-    public AnonymousIdentity() {
-
-    }
+    public AnonymousIdentity() { }
 
     public AnonymousIdentity(String n, String im){
         name = n;

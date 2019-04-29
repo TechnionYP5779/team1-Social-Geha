@@ -46,6 +46,8 @@ public class AvailableMatches extends AppCompatActivity {
                 Object o = listView.getItemAtPosition(position);
                 Person person = (Person)o; //As you are using Default String Adapter
                 Intent myIntent = new Intent(AvailableMatches.this, ChatActivity.class);
+                myIntent.putExtra("EXTRA_PHOTO_URL", person.getAnonymousIdentity().getImageName());
+                myIntent.putExtra("EXTRA_NAME", person.getAnonymousIdentity().getName());
                 myIntent.putExtra("EXTRA_PERSON_ID", person.getUserID());
                 AvailableMatches.this.startActivity(myIntent);
                 //Toast.makeText(getBaseContext(),person.getPersonID(),Toast.LENGTH_SHORT).show();
@@ -118,7 +120,7 @@ public class AvailableMatches extends AppCompatActivity {
     private void InstantiateList(){
         // https://github.com/wayou/anonymous-animals
         long birthDate = 123;
-        Person itamar = new Person("Itamar",FictitiousIdentityGenerator.getAnonymousIdentity(Person.Gender.MALE),birthDate,Person.Gender.MALE, Person.Religion.ARABIC, Arrays.asList(Person.Language.HEBREW), Person.Kind.PAST_PATIENT,"MkmNn4l4FIQx6uiI50yxnOhDDG63","Loves bamba.",new ArrayList<Integer>());
+        Person itamar = new Person("Itamar",FictitiousIdentityGenerator.getAnonymousIdentity(Person.Gender.MALE),birthDate,Person.Gender.MALE, Person.Religion.ARABIC, Arrays.asList(Person.Language.HEBREW), Person.Kind.PAST_PATIENT,"MkmNn4l4FIQx6uiI50yxnOhDDG63","אוהב מלא במבה",new ArrayList<Integer>());
         FirebaseFirestore.getInstance().collection("users").add(itamar);
         matches_list.add(itamar);
 //        matches_list.add(new Person("שמוליק שמוליק","מטופל עבר, בן 31, יהודי, דובר עברית","drawable://" + R.drawable.profilepic));

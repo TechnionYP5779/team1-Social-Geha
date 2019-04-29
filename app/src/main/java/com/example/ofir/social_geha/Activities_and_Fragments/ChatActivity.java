@@ -4,9 +4,13 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.example.ofir.social_geha.Firebase.Database;
 import com.example.ofir.social_geha.Firebase.Message;
@@ -16,6 +20,8 @@ import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.nostra13.universalimageloader.core.DisplayImageOptions;
+import com.nostra13.universalimageloader.core.ImageLoader;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,6 +35,8 @@ public class ChatActivity extends AppCompatActivity {
     private FirebaseFirestore mFirestore;
     private MessageListAdapter mMessageListAdapter;
     private String mOtherPersonId;
+    private String mAnonymousOtherPhotoUrl;
+    private String mAnonymousOtherName;
     private String mLoggedInPersonId;
     private FileHandler fileHandler;
     private List<Message> messageList;
@@ -37,6 +45,32 @@ public class ChatActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chat2);
+
+        final Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        // Display user image as profile pic
+        int default_image = this.getResources().getIdentifier("@drawable/image_fail", null, this.getPackageName() );
+        ImageLoader image_loader = ImageLoader.getInstance();
+        DisplayImageOptions options = new DisplayImageOptions.Builder().cacheInMemory(true)
+                .cacheOnDisc(true).resetViewBeforeLoading(true)
+                .showImageForEmptyUri(default_image)
+                .showImageOnFail(default_image)
+                .showImageOnLoading(default_image).build();
+
+        //Display user name and photo
+        mAnonymousOtherName = getIntent().getStringExtra("EXTRA_NAME");
+        mAnonymousOtherPhotoUrl = getIntent().getStringExtra("EXTRA_PHOTO_URL");
+        int image_id = this.getResources().getIdentifier("@drawable/" + mAnonymousOtherPhotoUrl, null, this.getPackageName() );
+        mAnonymousOtherPhotoUrl = "drawable://" + image_id;
+        ImageView image_holder = (ImageView) findViewById(R.id.user_photo);
+        TextView name_holder = (TextView) findViewById(R.id.user_title);
+
+        name_holder.setText(mAnonymousOtherName);
+        image_loader.displayImage(mAnonymousOtherPhotoUrl, image_holder, options);
+
+        // HANDLE THE CHAT
         mLoggedInPersonId = Database.getInstance().getLoggedInUserID();
         messageList = new ArrayList<>();
         fileHandler = new FileHandler(this);
@@ -114,5 +148,20 @@ public class ChatActivity extends AppCompatActivity {
         Database.getInstance().sendMessage(message,mLoggedInPersonId,mOtherPersonId);
         fileHandler.writeMessage(new Message(message,mLoggedInPersonId,mOtherPersonId));
         mMessageEdit.setText("");
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // handle arrow click here
+        if (item.getItemId() == android.R.id.home) {
+            finish(); // close this activity and return to preview activity (if there is any)
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public boolean onSupportNavigateUp() {
+        onBackPressed();
+        return true;
     }
 }

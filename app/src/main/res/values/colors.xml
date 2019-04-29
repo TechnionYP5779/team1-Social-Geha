@@ -9,4 +9,6 @@
     <color name="transparent">#8cFFFFFF</color>
     <color name="transparentBlack">#8e000000</color>
     <color name="transparent_primary">#3D696A</color>
+    <color name="message_sent">#91B671</color>
+    <color name="message_recieved">#E98E63</color>
 </resources>

@@ -25,7 +25,9 @@ android {
     useLibrary 'android.test.runner'
 }
 
+
 dependencies {
+    implementation 'com.daasuu:BubbleLayout:1.2.0'
     implementation 'com.nostra13.universalimageloader:universal-image-loader:1.9.5'
     implementation 'de.hdodenhof:circleimageview:3.0.0'
     implementation fileTree(dir: 'libs', include: ['*.jar'])

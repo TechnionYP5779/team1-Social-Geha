@@ -4,22 +4,48 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     tools:context=".Activities_and_Fragments.ChatActivity">
+
+    <android.support.design.widget.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/toolbar_wrapper">
+
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+            app:popupTheme="@style/ThemeOverlay.AppCompat.Light">
+            <include layout="@layout/toolbar_chat"/>
+        </android.support.v7.widget.Toolbar>
+    </android.support.design.widget.AppBarLayout>
 
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/message_list"
+        android:layout_below="@id/toolbar_wrapper"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        tools:layout_editor_absoluteX="0dp"
-        tools:layout_editor_absoluteY="0dp" />
+        android:layout_above="@id/divider"
+        android:layout_marginTop="5dp"
+        android:layout_height="match_parent"/>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_above="@id/footer"
+        android:id="@+id/divider"
+        android:background="@android:color/darker_gray"/>
 
     <LinearLayout
-        android:id="@+id/footer"
         android:layout_alignParentBottom="true"
+        android:id="@+id/footer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="2dp"
         android:orientation="horizontal">
+
 
         <EditText
             android:id="@+id/message_text"
@@ -28,11 +54,14 @@
             android:layout_height="wrap_content"
             android:singleLine="true"
             android:inputType="textShortMessage" />
-        <Button
+
+        <ImageButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:onClick="onSendButtonClick"
-            android:text="Send" />
+            android:src="@drawable/ic_send_black_24dp"
+            android:backgroundTint="@color/colorPrimary" />
+
     </LinearLayout>
 
 

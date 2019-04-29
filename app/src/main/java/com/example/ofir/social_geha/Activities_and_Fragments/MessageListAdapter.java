@@ -23,7 +23,6 @@ public class MessageListAdapter extends RecyclerView.Adapter<MessageListAdapter.
     public class ViewHolder extends RecyclerView.ViewHolder {
 
         private View mView;
-        public TextView userNameText;
         public TextView messageText;
 
 
@@ -31,7 +30,6 @@ public class MessageListAdapter extends RecyclerView.Adapter<MessageListAdapter.
             super(itemView);
             mView = itemView;
 
-            userNameText = mView.findViewById(R.id.username_text_view);
             messageText = mView.findViewById(R.id.message_text_view);
         }
     }
@@ -45,7 +43,6 @@ public class MessageListAdapter extends RecyclerView.Adapter<MessageListAdapter.
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder viewHolder, int i) {
-        viewHolder.userNameText.setText(messageList.get(i).getFromPersonID());
         viewHolder.messageText.setText(messageList.get(i).getMessage());
     }
 
