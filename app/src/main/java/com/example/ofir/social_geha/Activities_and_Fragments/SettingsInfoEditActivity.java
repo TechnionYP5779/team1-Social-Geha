@@ -85,7 +85,7 @@ public class SettingsInfoEditActivity extends AppCompatActivity {
 
             @Override
             public void onClick(View v) {
-                if(!getIntent().getStringExtra("code").equals("")){
+                if(getIntent().getStringExtra("code") != null){
                     // we need to preform register
                         register("ofira", "123456", getIntent().getStringExtra("code"));
                 }
