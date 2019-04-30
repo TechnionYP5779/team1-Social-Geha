@@ -34,4 +34,10 @@
         <item name="colorControlNormal">@color/colorPrimary</item>
         <item name="colorControlHighlight">@color/colorPrimary</item>
     </style>
+
+
+
+    <style name="ToolbarDotsColor">
+        <item name="android:textColorSecondary">@color/white</item>
+    </style>
 </resources>

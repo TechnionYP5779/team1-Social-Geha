@@ -127,10 +127,9 @@ public class ChatActivity extends AppCompatActivity {
                                 //Log.d("COOLTEST","Content: " + message);
                                 Message message = doc.getDocument().toObject(Message.class);
                                 messageList.add(message);
-                                mMessageListAdapter.notifyDataSetChanged();
                             }
                         }
-
+                        mMessageListAdapter.notifyDataSetChanged();
                     }
                 });
 

@@ -11,4 +11,16 @@
         app:actionViewClass="android.support.v7.widget.SearchView"
         app:showAsAction="ifRoom|collapseActionView" />
 
+    <item
+        android:id="@+id/menu_settings"
+        android:orderInCategory="100"
+        android:title="הגדרות"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/menu_edit_information"
+        android:orderInCategory="200"
+        android:title="ערוך מידע אישי"
+        app:showAsAction="never" />
+
 </menu>

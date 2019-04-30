@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">CatchApp</string>
+    <string name="app_name">Buddiz</string>
     <string name="log_in_header">התחברות</string>
     <string name="settings_header">הגדרות</string>
     <string name="settings_info_edit_header">עריכת מידע</string>

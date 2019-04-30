@@ -1,22 +1,34 @@
 package com.example.ofir.social_geha.Activities_and_Fragments;
 
+import android.content.Context;
 import android.content.Intent;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
+import android.util.Range;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.view.animation.AnimationUtils;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.ofir.social_geha.FilterParameters;
+import com.example.ofir.social_geha.Firebase.Database;
+import com.example.ofir.social_geha.Person;
 import com.example.ofir.social_geha.R;
 import com.example.ofir.social_geha.ScreenItem;
 
 import java.util.ArrayList;
+import java.util.EnumSet;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Set;
 
 public class FilterMatchesActivity extends AppCompatActivity {
 
@@ -115,8 +127,19 @@ public class FilterMatchesActivity extends AppCompatActivity {
     }
 
     public void findMatch(View view) {
+        introViewPagerAdapter.updatePersonInfo();
+        // from list to enumset
+        EnumSet<Person.Language> temp = EnumSet.noneOf(Person.Language.class); // make an empty enumset
+        temp.addAll(introViewPagerAdapter.languages_preference); // add varargs to it
+
+
+        Log.d("PEOPLE FOUND", "========== "+introViewPagerAdapter.gender_preference+"===========");
+
         Intent myIntent = new Intent(FilterMatchesActivity.this, AvailableMatches.class);
         myIntent.setFlags(myIntent.getFlags() | Intent.FLAG_ACTIVITY_NO_HISTORY);
+        FilterParameters filterObj = new FilterParameters(temp, introViewPagerAdapter.kind_preference,
+                introViewPagerAdapter.gender_preference, introViewPagerAdapter.religion_preference,null);
+        myIntent.putExtra("filterObject", filterObj);
         FilterMatchesActivity.this.startActivity(myIntent);
     }
 }

@@ -10,7 +10,6 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity android:name=".Activities_and_Fragments.SettingsHelp"></activity>
-        <activity android:name=".Activities_and_Fragments.AllConversationsActivity" />
         <activity android:name=".Activities_and_Fragments.SettingsInfoEditActivity" />
         <activity
             android:name=".Activities_and_Fragments.SettingsMainActivity"
@@ -24,11 +23,7 @@
         <activity
             android:name=".Activities_and_Fragments.mainScreen"
             android:screenOrientation="portrait">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
         <activity
             android:name=".Activities_and_Fragments.Login"
@@ -40,7 +35,13 @@
         <activity
             android:name=".Activities_and_Fragments.FilterMatchesActivity"
             android:screenOrientation="portrait" />
-        <activity android:name=".Activities_and_Fragments.AllChatsActivity" />
+        <activity android:name=".Activities_and_Fragments.AllChatsActivity">
+        <intent-filter>
+            <action android:name="android.intent.action.MAIN" />
+
+            <category android:name="android.intent.category.LAUNCHER" />
+        </intent-filter>
+        </activity>
     </application>
 
 </manifest>

@@ -3,16 +3,22 @@ package com.example.ofir.social_geha.Activities_and_Fragments;
 import android.app.DatePickerDialog;
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.provider.ContactsContract;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
+import com.example.ofir.social_geha.FictitiousIdentityGenerator;
 import com.example.ofir.social_geha.Firebase.Database;
+import com.example.ofir.social_geha.Person;
 import com.example.ofir.social_geha.R;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 import android.content.DialogInterface;
 import android.support.v7.app.AlertDialog;
@@ -24,7 +30,13 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
+import java.util.List;
+
+import static com.example.ofir.social_geha.Person.fromStringToGenderEnum;
+import static com.example.ofir.social_geha.Person.fromStringToReligion;
+import static com.example.ofir.social_geha.Person.languagesStringToLanguageEnum;
 
 
 public class SettingsInfoEditActivity extends AppCompatActivity {
@@ -87,33 +99,45 @@ public class SettingsInfoEditActivity extends AppCompatActivity {
             public void onClick(View v) {
                 if(getIntent().getStringExtra("code") != null){
                     // we need to preform register
-                        register("ofira", "123456", getIntent().getStringExtra("code"));
+                    register( getIntent().getStringExtra("code"), givenName, calendar, gender,
+                            religion, languagesAll, bio);
                 }
                 else {
-                    Intent myIntent = new Intent(SettingsInfoEditActivity.this, mainScreen.class);
-                    SettingsInfoEditActivity.this.startActivity(myIntent);
+                    onBackPressed();
                 }
             }
         });
     }
 
-    public void register(final String username, String password, final String personalCode) {
-        FirebaseAuth auth = FirebaseAuth.getInstance();
+    public void register(final String code,final String name,final Calendar c,final String gender,
+                         final String religion, final String[] languages,final String bio){
         final ProgressDialog progressDialog = new ProgressDialog(SettingsInfoEditActivity.this);
         progressDialog.setTitle("נרשם");
         progressDialog.setMessage("אנא המתן...");
-        String email = username.concat("@geha-technion.temp.com");
+        String email = code.concat("@geha-technion.temp.com");
         progressDialog.show();
-        auth.createUserWithEmailAndPassword(email, password)
+        allGenders = getResources().getStringArray(R.array.gender_preferences);
+
+
+        FirebaseAuth auth = FirebaseAuth.getInstance();
+        progressDialog.show();
+        auth.createUserWithEmailAndPassword(email, "ABCDDD123456")
                 .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         progressDialog.dismiss();
+                        long date = c.getTimeInMillis();
+                        Person.Religion mReligion = fromStringToReligion(religion);
+                        List<Person.Language> spokenLanguages = languagesStringToLanguageEnum(languages);
+                        Person p = new Person(name, FictitiousIdentityGenerator.getAnonymousIdentity(
+                                fromStringToGenderEnum(gender, SettingsInfoEditActivity.this)),
+                                    date,fromStringToGenderEnum(gender, SettingsInfoEditActivity.this), mReligion, spokenLanguages,
+                                    Person.Kind.PAST_PATIENT, Database.getInstance().getLoggedInUserID(), bio, new ArrayList<Integer>());
                         if (task.isSuccessful()) {
-                            Database.getInstance().addUser(username, personalCode);
+                            Database.getInstance().addUserPerson(p);
                             setResult(RESULT_OK);
                             finish();
-                            Intent myIntent = new Intent(SettingsInfoEditActivity.this, mainScreen.class);
+                            Intent myIntent = new Intent(SettingsInfoEditActivity.this, AllChatsActivity.class);
                             SettingsInfoEditActivity.this.startActivity(myIntent);
                         } else {
                             Toast.makeText(SettingsInfoEditActivity.this, "שם המשתמש כבר תפוס!", Toast.LENGTH_SHORT).show();
@@ -121,7 +145,6 @@ public class SettingsInfoEditActivity extends AppCompatActivity {
                     }
                 });
     }
-
 
     private void setUpBioButton() {
         bioButton = findViewById(R.id.bio_button);

@@ -127,7 +127,7 @@ public class Signup extends AppCompatActivity {
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         progressDialog.dismiss();
                         if (task.isSuccessful()) {
-                            Database.getInstance().addUser(username, personalCode);
+                            Database.getInstance().addUser(username, personalCode, Database.getInstance().getLoggedInUserID());
                             setResult(RESULT_OK);
                             finish();
                             Toast.makeText(Signup.this, "נרשמת", Toast.LENGTH_SHORT).show();

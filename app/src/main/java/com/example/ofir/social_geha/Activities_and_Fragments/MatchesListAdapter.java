@@ -11,6 +11,7 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.example.ofir.social_geha.Firebase.Message;
 import com.example.ofir.social_geha.Person;
 import com.example.ofir.social_geha.R;
 import com.nostra13.universalimageloader.cache.memory.impl.WeakMemoryCache;
@@ -107,7 +108,8 @@ public class MatchesListAdapter extends ArrayAdapter<Person> {
             holder.chat_message_layout.setVisibility(View.VISIBLE);
             holder.msg_time.setText("10:24");
             holder.unread_msg_count.setText("5");
-            holder.description.setText("super large message so we will see that everything is fine with the screen"); //change description to last msg
+            String lastMsg = "";
+            holder.description.setText(description); //change description to last msg
         }
         else{
             holder.chat_message_layout.setVisibility(View.GONE);

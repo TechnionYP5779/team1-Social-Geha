@@ -1,9 +1,11 @@
 package com.example.ofir.social_geha;
 
+import android.content.Context;
 import android.util.Pair;
 
 import com.google.firebase.firestore.DocumentSnapshot;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.EnumSet;
 import java.util.List;
@@ -142,4 +144,60 @@ public class Person {
         return whiteList.contains(userID);
     }
 
+
+    public void setUserID(String id){
+        this.userID = id;
+    }
+
+    public static List<Person.Language> languagesStringToLanguageEnum(String[] languages){
+        List<Person.Language> mLanguages = new ArrayList<>();
+        for(String l : languages){
+            switch(l){
+                case "עברית":
+                    mLanguages.add(Person.Language.HEBREW);
+                    break;
+                case "אנגלית":
+                    mLanguages.add(Person.Language.ENGLISH);
+                    break;
+                case "צרפתית":
+                    mLanguages.add(Person.Language.FRENCH);
+                    break;
+                case "רוסית":
+                    mLanguages.add(Person.Language.RUSSIAN);
+                    break;
+                case "ערבית":
+                    mLanguages.add(Person.Language.ARABIC);
+                    break;
+                case "אמהרית":
+                    mLanguages.add(Person.Language.AMHARIC);
+                    break;
+            }
+        }
+        return mLanguages;
+    }
+
+    public static Religion fromStringToReligion(String religion){
+        switch (religion){
+            case "דתי":
+                return Person.Religion.RELIGIOUS;
+            case "מסורתי":
+                return Person.Religion.TRADITIONAL;
+            case "לא משנה":
+                return Person.Religion.SECULAR;
+            case "חילוני":
+                return Person.Religion.SECULAR;
+            case "ערבי":
+                return Person.Religion.ARABIC;
+        }
+        return Person.Religion.SECULAR;
+    }
+
+    public static Gender fromStringToGenderEnum(String gender, Context mContext){
+        String[] allGenders = mContext.getResources().getStringArray(R.array.gender_preferences);
+        if(gender.equals(allGenders[0]))
+            return Gender.UNDISCLOSED;
+        if(gender.equals(allGenders[1]))
+            return Gender.MALE;
+        return Gender.FEMALE;
+    }
 }

@@ -3,17 +3,24 @@ package com.example.ofir.social_geha.Activities_and_Fragments;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v4.view.PagerAdapter;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.AdapterView;
+import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
+
+import com.example.ofir.social_geha.Person;
+import com.example.ofir.social_geha.Person.*;
 import com.example.ofir.social_geha.R;
 import com.example.ofir.social_geha.ScreenItem;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class FilterMatchesPagerAdapter extends PagerAdapter {
@@ -25,6 +32,12 @@ public class FilterMatchesPagerAdapter extends PagerAdapter {
     Spinner mSpinner1;
     Spinner mSpinnerGender;
     Spinner mSpinnerReligious;
+
+    //----------------------------------------
+    public Kind kind_preference;
+    public Gender gender_preference;
+    public Religion religion_preference;
+    public List<Language> languages_preference;
 
     public FilterMatchesPagerAdapter(Context mContext, List<ScreenItem> mListScreen) {
         this.mContext = mContext;
@@ -45,6 +58,32 @@ public class FilterMatchesPagerAdapter extends PagerAdapter {
         mSpinner1 = layoutScreen.findViewById(R.id.spinner_preferences); // TODO - attach listeners
         mSpinnerGender = layoutScreen.findViewById(R.id.spinner_gender);
         mSpinnerReligious = layoutScreen.findViewById(R.id.spinner_religious);
+
+        mSpinnerGender.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
+                gender_preference = Person.fromStringToGenderEnum(mContext.getResources().getStringArray(R.array.gender_preferences)[position],mContext);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parentView) {
+                gender_preference = Gender.UNDISCLOSED;
+            }
+
+        });
+
+        mSpinnerReligious.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
+                religion_preference = Person.fromStringToReligion(mContext.getResources().getStringArray(R.array.religious_preferences)[position]);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parentView) {
+                religion_preference = Religion.SECULAR;
+            }
+
+        });
 
         title.setText(mListScreen.get(position).getTitle());
         description.setText(mListScreen.get(position).getDescription());
@@ -93,5 +132,36 @@ public class FilterMatchesPagerAdapter extends PagerAdapter {
         }
     }
 
+    public void updatePersonInfo(){
+        kind_preference = Kind.PAST_PATIENT; // TODO - fix that
+        languages_preference = new ArrayList<>();
+
+        boolean heb_language = ((CheckBox) layoutScreen.findViewById(R.id.chkHebrew)).isChecked();
+        boolean amhar_language =((CheckBox) layoutScreen.findViewById(R.id.chkAmhar)).isChecked();
+        boolean arab_language = ((CheckBox)layoutScreen.findViewById(R.id.chkArab)).isChecked();
+        boolean english_language = ((CheckBox)layoutScreen.findViewById(R.id.chkEnglish)).isChecked();
+        boolean french_language =((CheckBox) layoutScreen.findViewById(R.id.chkFrench)).isChecked();
+        boolean russian_language = ((CheckBox)layoutScreen.findViewById(R.id.chkRussian)).isChecked();
+
+        if(heb_language){
+            languages_preference.add(Language.HEBREW);
+        }
+        if(amhar_language){
+            languages_preference.add(Language.AMHARIC);
+        }
+        if(english_language){
+            languages_preference.add(Language.ENGLISH);
+        }
+        if(arab_language){
+            languages_preference.add(Language.ARABIC);
+        }
+        if(french_language){
+            languages_preference.add(Language.FRENCH);
+        }
+        if(russian_language){
+            languages_preference.add(Language.RUSSIAN);
+        }
+
+    }
 
 }

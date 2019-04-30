@@ -1,27 +1,31 @@
 package com.example.ofir.social_geha.Activities_and_Fragments;
 
+import android.provider.ContactsContract;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.example.ofir.social_geha.Firebase.Database;
 import com.example.ofir.social_geha.Firebase.Message;
 import com.example.ofir.social_geha.R;
 
 import java.util.List;
 
-public class MessageListAdapter extends RecyclerView.Adapter<MessageListAdapter.ViewHolder> {
+public class MessageListAdapter extends RecyclerView.Adapter {
 
     private List<Message> messageList;
+    private static final int VIEW_TYPE_MESSAGE_SENT = 1;
+    private static final int VIEW_TYPE_MESSAGE_RECEIVED = 2;
 
     public MessageListAdapter(List<Message> messageList){
         this.messageList = messageList;
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
-
         private View mView;
         public TextView messageText;
 
@@ -32,18 +36,44 @@ public class MessageListAdapter extends RecyclerView.Adapter<MessageListAdapter.
 
             messageText = mView.findViewById(R.id.message_text_view);
         }
-    }
 
-    @NonNull
-    @Override
-    public ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
-        View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.message_layout,viewGroup,false);
-        return new ViewHolder(view);
+        public void bind(String msg) {
+            messageText.setText(msg);
+        }
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ViewHolder viewHolder, int i) {
-        viewHolder.messageText.setText(messageList.get(i).getMessage());
+    public int getItemViewType(int position) {
+        if (messageList.get(position).getFromPersonID().equals(Database.getInstance().getLoggedInUserID())) {
+            return VIEW_TYPE_MESSAGE_SENT;
+        } else {
+            // If some other user sent the message
+            return VIEW_TYPE_MESSAGE_RECEIVED;
+        }
+    }
+
+    // Inflates the appropriate layout according to the ViewType.
+    @Override
+    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        View view;
+
+        if (viewType == VIEW_TYPE_MESSAGE_SENT) {
+            view = LayoutInflater.from(parent.getContext())
+                    .inflate(R.layout.message_layout, parent, false);
+            return new ViewHolder(view);
+        } else if (viewType == VIEW_TYPE_MESSAGE_RECEIVED) {
+            view = LayoutInflater.from(parent.getContext())
+                    .inflate(R.layout.message_layout_recieved, parent, false);
+            return new ViewHolder(view);
+        }
+
+        return null;
+    }
+
+    @Override
+    public void onBindViewHolder(@NonNull RecyclerView.ViewHolder viewHolder, int i) {
+        ViewHolder vh = (ViewHolder)viewHolder;
+        vh.bind(messageList.get(i).getMessage());
     }
 
     @Override

@@ -25,7 +25,7 @@ public class FictitiousIdentityGenerator {
             randomPicture = male_animals_eng[randomAnimal] + "_" + randomColor;
         } else {
             int randomAdjective = (int)(Math.random()*female_adjectives.length);
-            int randomAnimal = (int)(Math.random()*male_animals.length);
+            int randomAnimal = (int)(Math.random()*female_animals.length);
             int randomColor = 1 + (int)(Math.random()*numberColor);
             name = female_animals[randomAnimal] + " " + female_adjectives[randomAdjective];
             randomPicture = female_animals_eng[randomAnimal] + "_" + randomColor;

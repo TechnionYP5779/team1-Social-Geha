@@ -8,6 +8,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.Filter;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.Toast;
@@ -15,6 +16,7 @@ import android.widget.Toolbar;
 
 import com.example.ofir.social_geha.AnonymousIdentity;
 import com.example.ofir.social_geha.FictitiousIdentityGenerator;
+import com.example.ofir.social_geha.FilterParameters;
 import com.example.ofir.social_geha.Firebase.Database;
 import com.example.ofir.social_geha.Person;
 import com.example.ofir.social_geha.R;
@@ -26,17 +28,22 @@ import java.util.Arrays;
 import java.util.Calendar;
 import java.util.EnumSet;
 import java.util.Objects;
+import java.util.Set;
 
 public class AvailableMatches extends AppCompatActivity {
 
     ListView listView;
     ArrayList<Person>  matches_list;
     ProgressBar progressBar;
+    MatchesListAdapter adapter;
+
 
     @Override
     public void onCreate(Bundle savedInstances){
         super.onCreate(savedInstances);
         setContentView(R.layout.activity_available_matches);
+
+        FilterParameters filterParms = (FilterParameters) getIntent().getSerializableExtra("filterObject");
 
         progressBar = (ProgressBar) findViewById(R.id.progressBar);
         listView = (ListView)findViewById(R.id.available_matches);
@@ -58,6 +65,7 @@ public class AvailableMatches extends AppCompatActivity {
         // ------ PROGRESS BAR START
         loadToolbar();
         loadList();
+        filterUsers(filterParms);
         // ------ END
         showItems(false);
 
@@ -85,10 +93,9 @@ public class AvailableMatches extends AppCompatActivity {
     private void loadList(){
         //Create the list of objects
         matches_list = new ArrayList<>();
-        InstantiateList();
 
         //Attach to adapter
-        MatchesListAdapter adapter = new MatchesListAdapter(this, R.layout.match_row_layout, matches_list, false);
+        adapter = new MatchesListAdapter(this, R.layout.match_row_layout, matches_list, false);
         listView.setAdapter(adapter);
     }
 
@@ -117,16 +124,9 @@ public class AvailableMatches extends AppCompatActivity {
         }
     }
 
-    private void InstantiateList(){
-        // https://github.com/wayou/anonymous-animals
-        long birthDate = 123;
-        Person itamar = new Person("Itamar",FictitiousIdentityGenerator.getAnonymousIdentity(Person.Gender.MALE),birthDate,Person.Gender.MALE, Person.Religion.ARABIC, Arrays.asList(Person.Language.HEBREW), Person.Kind.PAST_PATIENT,"MkmNn4l4FIQx6uiI50yxnOhDDG63","אוהב מלא במבה",new ArrayList<Integer>());
-        FirebaseFirestore.getInstance().collection("users").add(itamar);
-        matches_list.add(itamar);
-//        matches_list.add(new Person("שמוליק שמוליק","מטופל עבר, בן 31, יהודי, דובר עברית","drawable://" + R.drawable.profilepic));
-//        matches_list.add(new Person("קיפוד אנונימי","אמא של מטופל עבר, בת 58, יהודיה, דוברת עברית ורוסית","drawable://" + R.drawable.hedgehog));
-//        matches_list.add(new Person("לוטרה אנונימית","מטופלת עבר, בת 22, נוצריה, דוברת עברית ואנגלית","drawable://" + R.drawable.otter));
-//        matches_list.add(new Person("שמוליק שמוליק","מטופל עבר, בן 31, יהודי, דובר עברית","drawable://" + R.drawable.profilepic));
-//        matches_list.add(new Person("קיפוד אנונימי","אמא של מטופל עבר, בת 58, יהודיה, דוברת עברית ורוסית","drawable://" + R.drawable.hedgehog));
+    private void filterUsers(FilterParameters f){
+        // query users
+        Database.getInstance().queryUsers(f.getKind(), f.getGender(), f.getReligion(),
+                f.getLanguages(), f.getAge(), matches_list, adapter);
     }
 }

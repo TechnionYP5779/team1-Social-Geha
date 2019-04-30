@@ -6,7 +6,9 @@ import android.support.annotation.RequiresApi;
 import android.util.Log;
 import android.util.Range;
 
+import com.example.ofir.social_geha.Activities_and_Fragments.MatchesListAdapter;
 import com.example.ofir.social_geha.Person;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
@@ -22,6 +24,7 @@ import java.util.Calendar;
 import java.util.EnumSet;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 
 
@@ -31,7 +34,7 @@ public final class Database {
     private static String MESSAGES = "messages";
     private static String USERS = "users";
 
-    private FirebaseFirestore db = FirebaseFirestore.getInstance();
+    public FirebaseFirestore db = FirebaseFirestore.getInstance();
     private FirebaseAuth auth = FirebaseAuth.getInstance();
 
 
@@ -60,8 +63,26 @@ public final class Database {
                 });
     }
 
-    public void addUser(final String username, String personalCode) {
-        db.collection(USERS).document(username).set(new User(username, personalCode)).
+
+    public void addUserPerson(final Person p){
+        Log.d("PERSON PRINTING !", p.getRealName());
+        db.collection(USERS).document(p.getRealName()).set(p).
+                addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        Log.d(TAG, "onSuccess: Added the new user to the DB" + p.getRealName());
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.d(TAG, "onFailure: FAILED " + e.getMessage());
+                    }
+                });
+    }
+
+    public void addUser(final String username, String personalCode,String userID) {
+        db.collection(USERS).document(username).set(new User(username, personalCode,userID)).
                 addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {
@@ -75,13 +96,16 @@ public final class Database {
                     }
                 });
     }
-    @RequiresApi(api = Build.VERSION_CODES.N)
-    public Set<Person> queryUsers(Person.Kind kindPref,
-                                  Person.Gender genderPref,
-                                  Person.Religion religionPref,
-                                  EnumSet<Person.Language> languagesPref,
-                                  Range<Integer> ageRange) {
+
+    public void queryUsers(Person.Kind kindPref,
+                           Person.Gender genderPref,
+                           Person.Religion religionPref,
+                           EnumSet<Person.Language> languagesPref,
+                           Range<Integer> ageRange,
+                           final ArrayList<Person> matches_list,
+                           final MatchesListAdapter adapter) {
         List<Task<QuerySnapshot>> langQueryResults = new ArrayList<>();
+        Log.d("PEOPLE FOUND","Looking for gender" + genderPref.toString());
         // note the different fields
         if (languagesPref.isEmpty()) {
             QueryBuilder queryBuilder = new QueryBuilder(db.collection(USERS));
@@ -91,11 +115,12 @@ public final class Database {
             langQueryResults.add(queryBuilder.build().get());
         } else {
             for (Person.Language language : languagesPref) {
+                Log.d("PEOPLE FOUND","Looking for language: "+language.toString());
                 QueryBuilder queryBuilder = new QueryBuilder(db.collection(USERS));
                 queryBuilder.addWhereEquals("gender", genderPref)
                         .addWhereEquals("religion", religionPref)
                         .addWhereEquals("kind", kindPref);
-                langQueryResults.add(queryBuilder.build().whereArrayContains("languages", language.toString()).get());
+                langQueryResults.add(queryBuilder.build().whereArrayContains("spokenLanguages", language.toString()).get());
             }
         }
         // add the age ranges, consider how to calculate the ages using the current date
@@ -112,28 +137,43 @@ public final class Database {
                     .addUpperBound("birth_date", youngest.getTimeInMillis());
             ageQueryResults.add(queryBuilder.build().get());
         }
-        Set<Person> resultSet = new HashSet<>();
+
+        //STARTING TO FILTER
         for (Task<QuerySnapshot> task : langQueryResults) {
-            QuerySnapshot result = task.getResult();
-            if (result == null) continue;
-            for (DocumentSnapshot documentSnapshot : result.getDocuments()) {
-                resultSet.add(documentSnapshot.toObject(Person.class));
-            }
+            task.addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                @Override
+                public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                    if (task.getResult() != null) {
+                        for (DocumentSnapshot documentSnapshot : task.getResult()) {
+                            Person p = documentSnapshot.toObject(Person.class);
+                            if(!p.getUserID().equals(getInstance().getLoggedInUserID()) &&
+                            !matches_list.contains(p))
+                                matches_list.add(p);
+                        }
+                        adapter.notifyDataSetChanged();
+                    }
+                }
+            });
         }
 
         if (ageRange != null) {
-            for (Task<QuerySnapshot> task : ageQueryResults) {
-                QuerySnapshot result = task.getResult();
-                if (result == null) continue;
-                for (DocumentSnapshot documentSnapshot : result.getDocuments()) {
-                    Person currPerson = documentSnapshot.toObject(Person.class);
-                    if (!resultSet.contains(currPerson))
-                        resultSet.remove(currPerson);
-                }
+            for (Task<QuerySnapshot> task1 : ageQueryResults) {
+                task1.addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.getResult() != null) {
+                            for (DocumentSnapshot documentSnapshot : task.getResult()) {
+                                Log.d("PEOPLE FOUND","NOT DELETING PEOPLE");
+                                Person currPerson = documentSnapshot.toObject(Person.class);
+                                if (!matches_list.contains(currPerson))
+                                    matches_list.remove(currPerson);
+                            }
+                            adapter.notifyDataSetChanged();
+                        }
+                    }
+                });
             }
         }
-
-        return resultSet;
     }
 
     public boolean isLoggedIn() {
