@@ -15,6 +15,7 @@
             android:name=".Activities_and_Fragments.SettingsMainActivity"
             android:label="@string/title_activity_settings"
             android:parentActivityName=".Activities_and_Fragments.mainScreen">
+
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.example.ofir.social_geha.Activities_and_Fragments.mainScreen" />
@@ -23,7 +24,11 @@
         <activity
             android:name=".Activities_and_Fragments.mainScreen"
             android:screenOrientation="portrait">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
 
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
         </activity>
         <activity
             android:name=".Activities_and_Fragments.Login"
@@ -36,11 +41,7 @@
             android:name=".Activities_and_Fragments.FilterMatchesActivity"
             android:screenOrientation="portrait" />
         <activity android:name=".Activities_and_Fragments.AllChatsActivity">
-        <intent-filter>
-            <action android:name="android.intent.action.MAIN" />
 
-            <category android:name="android.intent.category.LAUNCHER" />
-        </intent-filter>
         </activity>
     </application>
 
