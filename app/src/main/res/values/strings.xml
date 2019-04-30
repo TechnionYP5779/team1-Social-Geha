@@ -88,7 +88,7 @@
 
     <string name="birth_date">תאריך לידה</string>
     <string name="search">חיפוש</string>
-    <string name="no_results">No Results</string>
+    <string name="no_results">אין תוצאות</string>
     <string name="you_may_return_and_edit">ניתן לחזור ולערוך את המידע בכל שלב</string>
     <string name="ok_label">שמור</string>
     <string name="dismiss_label">חזור</string>
