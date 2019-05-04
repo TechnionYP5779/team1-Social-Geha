@@ -32,17 +32,19 @@ import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 public class AllChatsActivity extends AppCompatActivity {
     Toolbar mToolbar;
-    MatchesListAdapter mAdapter;
+    ChatListAdapter mAdapter;
     private FileHandler mFileHandler;
     ListView mListView;
     TextView mEmptyView;
-    ArrayList<Person> conversationList;
-    ArrayList<Person> allList;
+    ArrayList<ChatEntry> conversationList;
+    ArrayList<ChatEntry> allList;
     private FirebaseFirestore mFirestore;
     private static final String MESSAGES = "messages";
     private static final String USERS = "users";
@@ -86,7 +88,8 @@ public class AllChatsActivity extends AppCompatActivity {
 
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Object o = mListView.getItemAtPosition(position);
-                Person person = (Person)o; //As you are using Default String Adapter
+                ChatEntry chatEntry = (ChatEntry)o; //As you are using Default String Adapter
+                Person person = chatEntry.getPerson();
                 Intent myIntent = new Intent(AllChatsActivity.this, ChatActivity.class);
                 myIntent.putExtra("EXTRA_PERSON_ID", person.getUserID());
                 myIntent.putExtra("EXTRA_NAME", person.getAnonymousIdentity().getName());
@@ -117,10 +120,10 @@ public class AllChatsActivity extends AppCompatActivity {
             @Override
             public boolean onQueryTextChange(String newText) {
                 conversationList.clear();
-                for(Person p : allList){
-                    Log.d("PEOPLE", p.getAnonymousIdentity().getName());
-                    if(p.getAnonymousIdentity().getName().trim().toLowerCase().contains(newText.trim().toLowerCase())){
-                        conversationList.add(p);
+                for(ChatEntry chatEntry : allList){
+                    Log.d("PEOPLE", chatEntry.getPerson().getAnonymousIdentity().getName());
+                    if(chatEntry.getPerson().getAnonymousIdentity().getName().trim().toLowerCase().contains(newText.trim().toLowerCase())){
+                        conversationList.add(chatEntry);
                     }
                 }
                 mAdapter.notifyDataSetChanged();
@@ -168,7 +171,7 @@ public class AllChatsActivity extends AppCompatActivity {
         populateConversationsList();
 
         //Attach to adapter
-        mAdapter = new MatchesListAdapter(this, R.layout.match_row_layout, conversationList, true);
+        mAdapter = new ChatListAdapter(this, R.layout.match_row_layout, conversationList);
         mListView.setAdapter(mAdapter);
     }
 
@@ -239,14 +242,19 @@ public class AllChatsActivity extends AppCompatActivity {
     public void updateList(){
         conversationList.clear();
         allList.clear();
-        Set<String> personIdList = new HashSet<>();
+        final Map<String,Message> messageMap = new HashMap<>();
+        String loggedInUserID = Database.getInstance().getLoggedInUserID();
         for(Message msg : mFileHandler.getMessages()){
             Log.d("COOLTEST","found msg:" + msg.getFromPersonID());
-            personIdList.add(msg.getFromPersonID());
+            if(loggedInUserID.equals(msg.getFromPersonID()))
+                messageMap.put(msg.getToPersonID(),msg);
+            else
+                messageMap.put(msg.getFromPersonID(),msg);
         }
-        personIdList.remove(Database.getInstance().getLoggedInUserID());
-        for(String id : personIdList){
-            Task<QuerySnapshot> personQueryTask = mFirestore.collection(USERS).whereEqualTo("userID", id).get();
+
+        messageMap.remove(loggedInUserID);
+        for(final Map.Entry<String,Message> entry : messageMap.entrySet()){
+            Task<QuerySnapshot> personQueryTask = mFirestore.collection(USERS).whereEqualTo("userID", entry.getKey()).get();
             personQueryTask.addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                 @Override
                 public void onComplete(@NonNull Task<QuerySnapshot> task) {
@@ -255,8 +263,9 @@ public class AllChatsActivity extends AppCompatActivity {
                     if(!person.isEmpty()) {
                         Person myPerson = person.toObjects(Person.class).get(0);
                         Log.d("COOLTEST","got user: " + myPerson.getDescription());
-                        conversationList.add(myPerson);
-                        allList.add(myPerson);
+                        ChatEntry chatEntry = new ChatEntry(myPerson,entry.getValue());
+                        conversationList.add(chatEntry);
+                        allList.add(chatEntry);
                         mAdapter.notifyDataSetChanged();
                     }
                 }

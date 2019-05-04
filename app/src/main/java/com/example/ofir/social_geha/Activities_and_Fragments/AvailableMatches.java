@@ -95,7 +95,7 @@ public class AvailableMatches extends AppCompatActivity {
         matches_list = new ArrayList<>();
 
         //Attach to adapter
-        adapter = new MatchesListAdapter(this, R.layout.match_row_layout, matches_list, false);
+        adapter = new MatchesListAdapter(this, R.layout.match_row_layout, matches_list);
         listView.setAdapter(adapter);
     }
 

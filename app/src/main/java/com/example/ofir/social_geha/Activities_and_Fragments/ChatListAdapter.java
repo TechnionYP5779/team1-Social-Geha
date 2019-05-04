@@ -1,7 +1,6 @@
 package com.example.ofir.social_geha.Activities_and_Fragments;
 
 import android.content.Context;
-import android.content.res.Resources;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,11 +20,12 @@ import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.nostra13.universalimageloader.core.assist.ImageScaleType;
 import com.nostra13.universalimageloader.core.display.FadeInBitmapDisplayer;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 
 
-public class MatchesListAdapter extends ArrayAdapter<Person> {
+public class ChatListAdapter extends ArrayAdapter<ChatEntry> {
     private Context mContext;
     private int mResource;
     private int lastPosition = -1;
@@ -34,10 +34,12 @@ public class MatchesListAdapter extends ArrayAdapter<Person> {
         TextView name;
         TextView description;
         ImageView image;
-        ImageView pick_arrow;
+        TextView unread_msg_count;
+        TextView msg_time;
+        RelativeLayout chat_message_layout;
     }
 
-    public MatchesListAdapter(Context ctxt, int resource, ArrayList<Person> objects){
+    public ChatListAdapter(Context ctxt, int resource, ArrayList<ChatEntry> objects){
         super(ctxt, resource, objects);
         this.mContext = ctxt;
         this.mResource = resource;
@@ -46,9 +48,10 @@ public class MatchesListAdapter extends ArrayAdapter<Person> {
     public View getView(int position, View convertView, ViewGroup parent){
         setupImageLoader();
 
-        String name = getItem(position).getAnonymousIdentity().getName();
-        String description = getItem(position).getDescription();
-        String imageUrl = getItem(position).getAnonymousIdentity().getImageName();
+        String name = getItem(position).getPerson().getAnonymousIdentity().getName();
+        String description = getItem(position).getPerson().getDescription();
+        String imageUrl = getItem(position).getPerson().getAnonymousIdentity().getImageName();
+        Message lastMessage = getItem(position).getMessage();
         Log.d("imageBug1", imageUrl);
         int image_id = mContext.getResources().getIdentifier("@drawable/" + imageUrl, null, mContext.getPackageName() );
         imageUrl = "drawable://" + image_id;
@@ -65,7 +68,9 @@ public class MatchesListAdapter extends ArrayAdapter<Person> {
             holder.name = (TextView) convertView.findViewById(R.id.row_name);
             holder.description = (TextView) convertView.findViewById(R.id.row_description);
             holder.image = (ImageView) convertView.findViewById(R.id.row_image);
-            holder.pick_arrow = (ImageView) convertView.findViewById(R.id.pick_arrow);
+            holder.msg_time = (TextView) convertView.findViewById(R.id.message_time);
+            holder.unread_msg_count = (TextView) convertView.findViewById(R.id.unread_messages_icon);
+            holder.chat_message_layout = (RelativeLayout) convertView.findViewById(R.id.chat_message_layout);
 
             result = convertView;
             convertView.setTag(holder);
@@ -94,8 +99,30 @@ public class MatchesListAdapter extends ArrayAdapter<Person> {
 
         holder.name.setText(name);
         holder.description.setText(description);
-        holder.pick_arrow.setVisibility(View.VISIBLE);
+        holder.chat_message_layout.setVisibility(View.VISIBLE);
+        holder.msg_time.setText(getHourStringFromDate(lastMessage.getMessageDate()));
+        holder.unread_msg_count.setText("5");
+        holder.description.setText(lastMessage.getMessage());
         return convertView;
+    }
+
+    private static String getHourStringFromDate(Date date){
+        if(date == null)
+            return "NULL DATE";
+        Calendar cal = Calendar.getInstance();
+
+        cal.setTime(date);
+        int hour = cal.get(Calendar.HOUR);
+        int minute = cal.get(Calendar.MINUTE);
+        StringBuilder sb = new StringBuilder();
+        if(hour < 10);
+            sb.append(0);
+        sb.append(hour);
+        sb.append(":");
+        if(minute < 10)
+            sb.append(0);
+        sb.append(minute);
+        return sb.toString();
     }
 
     private void setupImageLoader(){

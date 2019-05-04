@@ -102,7 +102,6 @@ public class ChatActivity extends AppCompatActivity {
                         Log.d("POPO", "onEvent: DOES THIS");
                         Message message = doc.getDocument().toObject(Message.class);
                         mFirestore.collection(MESSAGES).document(doc.getDocument().getId()).delete();
-                        messageList.add(message);
                         fileHandler.writeMessage(message);
                         mMessageListAdapter.notifyDataSetChanged();
                     }

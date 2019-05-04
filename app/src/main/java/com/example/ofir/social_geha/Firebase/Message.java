@@ -11,8 +11,7 @@ public class Message implements Serializable {
     private String message;
     private String fromPersonID;
     private String toPersonID;
-    private @ServerTimestamp
-    Date messageDate;
+    private @ServerTimestamp Date messageDate;
 
     public Message(){
 
@@ -54,6 +53,10 @@ public class Message implements Serializable {
 
     public void setMessage(String message) {
         this.message = message;
+    }
+
+    public Date getMessageDate() {
+        return messageDate;
     }
 
     @Override
