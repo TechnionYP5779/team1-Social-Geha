@@ -62,7 +62,7 @@ public class mainScreen extends AppCompatActivity {
     }
 
     private void loginSuccess() {
-        Toast.makeText(getApplicationContext(), "מחובר בהצלחה!", Toast.LENGTH_SHORT).show();
+        Toast.makeText(getApplicationContext(), getString(R.string.strings_succ_login), Toast.LENGTH_SHORT).show();
     }
 
     @Override

@@ -83,7 +83,7 @@ public class SettingsMainActivity extends AppCompatActivity {
         mDialog.show();
     }
         if (view.equals(password_change_screen)){
-            Toast.makeText(SettingsMainActivity.this , "Password Change", Toast.LENGTH_SHORT).show();
+            Toast.makeText(SettingsMainActivity.this , getString(R.string.strings_password_change), Toast.LENGTH_SHORT).show();
         }
 
         if(view.equals(ask_for_help)) {
@@ -92,7 +92,7 @@ public class SettingsMainActivity extends AppCompatActivity {
         }
 
         if(view.equals(delete_data_screen)) {
-            Toast.makeText(SettingsMainActivity.this , "Delete Account", Toast.LENGTH_SHORT).show();
+            Toast.makeText(SettingsMainActivity.this , getString(R.string.strings_delete_account), Toast.LENGTH_SHORT).show();
         }
     }
 }

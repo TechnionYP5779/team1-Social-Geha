@@ -180,7 +180,7 @@ public class AllChatsActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == LOGIN_RETURN_CODE) {
             if (resultCode == RESULT_OK) {
-                Toast.makeText(this,"מחובר בהצלחה",Toast.LENGTH_SHORT).show();
+                Toast.makeText(this,getString(R.string.strings_succ_login),Toast.LENGTH_SHORT).show();
             } else {
                 promptLogin();
             }

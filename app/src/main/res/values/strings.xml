@@ -47,7 +47,7 @@
         <item>חילוני</item>
         <item>ערבי</item>
     </string-array>
-    <string name="title_activity_settings">Settings</string>
+    <string name="title_activity_settings">הגדרות</string>
 
     <!-- Strings related to Settings -->
 
@@ -95,18 +95,18 @@
     <string name="clear_all_label">נקה הכל</string>
 
     <string-array name="months_array">
-    <item>January</item>
-    <item>February</item>
-    <item>March</item>
-    <item>April</item>
-    <item>May</item>
-    <item>June</item>
-    <item>July</item>
-    <item>August</item>
-    <item>September</item>
-    <item>October</item>
-    <item>November</item>
-    <item>December</item>
+    <item>ינואר</item>
+    <item>פברואר</item>
+    <item>מרץ</item>
+    <item>אפריל</item>
+    <item>מאי</item>
+    <item>יוני</item>
+    <item>יולי</item>
+    <item>אוגוסט</item>
+    <item>ספטמבר</item>
+    <item>אוקטובר</item>
+    <item>נובמבר</item>
+    <item>דצמבר</item>
     </string-array>
     <string name="headline_about"><b><i>המטרה שלנו</i></b></string>
     <string name="info_our_purpose">מטרת האפליקציה היא לספק תמיכה לשוהי המרכז הרפואי גהה ומשפחותיהם על ידי מטופלי עבר ומשפחותיהם\n
@@ -115,4 +115,7 @@
     <string name="terms_of_use">נא להתבטא בצורה הולמת בשיחות עם אנשים אחרים\n\nנא להשתמש באפליקציה אך ורק למטרתה המיועדת\n\nשימוש באפליקציה מותנה באישור מכון בריאות הנפש גהה</string>
     <string name="help_button">עזרה</string>
     <string name="done">סיימתי</string>
+    <string name="strings_delete_account">מחק חשבון</string>
+    <string name="strings_password_change">שנה סיסמה</string>
+    <string name="strings_succ_login">התחברת בהצלחה!</string>
 </resources>
