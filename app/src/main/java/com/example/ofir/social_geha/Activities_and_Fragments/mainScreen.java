@@ -74,6 +74,7 @@ public class mainScreen extends AppCompatActivity {
         pb.setVisibility(View.VISIBLE);
         loading.setVisibility(View.VISIBLE);
 
+        Log.i("LOGGED_IN_UID", Database.getInstance().getLoggedInUserID());
         Database.getInstance().getdb().collection("users").whereEqualTo("userID",Database.getInstance().getLoggedInUserID()).get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
