@@ -1,5 +1,9 @@
 package com.example.ofir.social_geha.Activities_and_Fragments;
 
+import android.app.Activity;
+import android.content.Intent;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -46,12 +50,12 @@ public class ChatActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chat2);
 
-        final Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        final Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         // Display user image as profile pic
-        int default_image = this.getResources().getIdentifier("@drawable/image_fail", null, this.getPackageName() );
+        int default_image = this.getResources().getIdentifier("@drawable/image_fail", null, this.getPackageName());
         ImageLoader image_loader = ImageLoader.getInstance();
         DisplayImageOptions options = new DisplayImageOptions.Builder().cacheInMemory(true)
                 .cacheOnDisc(true).resetViewBeforeLoading(true)
@@ -62,13 +66,33 @@ public class ChatActivity extends AppCompatActivity {
         //Display user name and photo
         mAnonymousOtherName = getIntent().getStringExtra("EXTRA_NAME");
         mAnonymousOtherPhotoUrl = getIntent().getStringExtra("EXTRA_PHOTO_URL");
-        int image_id = this.getResources().getIdentifier("@drawable/" + mAnonymousOtherPhotoUrl, null, this.getPackageName() );
+        int image_id = this.getResources().getIdentifier("@drawable/" + mAnonymousOtherPhotoUrl, null, this.getPackageName());
         mAnonymousOtherPhotoUrl = "drawable://" + image_id;
-        ImageView image_holder = (ImageView) findViewById(R.id.user_photo);
-        TextView name_holder = (TextView) findViewById(R.id.user_title);
+        ImageView image_holder = findViewById(R.id.user_photo);
+        TextView name_holder = findViewById(R.id.user_title);
 
         name_holder.setText(mAnonymousOtherName);
         image_loader.displayImage(mAnonymousOtherPhotoUrl, image_holder, options);
+        final View viewStart = image_holder;
+        final String imageURL = mAnonymousOtherPhotoUrl;
+
+        //make sure the profile picture clicks and zooms
+        image_holder.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(ChatActivity.this, ZoomedPictureActivity.class);
+                String transitionName = getString(R.string.transition_string);
+                ActivityOptionsCompat options =
+                        ActivityOptionsCompat.makeSceneTransitionAnimation(ChatActivity.this,
+                                viewStart,   // Starting view
+                                transitionName    // The String
+                        );
+                intent.putExtra("EXTRA_IMAGE_URL", imageURL);
+
+                //Start the Intent
+                ActivityCompat.startActivity(ChatActivity.this, intent, options.toBundle());
+            }
+        });
 
         // HANDLE THE CHAT
         mLoggedInPersonId = Database.getInstance().getLoggedInUserID();
@@ -76,7 +100,7 @@ public class ChatActivity extends AppCompatActivity {
         fileHandler = new FileHandler(this);
         mMessageListAdapter = new MessageListAdapter(messageList);
         mOtherPersonId = getIntent().getStringExtra("EXTRA_PERSON_ID");
-        Log.d("POPO", "onCreate: "+mOtherPersonId);
+        Log.d("POPO", "onCreate: " + mOtherPersonId);
         mMessageEdit = findViewById(R.id.message_text);
         mMessageRecycler = findViewById(R.id.message_list);
         mMessageRecycler.setHasFixedSize(true);
@@ -86,42 +110,42 @@ public class ChatActivity extends AppCompatActivity {
         mFirestore = FirebaseFirestore.getInstance();
 
         mFirestore.collection(MESSAGES).whereEqualTo("toPersonID", mLoggedInPersonId)
-                .whereEqualTo("fromPersonID",mOtherPersonId)
-                .addSnapshotListener(new EventListener<QuerySnapshot>() {
-            @Override
-            public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
-                if(e != null){
-                    Log.d("COOLTEST","Error: " + e.getMessage());
-                    return;
-                }
-
-                for(DocumentChange doc : queryDocumentSnapshots.getDocumentChanges()){
-                    if(doc.getType() == DocumentChange.Type.ADDED){
-                        String message_text = doc.getDocument().getString("message");
-                        Log.d("COOLTEST","Content: " + message_text);
-                        Log.d("POPO", "onEvent: DOES THIS");
-                        Message message = doc.getDocument().toObject(Message.class);
-                        mFirestore.collection(MESSAGES).document(doc.getDocument().getId()).delete();
-                        fileHandler.writeMessage(message);
-                        mMessageListAdapter.notifyDataSetChanged();
-                    }
-                }
-
-            }
-        });
-
-        mFirestore.collection(MESSAGES).whereEqualTo("fromPersonID", mLoggedInPersonId)
-                .whereEqualTo("toPersonID",mOtherPersonId)
+                .whereEqualTo("fromPersonID", mOtherPersonId)
                 .addSnapshotListener(new EventListener<QuerySnapshot>() {
                     @Override
                     public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
-                        if(e != null){
-                            Log.d("COOLTEST","Error: " + e.getMessage());
+                        if (e != null) {
+                            Log.d("COOLTEST", "Error: " + e.getMessage());
                             return;
                         }
 
-                        for(DocumentChange doc : queryDocumentSnapshots.getDocumentChanges()){
-                            if(doc.getType() == DocumentChange.Type.ADDED){
+                        for (DocumentChange doc : queryDocumentSnapshots.getDocumentChanges()) {
+                            if (doc.getType() == DocumentChange.Type.ADDED) {
+                                String message_text = doc.getDocument().getString("message");
+                                Log.d("COOLTEST", "Content: " + message_text);
+                                Log.d("POPO", "onEvent: DOES THIS");
+                                Message message = doc.getDocument().toObject(Message.class);
+                                mFirestore.collection(MESSAGES).document(doc.getDocument().getId()).delete();
+                                fileHandler.writeMessage(message);
+                                mMessageListAdapter.notifyDataSetChanged();
+                            }
+                        }
+
+                    }
+                });
+
+        mFirestore.collection(MESSAGES).whereEqualTo("fromPersonID", mLoggedInPersonId)
+                .whereEqualTo("toPersonID", mOtherPersonId)
+                .addSnapshotListener(new EventListener<QuerySnapshot>() {
+                    @Override
+                    public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
+                        if (e != null) {
+                            Log.d("COOLTEST", "Error: " + e.getMessage());
+                            return;
+                        }
+
+                        for (DocumentChange doc : queryDocumentSnapshots.getDocumentChanges()) {
+                            if (doc.getType() == DocumentChange.Type.ADDED) {
                                 //String message = doc.getDocument().getString("message");
                                 //Log.d("COOLTEST","Content: " + message);
                                 Message message = doc.getDocument().toObject(Message.class);
@@ -132,9 +156,9 @@ public class ChatActivity extends AppCompatActivity {
                     }
                 });
 
-        for(Message msg : fileHandler.getMessages()){
-            Log.d("COOLTEST", "readMessage: "+msg.getMessage() + "from: " + msg.getFromPersonID());
-            if(msg.getFromPersonID().equals(mOtherPersonId) || msg.getToPersonID().equals(mOtherPersonId) ) {
+        for (Message msg : fileHandler.getMessages()) {
+            Log.d("COOLTEST", "readMessage: " + msg.getMessage() + "from: " + msg.getFromPersonID());
+            if (msg.getFromPersonID().equals(mOtherPersonId) || msg.getToPersonID().equals(mOtherPersonId)) {
                 messageList.add(msg);
             }
         }
@@ -143,8 +167,8 @@ public class ChatActivity extends AppCompatActivity {
 
     public void onSendButtonClick(View v) {
         String message = mMessageEdit.getText().toString();
-        Database.getInstance().sendMessage(message,mLoggedInPersonId,mOtherPersonId);
-        fileHandler.writeMessage(new Message(message,mLoggedInPersonId,mOtherPersonId));
+        Database.getInstance().sendMessage(message, mLoggedInPersonId, mOtherPersonId);
+        fileHandler.writeMessage(new Message(message, mLoggedInPersonId, mOtherPersonId));
         mMessageEdit.setText("");
     }
 
