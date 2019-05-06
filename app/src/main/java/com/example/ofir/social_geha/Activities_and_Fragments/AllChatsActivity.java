@@ -5,6 +5,8 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
@@ -13,6 +15,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -247,4 +251,27 @@ public class AllChatsActivity extends AppCompatActivity {
             });
         }
     }
+
+//    public void animateIntent(View view, ImageView originalImage) {
+//
+//        // Ordinary Intent for launching a new activity
+//        Intent intent = new Intent(this, ZoomedPictureActivity.class);
+//
+//        // Get the transition name from the string
+//        String transitionName = getString(R.string.transition_string);
+//
+//        // Define the view that the animation will start from
+//        View viewStart = findViewById(R.id.row_image);
+//
+//        ActivityOptionsCompat options =
+//
+//                ActivityOptionsCompat.makeSceneTransitionAnimation(this,
+//                        viewStart,   // Starting view
+//                        transitionName    // The String
+//                );
+//        //Start the Intent
+//        ActivityCompat.startActivity(this, intent, options.toBundle());
+//
+//    }
+
 }

@@ -9,13 +9,13 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".Activities_and_Fragments.SettingsHelp"></activity>
+        <activity android:name=".Activities_and_Fragments.ZoomedPictureActivity"></activity>
+        <activity android:name=".Activities_and_Fragments.SettingsHelp" />
         <activity android:name=".Activities_and_Fragments.SettingsInfoEditActivity" />
         <activity
             android:name=".Activities_and_Fragments.SettingsMainActivity"
             android:label="@string/title_activity_settings"
             android:parentActivityName=".Activities_and_Fragments.mainScreen">
-
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.example.ofir.social_geha.Activities_and_Fragments.mainScreen" />
@@ -23,9 +23,7 @@
         <activity android:name=".Activities_and_Fragments.ChatActivity" />
         <activity
             android:name=".Activities_and_Fragments.mainScreen"
-            android:screenOrientation="portrait">
-
-        </activity>
+            android:screenOrientation="portrait"></activity>
         <activity
             android:name=".Activities_and_Fragments.Login"
             android:screenOrientation="portrait" />

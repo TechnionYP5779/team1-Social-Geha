@@ -95,18 +95,18 @@
     <string name="clear_all_label">נקה הכל</string>
 
     <string-array name="months_array">
-    <item>ינואר</item>
-    <item>פברואר</item>
-    <item>מרץ</item>
-    <item>אפריל</item>
-    <item>מאי</item>
-    <item>יוני</item>
-    <item>יולי</item>
-    <item>אוגוסט</item>
-    <item>ספטמבר</item>
-    <item>אוקטובר</item>
-    <item>נובמבר</item>
-    <item>דצמבר</item>
+        <item>ינואר</item>
+        <item>פברואר</item>
+        <item>מרץ</item>
+        <item>אפריל</item>
+        <item>מאי</item>
+        <item>יוני</item>
+        <item>יולי</item>
+        <item>אוגוסט</item>
+        <item>ספטמבר</item>
+        <item>אוקטובר</item>
+        <item>נובמבר</item>
+        <item>דצמבר</item>
     </string-array>
     <string name="headline_about"><b><i>המטרה שלנו</i></b></string>
     <string name="info_our_purpose">מטרת האפליקציה היא לספק תמיכה לשוהי המרכז הרפואי גהה ומשפחותיהם על ידי מטופלי עבר ומשפחותיהם\nבעזרת אפליקציה זו תוכלו לשוחח באנונימיות מוחלטת עם מטופלי עבר בגהה ועם קרובי משפחה של אנשים שהיו מטופלים\n\nשימוש באפליקציה מותנה באישור של גהה</string>
@@ -119,4 +119,5 @@
     <string name="strings_succ_login">התחברת בהצלחה!</string>
     <string name="vecteezy">תודה לvecteezy שסיפקו לנו תמונות עם רישיון לשימוש חוזר</string>
     <string name="profile">פרופיל אישי</string>
+    <string name="transition_string">profile_zoom</string>
 </resources>
