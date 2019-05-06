@@ -109,13 +109,13 @@
     <item>דצמבר</item>
     </string-array>
     <string name="headline_about"><b><i>המטרה שלנו</i></b></string>
-    <string name="info_our_purpose">מטרת האפליקציה היא לספק תמיכה לשוהי המרכז הרפואי גהה ומשפחותיהם על ידי מטופלי עבר ומשפחותיהם\n
-        בעזרת אפליקציה זו תוכלו לשוחח באנונימיות מוחלטת עם מטופלי עבר בגהה ועם קרובי משפחה של אנשים שהיו מטופלים\n\n שימוש באפליקציה מותנה באישור של גהה.</string>
+    <string name="info_our_purpose">מטרת האפליקציה היא לספק תמיכה לשוהי המרכז הרפואי גהה ומשפחותיהם על ידי מטופלי עבר ומשפחותיהם\nבעזרת אפליקציה זו תוכלו לשוחח באנונימיות מוחלטת עם מטופלי עבר בגהה ועם קרובי משפחה של אנשים שהיו מטופלים\n\nשימוש באפליקציה מותנה באישור של גהה</string>
     <string name="terms_of_use_headline">תנאי שימוש</string>
     <string name="terms_of_use">נא להתבטא בצורה הולמת בשיחות עם אנשים אחרים\n\nנא להשתמש באפליקציה אך ורק למטרתה המיועדת\n\nשימוש באפליקציה מותנה באישור מכון בריאות הנפש גהה</string>
-    <string name="help_button">עזרה</string>
+    <string name="about_button">אודות</string>
     <string name="done">סיימתי</string>
     <string name="strings_delete_account">מחק חשבון</string>
     <string name="strings_password_change">שנה סיסמה</string>
     <string name="strings_succ_login">התחברת בהצלחה!</string>
+    <string name="vecteezy">תודה לvecteezy שסיפקו לנו תמונות עם רישיון לשימוש חוזר</string>
 </resources>
