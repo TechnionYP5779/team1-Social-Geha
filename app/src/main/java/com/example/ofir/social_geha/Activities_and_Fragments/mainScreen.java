@@ -5,6 +5,8 @@ import android.content.Intent;
 import android.provider.ContactsContract;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -59,7 +61,7 @@ public class mainScreen extends AppCompatActivity {
         loadUserData();
 
 
-        ImageView return_home = (ImageView) findViewById(R.id.return_icon);
+        ImageView return_home = findViewById(R.id.return_icon);
         return_home.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -98,8 +100,26 @@ public class mainScreen extends AppCompatActivity {
                                         .showImageOnFail(default_image)
                                         .showImageOnLoading(default_image).build();
                                 int image_id = mainScreen.this.getResources().getIdentifier("@drawable/" + p.getAnonymousIdentity().getImageName(), null, mainScreen.this.getPackageName() );
-                                String photoString = "drawable://" + image_id;
+                                final String photoString = "drawable://" + image_id;
+                                Log.i("PROFILE_PICTURE", photoString);
                                 image_loader.displayImage(photoString , profile_pic, options);
+
+                                //make sure the profile picture clicks and zooms
+                                final ImageView viewStart = profile_pic;
+                                profile_pic.setOnClickListener(new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View v) {
+                                        Intent intent = new Intent(mainScreen.this, ZoomedPictureActivity.class);
+                                        String transitionName = getString(R.string.transition_string);
+                                        ActivityOptionsCompat options =
+                                                ActivityOptionsCompat.makeSceneTransitionAnimation(mainScreen.this,
+                                                        viewStart,   // Starting view
+                                                        transitionName    // The String
+                                                );
+                                        intent.putExtra("EXTRA_IMAGE_URL", photoString);
+                                        ActivityCompat.startActivity(mainScreen.this, intent, options.toBundle());
+                                    }
+                                });
 
                                 pb.setVisibility(View.GONE);
                                 loading.setVisibility(View.GONE);

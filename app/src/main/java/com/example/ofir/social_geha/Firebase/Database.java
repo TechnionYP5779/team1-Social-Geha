@@ -66,6 +66,8 @@ public final class Database {
 
     public void addUserPerson(final Person p){
         Log.d("PERSON PRINTING !", p.getRealName());
+        //Log.d("PERSON PRINTING !", p.getCalendarBirthDate().toString());
+        //p.getCalendarBirthDate().set
         db.collection(USERS).document(p.getRealName()).set(p).
                 addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override

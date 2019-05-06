@@ -140,7 +140,9 @@ public class SettingsInfoEditActivity extends AppCompatActivity {
                             Intent myIntent = new Intent(SettingsInfoEditActivity.this, AllChatsActivity.class);
                             SettingsInfoEditActivity.this.startActivity(myIntent);
                         } else {
-                            Toast.makeText(SettingsInfoEditActivity.this, "שם המשתמש כבר תפוס!", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(SettingsInfoEditActivity.this, "Authentication failed:" +
+                                    task.getException(), Toast.LENGTH_SHORT).show();
+//                            Toast.makeText(SettingsInfoEditActivity.this, "שם המשתמש כבר תפוס!", Toast.LENGTH_SHORT).show();
                         }
                     }
                 });

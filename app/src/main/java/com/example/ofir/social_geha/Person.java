@@ -4,6 +4,7 @@ import android.content.Context;
 import android.util.Pair;
 
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.Exclude;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -81,6 +82,7 @@ public class Person {
         return anonymousIdentity;
     }
 
+    @Exclude
     public Calendar getCalendarBirthDate() {
         Calendar date = Calendar.getInstance();
         date.setTimeInMillis(birthDate);
