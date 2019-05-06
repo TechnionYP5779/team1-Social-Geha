@@ -349,12 +349,12 @@ public class SettingsInfoEditActivity extends AppCompatActivity {
                     }
                 });
 
-                mBuilder.setNeutralButton(R.string.clear_all_label, new DialogInterface.OnClickListener() {
+                mBuilder.setNeutralButton(R.string.select_all_label, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int which) {
                         for (int i = 0; i < langCheckedItems.length; i++) {
-                            langCheckedItems[i] = false;
-                            mUserItems.clear();
+                            langCheckedItems[i] = true;
+                            mUserItems.add(i);
 //                            mItemSelected.setText("");
                         }
                     }

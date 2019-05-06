@@ -68,12 +68,12 @@ public class SettingsMainActivity extends AppCompatActivity {
             }
         });
 
-        mBuilder.setNeutralButton(R.string.clear_all_label, new DialogInterface.OnClickListener() {
+        mBuilder.setNeutralButton(R.string.select_all_label, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int which) {
                 for (int i = 0; i < usersChecked.length; i++) {
-                    usersChecked[i] = false;
-                    mUserItems.clear();
+                    usersChecked[i] = true;
+                    mUserItems.add(i);
 //                            mItemSelected.setText("");
                 }
             }
