@@ -1,7 +1,6 @@
 package com.example.ofir.social_geha.Activities_and_Fragments;
 
 import android.content.Intent;
-import android.graphics.PorterDuff;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -36,9 +35,7 @@ import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
-import java.util.Set;
 
 public class AllChatsActivity extends AppCompatActivity {
     Toolbar mToolbar;
@@ -75,12 +72,6 @@ public class AllChatsActivity extends AppCompatActivity {
 
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(mToolbar);
-        if (getSupportActionBar() != null){
-            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-            getSupportActionBar().setDisplayShowHomeEnabled(true);
-        }
-        mToolbar.getNavigationIcon().setColorFilter(this.getColor(R.color.white), PorterDuff.Mode.SRC_ATOP);
-
         mListView = (ListView) findViewById(R.id.list);
         mEmptyView = (TextView) findViewById(R.id.emptyView);
 
@@ -112,7 +103,7 @@ public class AllChatsActivity extends AppCompatActivity {
         MenuItem mSearch = menu.findItem(R.id.action_search);
 
         SearchView mSearchView = (SearchView) mSearch.getActionView();
-        mSearchView.setQueryHint("Search");
+        mSearchView.setQueryHint("חיפוש");
 
         mSearchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
@@ -159,12 +150,6 @@ public class AllChatsActivity extends AppCompatActivity {
             AllChatsActivity.this.startActivity(intent);
         }
         return super.onOptionsItemSelected(item);
-    }
-
-    @Override
-    public boolean onSupportNavigateUp() {
-        onBackPressed();
-        return true;
     }
 
     private void loadList(){
