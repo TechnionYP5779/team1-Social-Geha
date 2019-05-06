@@ -1,9 +1,11 @@
 package com.example.ofir.social_geha.Activities_and_Fragments;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.provider.ContactsContract;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -26,12 +28,14 @@ import com.nostra13.universalimageloader.core.ImageLoader;
 
 import org.w3c.dom.Text;
 
+import java.util.ArrayList;
+
 public class mainScreen extends AppCompatActivity {
 
-    LinearLayout settings_screen;
+    LinearLayout share_info;
     LinearLayout edit_info;
-    LinearLayout all_conversations;
-    LinearLayout contact_us;
+    LinearLayout delete_account;
+    LinearLayout about;
     ImageView profile_pic;
     TextView real_name;
     TextView anonymous_name;
@@ -43,10 +47,10 @@ public class mainScreen extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_screen);
 
-        settings_screen = this.findViewById(R.id.settings);
+        share_info = this.findViewById(R.id.share_info);
         edit_info = this.findViewById(R.id.edit_info);
-        all_conversations = this.findViewById(R.id.current_conversations);
-        contact_us = this.findViewById(R.id.contact_us);
+        delete_account = this.findViewById(R.id.delete_my_account);
+        about = this.findViewById(R.id.about);
         profile_pic = this.findViewById(R.id.overlapImage);
         real_name = this.findViewById(R.id.user_name);
         anonymous_name = this.findViewById(R.id.anonymous_name);
@@ -111,20 +115,59 @@ public class mainScreen extends AppCompatActivity {
     }
 
     public void gotoScreen(View view) {
-        if (view.equals(settings_screen)) {
-            Intent myIntent = new Intent(mainScreen.this, SettingsMainActivity.class);
-            mainScreen.this.startActivity(myIntent);
+        final ArrayList<Integer> mUserItems = new ArrayList<>();
+        if (view.equals(share_info)) {
+            String[] usersAll = {"אבי ישראלי", "ענת רימון"};
+            final boolean[] usersChecked ={true, true};
+                AlertDialog.Builder mBuilder = new AlertDialog.Builder(mainScreen.this, R.style.AlertDialogCustom);
+                mBuilder.setMultiChoiceItems(usersAll, usersChecked, new DialogInterface.OnMultiChoiceClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int position, boolean isChecked) {
+                        if (isChecked) {
+                            mUserItems.add(position);
+                        } else {
+                            mUserItems.remove((Integer.valueOf(position)));
+                        }
+                    }
+                });
+
+                mBuilder.setCancelable(false);
+                mBuilder.setPositiveButton(R.string.ok_label, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int which) {
+                    }
+                });
+
+                mBuilder.setNegativeButton(R.string.dismiss_label, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        dialogInterface.dismiss();
+                    }
+                });
+
+                mBuilder.setNeutralButton(R.string.clear_all_label, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int which) {
+                        for (int i = 0; i < usersChecked.length; i++) {
+                            usersChecked[i] = false;
+                            mUserItems.clear();
+                        }
+                    }
+                });
+
+                AlertDialog mDialog = mBuilder.create();
+                mDialog.show();
         }
         if (view.equals(edit_info)){
             Intent myIntent = new Intent(mainScreen.this, SettingsInfoEditActivity.class);
             mainScreen.this.startActivity(myIntent);
          }
-        if (view.equals(all_conversations)){
-            Intent myIntent = new Intent(mainScreen.this, AllChatsActivity.class);
-            mainScreen.this.startActivity(myIntent);
+        if (view.equals(delete_account)){
+            Toast.makeText(this,"deletion not implemented yet",Toast.LENGTH_SHORT).show();
         }
-        if(view.equals(contact_us)) {
-            Toast.makeText(this, "Not implemented yet", Toast.LENGTH_SHORT).show();
+        if(view.equals(about)) {
+            Intent myIntent = new Intent(mainScreen.this , SettingsHelp.class);
+            mainScreen.this.startActivity(myIntent);
         }
     }
 
