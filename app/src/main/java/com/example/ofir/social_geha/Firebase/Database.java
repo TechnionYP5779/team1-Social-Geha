@@ -17,6 +17,7 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
@@ -62,7 +63,6 @@ public final class Database {
                     }
                 });
     }
-
 
     public void addUserPerson(final Person p){
         Log.d("PERSON PRINTING !", p.getRealName());
@@ -189,5 +189,8 @@ public final class Database {
         auth.signOut();
     }
 
+    public FirebaseFirestore getdb(){
+        return db;
+    }
 
 }

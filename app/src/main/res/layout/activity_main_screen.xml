@@ -3,6 +3,22 @@
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/loading"
+        android:textColor="@color/colorAccent"
+        android:layout_centerInParent="true"
+        android:id="@+id/loading_txt"
+        android:layout_above="@id/mainscreen_pb"/>
+
+    <ProgressBar
+        android:id="@+id/mainscreen_pb"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        />
+
     <RelativeLayout
         android:id="@+id/layoutTop"
         android:layout_width="match_parent"
@@ -47,6 +63,8 @@
 
 
         <LinearLayout
+            android:id="@+id/buttons_layout"
+            android:visibility="gone"
             android:layout_width="match_parent"
             android:layout_height="350dp"
             android:layout_marginTop="60dp"
@@ -170,6 +188,7 @@
         android:layout_marginBottom="-100dp"
         app:civ_border_width="3dp"
         app:civ_border_color="@color/colorPrimaryDark"
+        android:visibility="gone"
         android:src="@drawable/sheep_1" />
 
 </RelativeLayout>

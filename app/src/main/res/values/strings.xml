@@ -130,4 +130,5 @@
     <string name="profile">פרופיל אישי</string>
     <string name="transition_string">profile_zoom</string>
     <string name="age_range_text">טווח גילאים</string>
+    <string name="loading">טוען...</string>
 </resources>

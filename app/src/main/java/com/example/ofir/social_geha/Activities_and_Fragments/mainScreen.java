@@ -1,20 +1,30 @@
 package com.example.ofir.social_geha.Activities_and_Fragments;
 
 import android.content.Intent;
+import android.provider.ContactsContract;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.ofir.social_geha.Firebase.Database;
 import com.example.ofir.social_geha.Person;
 import com.example.ofir.social_geha.R;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
+
+import org.w3c.dom.Text;
 
 public class mainScreen extends AppCompatActivity {
 
@@ -41,7 +51,6 @@ public class mainScreen extends AppCompatActivity {
         real_name = this.findViewById(R.id.user_name);
         anonymous_name = this.findViewById(R.id.anonymous_name);
 
-        Database.getInstance().getLoggedInUserID();
         // Load details
         loadUserData();
 
@@ -60,24 +69,45 @@ public class mainScreen extends AppCompatActivity {
     }
 
     private void loadUserData() {
-//        Person p = getLoggedInPerson();
-//        anonymous_name.setText(p.getAnonymousIdentity().getName());
-//        real_name.setText(p.getRealName());
-        anonymous_name.setText("כבשה חלקלקה");
-        real_name.setText("אופיר אלכסי");
+        final ProgressBar pb = this.findViewById(R.id.mainscreen_pb);
+        final TextView loading = this.findViewById(R.id.loading_txt);
+        pb.setVisibility(View.VISIBLE);
+        loading.setVisibility(View.VISIBLE);
 
-        // Display user image as profile pic
-        int default_image = this.getResources().getIdentifier("@drawable/image_fail", null, this.getPackageName() );
-        ImageLoader image_loader = ImageLoader.getInstance();
-        DisplayImageOptions options = new DisplayImageOptions.Builder().cacheInMemory(true)
-                .cacheOnDisc(true).resetViewBeforeLoading(true)
-                .showImageForEmptyUri(default_image)
-                .showImageOnFail(default_image)
-                .showImageOnLoading(default_image).build();
-//        int image_id = this.getResources().getIdentifier("@drawable/" + p.getAnonymousIdentity().getImageName(), null, this.getPackageName() );
-        int image_id = R.drawable.sheep_1;
-        String photoString = "drawable://" + image_id;
-        image_loader.displayImage(photoString , profile_pic, options);
+        Database.getInstance().getdb().collection("users").whereEqualTo("userID",Database.getInstance().getLoggedInUserID()).get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if(task.isSuccessful()){
+                            for(QueryDocumentSnapshot doc: task.getResult()){
+                                Person p = doc.toObject(Person.class);
+                                anonymous_name.setText(p.getAnonymousIdentity().getName());
+                                real_name.setText(p.getRealName());
+
+                                // Display user image as profile pic
+                                int default_image = mainScreen.this.getResources().getIdentifier("@drawable/image_fail", null, mainScreen.this.getPackageName() );
+                                ImageLoader image_loader = ImageLoader.getInstance();
+                                DisplayImageOptions options = new DisplayImageOptions.Builder().cacheInMemory(true)
+                                        .cacheOnDisc(true).resetViewBeforeLoading(true)
+                                        .showImageForEmptyUri(default_image)
+                                        .showImageOnFail(default_image)
+                                        .showImageOnLoading(default_image).build();
+                                int image_id = mainScreen.this.getResources().getIdentifier("@drawable/" + p.getAnonymousIdentity().getImageName(), null, mainScreen.this.getPackageName() );
+                                String photoString = "drawable://" + image_id;
+                                image_loader.displayImage(photoString , profile_pic, options);
+
+                                pb.setVisibility(View.GONE);
+                                loading.setVisibility(View.GONE);
+                                profile_pic.setVisibility(View.VISIBLE);
+                                LinearLayout buttons_layout = findViewById(R.id.buttons_layout);
+                                buttons_layout.setVisibility(View.VISIBLE);
+                            }
+                        }
+                        else{
+                            loading.setText("אירעה שגיאה, נסה שוב מאוחר יותר.");
+                        }
+                    }
+                });
     }
 
     public void gotoScreen(View view) {
