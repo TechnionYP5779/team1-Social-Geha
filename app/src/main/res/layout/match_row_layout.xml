@@ -74,11 +74,13 @@
     </LinearLayout>
 
     <de.hdodenhof.circleimageview.CircleImageView
+        android:transitionName="@string/transition_string"
         android:layout_alignParentEnd="true"
         android:id="@+id/row_image"
         android:layout_width="60dp"
         android:layout_height="60dp"
         android:src="@drawable/profilepic"
         android:layout_marginEnd="1dp" />
+        <!-- android:onClick="animateIntent" -->
 
 </RelativeLayout>

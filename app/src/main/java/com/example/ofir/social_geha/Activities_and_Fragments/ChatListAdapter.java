@@ -1,6 +1,10 @@
 package com.example.ofir.social_geha.Activities_and_Fragments;
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.ActivityOptionsCompat;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -37,6 +41,7 @@ public class ChatListAdapter extends ArrayAdapter<ChatEntry> {
         TextView unread_msg_count;
         TextView msg_time;
         RelativeLayout chat_message_layout;
+        String imgURL;
     }
 
     public ChatListAdapter(Context ctxt, int resource, ArrayList<ChatEntry> objects){
@@ -68,6 +73,8 @@ public class ChatListAdapter extends ArrayAdapter<ChatEntry> {
             holder.name = (TextView) convertView.findViewById(R.id.row_name);
             holder.description = (TextView) convertView.findViewById(R.id.row_description);
             holder.image = (ImageView) convertView.findViewById(R.id.row_image);
+            holder.imgURL = imageUrl;
+            setUpOnClick(holder);
             holder.msg_time = (TextView) convertView.findViewById(R.id.message_time);
             holder.unread_msg_count = (TextView) convertView.findViewById(R.id.unread_messages_icon);
             holder.chat_message_layout = (RelativeLayout) convertView.findViewById(R.id.chat_message_layout);
@@ -104,6 +111,37 @@ public class ChatListAdapter extends ArrayAdapter<ChatEntry> {
         holder.unread_msg_count.setText("5");
         holder.description.setText(lastMessage.getMessage());
         return convertView;
+    }
+
+    private void setUpOnClick(final ViewHolder holder) {
+//        final ImageView img = holder.image;
+        holder.image.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Ordinary Intent for launching a new activity
+                Intent intent = new Intent(mContext, ZoomedPictureActivity.class);
+
+                // Get the transition name from the string
+                String transitionName = mContext.getString(R.string.transition_string);
+
+                // Define the view that the animation will start from
+                View viewStart = holder.image;
+
+                ActivityOptionsCompat options =
+
+                        ActivityOptionsCompat.makeSceneTransitionAnimation((Activity) mContext,
+                                viewStart,   // Starting view
+                                transitionName    // The String
+                        );
+
+                //put extra
+                intent.putExtra("EXTRA_IMAGE_URL", holder.imgURL);
+
+                //Start the Intent
+                ActivityCompat.startActivity(mContext, intent, options.toBundle());
+            }
+        });
+
     }
 
     private static String getHourStringFromDate(Date date){
