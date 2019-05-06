@@ -97,6 +97,16 @@ public class AllChatsActivity extends AppCompatActivity {
         getMenuInflater().inflate(R.menu.toolbar_menu_search, menu);
 
         MenuItem mSearch = menu.findItem(R.id.action_search);
+        MenuItem mProfile = menu.findItem(R.id.personal_info);
+        mProfile.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                // move to personal settings screen
+                Intent intent = new Intent(AllChatsActivity.this, mainScreen.class);
+                AllChatsActivity.this.startActivity(intent);
+                return true;
+            }
+        });
 
         SearchView mSearchView = (SearchView) mSearch.getActionView();
         mSearchView.setQueryHint("חיפוש");
@@ -127,25 +137,6 @@ public class AllChatsActivity extends AppCompatActivity {
     public void promptLogin() {
         Intent intent = new Intent(AllChatsActivity.this, Login.class);
         startActivityForResult(intent, LOGIN_RETURN_CODE);
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-        // handle arrow click here
-        if (id == android.R.id.home) {
-            finish(); // close this activity and return to preview activity (if there is any)
-        }
-        if(id == R.id.menu_settings){
-            // move to settings screen
-            Intent intent = new Intent(AllChatsActivity.this, SettingsMainActivity.class);
-            AllChatsActivity.this.startActivity(intent);
-        }
-        if(id == R.id.menu_edit_information){
-            Intent intent = new Intent(AllChatsActivity.this, SettingsInfoEditActivity.class);
-            AllChatsActivity.this.startActivity(intent);
-        }
-        return super.onOptionsItemSelected(item);
     }
 
     private void loadList(){

@@ -62,7 +62,7 @@ public class FilterMatchesPagerAdapter extends PagerAdapter {
         mSpinnerGender.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
-                gender_preference = Person.fromStringToGenderEnum(mContext.getResources().getStringArray(R.array.gender_preferences)[position],mContext);
+                gender_preference = Person.fromStringToGenderEnum(mContext.getResources().getStringArray(R.array.gender_preferences)[position],mContext, true);
             }
 
             @Override
@@ -75,7 +75,7 @@ public class FilterMatchesPagerAdapter extends PagerAdapter {
         mSpinnerReligious.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
-                religion_preference = Person.fromStringToReligion(mContext.getResources().getStringArray(R.array.religious_preferences)[position]);
+                religion_preference = Person.fromStringToReligion(mContext.getResources().getStringArray(R.array.religious_preferences)[position], true);
             }
 
             @Override

@@ -176,26 +176,29 @@ public class Person {
         return mLanguages;
     }
 
-    public static Religion fromStringToReligion(String religion){
+    public static Religion fromStringToReligion(String religion, boolean canBeNull){
         switch (religion){
             case "דתי":
                 return Person.Religion.RELIGIOUS;
             case "מסורתי":
                 return Person.Religion.TRADITIONAL;
-            case "לא משנה":
-                return Person.Religion.SECULAR;
             case "חילוני":
                 return Person.Religion.SECULAR;
             case "ערבי":
                 return Person.Religion.ARABIC;
         }
+        if(canBeNull)
+            return null;
         return Person.Religion.SECULAR;
     }
 
-    public static Gender fromStringToGenderEnum(String gender, Context mContext){
+    public static Gender fromStringToGenderEnum(String gender, Context mContext, boolean canBeNull){
         String[] allGenders = mContext.getResources().getStringArray(R.array.gender_preferences);
-        if(gender.equals(allGenders[0]))
+        if(gender.equals(allGenders[0])){
+            if(canBeNull)
+                return null;
             return Gender.UNDISCLOSED;
+        }
         if(gender.equals(allGenders[1]))
             return Gender.MALE;
         return Gender.FEMALE;

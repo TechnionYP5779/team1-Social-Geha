@@ -104,8 +104,8 @@ public final class Database {
                            Range<Integer> ageRange,
                            final ArrayList<Person> matches_list,
                            final MatchesListAdapter adapter) {
+
         List<Task<QuerySnapshot>> langQueryResults = new ArrayList<>();
-        Log.d("PEOPLE FOUND","Looking for gender" + genderPref.toString());
         // note the different fields
         if (languagesPref.isEmpty()) {
             QueryBuilder queryBuilder = new QueryBuilder(db.collection(USERS));

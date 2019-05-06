@@ -118,4 +118,5 @@
     <string name="strings_password_change">שנה סיסמה</string>
     <string name="strings_succ_login">התחברת בהצלחה!</string>
     <string name="vecteezy">תודה לvecteezy שסיפקו לנו תמונות עם רישיון לשימוש חוזר</string>
+    <string name="profile">פרופיל אישי</string>
 </resources>

@@ -127,11 +127,11 @@ public class SettingsInfoEditActivity extends AppCompatActivity {
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         progressDialog.dismiss();
                         long date = c.getTimeInMillis();
-                        Person.Religion mReligion = fromStringToReligion(religion);
+                        Person.Religion mReligion = fromStringToReligion(religion, false);
                         List<Person.Language> spokenLanguages = languagesStringToLanguageEnum(languages);
                         Person p = new Person(name, FictitiousIdentityGenerator.getAnonymousIdentity(
-                                fromStringToGenderEnum(gender, SettingsInfoEditActivity.this)),
-                                    date,fromStringToGenderEnum(gender, SettingsInfoEditActivity.this), mReligion, spokenLanguages,
+                                fromStringToGenderEnum(gender, SettingsInfoEditActivity.this,false)),
+                                    date,fromStringToGenderEnum(gender, SettingsInfoEditActivity.this, false), mReligion, spokenLanguages,
                                     Person.Kind.PAST_PATIENT, Database.getInstance().getLoggedInUserID(), bio, new ArrayList<Integer>());
                         if (task.isSuccessful()) {
                             Database.getInstance().addUserPerson(p);
