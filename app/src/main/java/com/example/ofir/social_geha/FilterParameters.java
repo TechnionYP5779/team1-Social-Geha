@@ -11,15 +11,17 @@ public class FilterParameters implements Serializable {
     private Person.Kind kind;
     private Person.Gender gender;
     private Person.Religion religion;
-    private Range<Integer> age = null;
+    private Integer lower_bound;
+    private Integer upper_bound;
 
     public FilterParameters(EnumSet<Person.Language> languages, Person.Kind kind, Person.Gender gender,
-                            Person.Religion religion, Range<Integer> age) {
+                            Person.Religion religion, Integer lower, Integer upper) {
         this.languages = languages;
         this.kind = kind;
         this.gender = gender;
         this.religion = religion;
-        this.age = age;
+        this.lower_bound = lower;
+        this.upper_bound = upper;
     }
 
     public EnumSet<Person.Language> getLanguages() {
@@ -54,11 +56,19 @@ public class FilterParameters implements Serializable {
         this.religion = religion;
     }
 
-    public Range<Integer> getAge() {
-        return age;
+    public Integer getLower_bound() {
+        return lower_bound;
     }
 
-    public void setAge(Range<Integer> age) {
-        this.age = age;
+    public void setLower_bound(Integer lower_bound) {
+        this.lower_bound = lower_bound;
+    }
+
+    public Integer getUpper_bound() {
+        return upper_bound;
+    }
+
+    public void setUpper_bound(Integer upper_bound) {
+        this.upper_bound = upper_bound;
     }
 }

@@ -138,7 +138,7 @@ public class FilterMatchesActivity extends AppCompatActivity {
         Intent myIntent = new Intent(FilterMatchesActivity.this, AvailableMatches.class);
         myIntent.setFlags(myIntent.getFlags() | Intent.FLAG_ACTIVITY_NO_HISTORY);
         FilterParameters filterObj = new FilterParameters(temp, introViewPagerAdapter.kind_preference,
-                introViewPagerAdapter.gender_preference, introViewPagerAdapter.religion_preference,null);
+                introViewPagerAdapter.gender_preference, introViewPagerAdapter.religion_preference,introViewPagerAdapter.lower_bound, introViewPagerAdapter.upper_bound);
         myIntent.putExtra("filterObject", filterObj);
         FilterMatchesActivity.this.startActivity(myIntent);
     }

@@ -127,6 +127,6 @@ public class AvailableMatches extends AppCompatActivity {
     private void filterUsers(FilterParameters f){
         // query users
         Database.getInstance().queryUsers(f.getKind(), f.getGender(), f.getReligion(),
-                f.getLanguages(), f.getAge(), matches_list, adapter);
+                f.getLanguages(), f.getLower_bound(), f.getUpper_bound(), matches_list, adapter);
     }
 }

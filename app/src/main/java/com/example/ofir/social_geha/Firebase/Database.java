@@ -101,7 +101,8 @@ public final class Database {
                            Person.Gender genderPref,
                            Person.Religion religionPref,
                            EnumSet<Person.Language> languagesPref,
-                           Range<Integer> ageRange,
+                           Integer lower_bound,
+                           Integer upper_bound,
                            final ArrayList<Person> matches_list,
                            final MatchesListAdapter adapter) {
 
@@ -125,10 +126,10 @@ public final class Database {
         }
         // add the age ranges, consider how to calculate the ages using the current date
         List<Task<QuerySnapshot>> ageQueryResults = new ArrayList<>();
-        if (ageRange != null) {
+        if (lower_bound != null) {
             Calendar youngest = Calendar.getInstance(), oldest = Calendar.getInstance();
-            oldest.add(Calendar.YEAR, -ageRange.getUpper());
-            youngest.add(Calendar.YEAR, -ageRange.getLower());
+            oldest.add(Calendar.YEAR, -upper_bound);
+            youngest.add(Calendar.YEAR, -lower_bound);
             QueryBuilder queryBuilder = new QueryBuilder(db.collection(USERS));
             queryBuilder.addWhereEquals("gender", genderPref)
                     .addWhereEquals("religion", religionPref)
@@ -156,7 +157,7 @@ public final class Database {
             });
         }
 
-        if (ageRange != null) {
+        if (lower_bound != null) {
             for (Task<QuerySnapshot> task1 : ageQueryResults) {
                 task1.addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override

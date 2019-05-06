@@ -3,7 +3,7 @@ package com.example.ofir.social_geha.Activities_and_Fragments;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v4.view.PagerAdapter;
-import android.util.Log;
+import android.util.Range;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,21 +25,20 @@ import java.util.List;
 
 public class FilterMatchesPagerAdapter extends PagerAdapter {
 
-    Context mContext ;
-    List<ScreenItem> mListScreen;
-    View layoutScreen;
-    Animation btnAnim;
-    Spinner mSpinner1;
-    Spinner mSpinnerGender;
-    Spinner mSpinnerReligious;
+    private Context mContext ;
+    private List<ScreenItem> mListScreen;
+    private View layoutScreen;
+    private Animation btnAnim;
 
     //----------------------------------------
-    public Kind kind_preference;
-    public Gender gender_preference;
-    public Religion religion_preference;
-    public List<Language> languages_preference;
+    Kind kind_preference = null;
+    Gender gender_preference = null;
+    Religion religion_preference = null;
+    List<Language> languages_preference= null;
+    Integer lower_bound = null;
+    Integer upper_bound = null;
 
-    public FilterMatchesPagerAdapter(Context mContext, List<ScreenItem> mListScreen) {
+    FilterMatchesPagerAdapter(Context mContext, List<ScreenItem> mListScreen) {
         this.mContext = mContext;
         this.mListScreen = mListScreen;
     }
@@ -55,9 +54,10 @@ public class FilterMatchesPagerAdapter extends PagerAdapter {
         ImageView imgSlide = layoutScreen.findViewById(R.id.intro_img);
         TextView title = layoutScreen.findViewById(R.id.intro_title);
         TextView description = layoutScreen.findViewById(R.id.intro_description);
-        mSpinner1 = layoutScreen.findViewById(R.id.spinner_preferences); // TODO - attach listeners
-        mSpinnerGender = layoutScreen.findViewById(R.id.spinner_gender);
-        mSpinnerReligious = layoutScreen.findViewById(R.id.spinner_religious);
+        Spinner mSpinner1 = layoutScreen.findViewById(R.id.spinner_preferences); // TODO - attach listeners
+        Spinner mSpinnerGender = layoutScreen.findViewById(R.id.spinner_gender);
+        Spinner mSpinnerReligious = layoutScreen.findViewById(R.id.spinner_religious);
+        Spinner mSpinnerAge = layoutScreen.findViewById(R.id.spinner_age);
 
         mSpinnerGender.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
@@ -67,7 +67,7 @@ public class FilterMatchesPagerAdapter extends PagerAdapter {
 
             @Override
             public void onNothingSelected(AdapterView<?> parentView) {
-                gender_preference = Gender.UNDISCLOSED;
+                gender_preference = null;
             }
 
         });
@@ -80,9 +80,30 @@ public class FilterMatchesPagerAdapter extends PagerAdapter {
 
             @Override
             public void onNothingSelected(AdapterView<?> parentView) {
-                religion_preference = Religion.SECULAR;
+                religion_preference = null;
             }
 
+        });
+
+        mSpinnerAge.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                String selected_value = mContext.getResources().getStringArray(R.array.age_preferences)[position];
+                if(selected_value.equals("לא משנה")) {
+                    lower_bound = null;
+                    upper_bound = null;
+                    return;
+                }
+                String[] numbers = selected_value.split("–"); //splits the string based on string
+                lower_bound = Integer.valueOf(numbers[0]);
+                upper_bound = Integer.valueOf(numbers[1]);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+                lower_bound = null;
+                upper_bound = null;
+            }
         });
 
         title.setText(mListScreen.get(position).getTitle());

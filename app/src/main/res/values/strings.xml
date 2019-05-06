@@ -47,6 +47,15 @@
         <item>חילוני</item>
         <item>ערבי</item>
     </string-array>
+
+    <string-array name="age_preferences">
+        <item>לא משנה</item>
+        <item>0–20</item>
+        <item>30–40</item>
+        <item>40–50</item>
+        <item>50+</item>
+    </string-array>
+
     <string name="title_activity_settings">הגדרות</string>
 
     <!-- Strings related to Settings -->
@@ -120,4 +129,5 @@
     <string name="vecteezy">תודה לvecteezy שסיפקו לנו תמונות עם רישיון לשימוש חוזר</string>
     <string name="profile">פרופיל אישי</string>
     <string name="transition_string">profile_zoom</string>
+    <string name="age_range_text">טווח גילאים</string>
 </resources>
