@@ -252,7 +252,13 @@ public class AllChatsActivity extends AppCompatActivity {
         }
     }
 
-//    public void animateIntent(View view, ImageView originalImage) {
+    @Override
+    protected void onResume() {
+        super.onResume();
+        updateList();
+    }
+
+    //    public void animateIntent(View view, ImageView originalImage) {
 //
 //        // Ordinary Intent for launching a new activity
 //        Intent intent = new Intent(this, ZoomedPictureActivity.class);
