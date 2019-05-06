@@ -27,6 +27,7 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
+import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 
 import org.w3c.dom.Text;
 
@@ -41,6 +42,7 @@ public class mainScreen extends AppCompatActivity {
     ImageView profile_pic;
     TextView real_name;
     TextView anonymous_name;
+    Person p;
 
     private static final int LOGIN_RETURN_CODE = 1;
 
@@ -58,7 +60,7 @@ public class mainScreen extends AppCompatActivity {
         anonymous_name = this.findViewById(R.id.anonymous_name);
 
         // Load details
-        loadUserData();
+        loadUserData(); //initializes the field p
 
 
         ImageView return_home = findViewById(R.id.return_icon);
@@ -87,13 +89,15 @@ public class mainScreen extends AppCompatActivity {
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
                         if(task.isSuccessful()){
                             for(QueryDocumentSnapshot doc: task.getResult()){
-                                Person p = doc.toObject(Person.class);
+                                p = doc.toObject(Person.class);
                                 anonymous_name.setText(p.getAnonymousIdentity().getName());
                                 real_name.setText(p.getRealName());
 
                                 // Display user image as profile pic
+
                                 int default_image = mainScreen.this.getResources().getIdentifier("@drawable/image_fail", null, mainScreen.this.getPackageName() );
                                 ImageLoader image_loader = ImageLoader.getInstance();
+                                image_loader.init(ImageLoaderConfiguration.createDefault(mainScreen.this));
                                 DisplayImageOptions options = new DisplayImageOptions.Builder().cacheInMemory(true)
                                         .cacheOnDisc(true).resetViewBeforeLoading(true)
                                         .showImageForEmptyUri(default_image)
@@ -102,7 +106,7 @@ public class mainScreen extends AppCompatActivity {
                                 int image_id = mainScreen.this.getResources().getIdentifier("@drawable/" + p.getAnonymousIdentity().getImageName(), null, mainScreen.this.getPackageName() );
                                 final String photoString = "drawable://" + image_id;
                                 Log.i("PROFILE_PICTURE", photoString);
-                                image_loader.displayImage(photoString , profile_pic, options);
+                                image_loader.displayImage(photoString , profile_pic, options );
 
                                 //make sure the profile picture clicks and zooms
                                 final ImageView viewStart = profile_pic;
@@ -139,7 +143,9 @@ public class mainScreen extends AppCompatActivity {
         final ArrayList<Integer> mUserItems = new ArrayList<>();
         if (view.equals(share_info)) {
             String[] usersAll = {"אבי ישראלי", "ענת רימון"};
-            final boolean[] usersChecked ={true, true};
+            final boolean[] usersChecked = {};
+
+
                 AlertDialog.Builder mBuilder = new AlertDialog.Builder(mainScreen.this, R.style.AlertDialogCustom);
                 mBuilder.setMultiChoiceItems(usersAll, usersChecked, new DialogInterface.OnMultiChoiceClickListener() {
                     @Override

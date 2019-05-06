@@ -11,6 +11,7 @@ import android.widget.ImageView;
 import com.example.ofir.social_geha.R;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
+import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 
 public class ZoomedPictureActivity extends AppCompatActivity {
     Toolbar mToolbar;
@@ -58,6 +59,7 @@ public class ZoomedPictureActivity extends AppCompatActivity {
                 .showImageForEmptyUri(default_image)
                 .showImageOnFail(default_image)
                 .showImageOnLoading(default_image).build();
+        image_loader.init(ImageLoaderConfiguration.createDefault(ZoomedPictureActivity.this));
 
         //download and display image from url
         image_loader.displayImage(imageURL, imgView, options);
