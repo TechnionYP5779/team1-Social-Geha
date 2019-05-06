@@ -17,20 +17,34 @@ public class ZoomedPictureActivity extends AppCompatActivity {
     String imageURL;
 
     @Override
+    public boolean onSupportNavigateUp() {
+//        getSupportActionBar().hide();
+        mToolbar.setVisibility(View.GONE);
+        onBackPressed();
+        return true;
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_zoomed_picture);
 
-        mToolbar = (Toolbar) findViewById(R.id.toolbar2);
+        mToolbar = findViewById(R.id.toolbar2);
+        setSupportActionBar(mToolbar);
 
-        mToolbar.setNavigationIcon(R.drawable.ic_arrow_left_white_24dp);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
+        //getSupportActionBar().setTitle();
 
-        mToolbar.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(getApplicationContext(), AllChatsActivity.class));
-            }
-        });
+//        mToolbar.setNavigationIcon(R.drawable.ic_arrow_left_white_24dp);
+//
+//        mToolbar.setNavigationOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                startActivity(new Intent(getApplicationContext(), AllChatsActivity.class));
+//            }
+//        });
 
         //display the image from URL
         ImageView imgView = findViewById(R.id.zoomed_profile_picture);
