@@ -23,6 +23,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import android.content.DialogInterface;
 import android.support.v7.app.AlertDialog;
 import android.text.InputType;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
@@ -99,6 +100,7 @@ public class SettingsInfoEditActivity extends AppCompatActivity {
             public void onClick(View v) {
                 if (getIntent().getStringExtra("code") != null) {
                     // we need to preform register
+                    calendar.set(year, month, dayOfMonth);
                     register(getIntent().getStringExtra("code"), givenName, calendar, gender,
                             religion, languagesAll, bio);
                 } else {
@@ -127,6 +129,17 @@ public class SettingsInfoEditActivity extends AppCompatActivity {
                         progressDialog.dismiss();
                         long date = c.getTimeInMillis();
                         Person.Religion mReligion = fromStringToReligion(religion, false);
+                        for (String lang : languages){
+                            Log.d("REGISTER_LANG", lang);
+                        }
+
+                        for (boolean flag : langCheckedItems){
+                            Log.d("REGISTER_LANG_CHECKED", String.valueOf(flag));
+                        }
+
+                        Log.d("REGISTER_DATE", String.valueOf(date));
+
+
                         List<Person.Language> spokenLanguages = languagesStringToLanguageEnum(languages);
                         Person p = new Person(name, FictitiousIdentityGenerator.getAnonymousIdentity(
                                 fromStringToGenderEnum(gender, SettingsInfoEditActivity.this, false)),

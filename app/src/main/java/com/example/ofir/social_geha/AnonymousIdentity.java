@@ -5,6 +5,8 @@ public class AnonymousIdentity {
     public String imageName;
     public String imageColor;
 
+    public AnonymousIdentity() {
+    }
 
     public AnonymousIdentity(String n, String im, String col) {
         name = n;
