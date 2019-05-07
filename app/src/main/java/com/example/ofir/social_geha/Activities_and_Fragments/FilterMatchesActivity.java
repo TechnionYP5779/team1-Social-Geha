@@ -33,10 +33,10 @@ import java.util.Set;
 public class FilterMatchesActivity extends AppCompatActivity {
 
     private ViewPager screenPager;
-    FilterMatchesPagerAdapter introViewPagerAdapter ;
+    FilterMatchesPagerAdapter introViewPagerAdapter;
     TabLayout tabIndicator;
     Button btnNext;
-    int position = 0 ;
+    int position = 0;
     TextView tvSkip;
     List<ScreenItem> mList;
 
@@ -60,14 +60,14 @@ public class FilterMatchesActivity extends AppCompatActivity {
         // fill list screen
         // ALL PHOTOS FROM https://pixabay.com/
         mList = new ArrayList<>();
-        String description = "מלא/י את הפרטים הבאים על האדם שאיתו תרצה/י לשוחח, על מנת שנוכל למצוא לך את ההתאמה הטובה ביותר.";
-        mList.add(new ScreenItem("יצירת שיחה חדשה",description, R.drawable.chat_icon));
-        mList.add(new ScreenItem("פרטים בסיסיים", description, R.drawable.people));
-        mList.add(new ScreenItem("בחירת שפה","בחר/י את השפות בהן תרצה/י לשוחח",R.drawable.earth_round));
+        String description = this.getString(R.string.strings_filter_desc);
+        mList.add(new ScreenItem(this.getString(R.string.strings_filter_create_conv), description, R.drawable.chat_icon));
+        mList.add(new ScreenItem(this.getString(R.string.strings_filter_basic_info), description, R.drawable.people));
+        mList.add(new ScreenItem(this.getString(R.string.strings_filter_choose_lang), this.getString(R.string.strings_filter_lang_desc), R.drawable.earth_round));
 
         // setup viewpager
         screenPager = findViewById(R.id.screen_viewpager);
-        introViewPagerAdapter = new FilterMatchesPagerAdapter(this,mList);
+        introViewPagerAdapter = new FilterMatchesPagerAdapter(this, mList);
         screenPager.setAdapter(introViewPagerAdapter);
 
         // setup tablayout with viewpager
@@ -97,10 +97,12 @@ public class FilterMatchesActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onTabUnselected(TabLayout.Tab tab) { }
+            public void onTabUnselected(TabLayout.Tab tab) {
+            }
 
             @Override
-            public void onTabReselected(TabLayout.Tab tab) { }
+            public void onTabReselected(TabLayout.Tab tab) {
+            }
         });
 
         // skip button click listener
@@ -113,13 +115,12 @@ public class FilterMatchesActivity extends AppCompatActivity {
         });
     }
 
-    private void showScreen(int position){
-        if( position == mList.size() - 1){ // at the languages window
+    private void showScreen(int position) {
+        if (position == mList.size() - 1) { // at the languages window
             btnNext.setVisibility(View.GONE);
             tvSkip.setVisibility(View.INVISIBLE);
             tabIndicator.setVisibility(View.GONE);
-        }
-        else{
+        } else {
             btnNext.setVisibility(View.VISIBLE);
             tvSkip.setVisibility(View.VISIBLE);
             tabIndicator.setVisibility(View.VISIBLE);
@@ -133,12 +134,12 @@ public class FilterMatchesActivity extends AppCompatActivity {
         temp.addAll(introViewPagerAdapter.languages_preference); // add varargs to it
 
 
-        Log.d("PEOPLE FOUND", "========== "+introViewPagerAdapter.gender_preference+"===========");
+        Log.d("PEOPLE FOUND", "========== " + introViewPagerAdapter.gender_preference + "===========");
 
         Intent myIntent = new Intent(FilterMatchesActivity.this, AvailableMatches.class);
         myIntent.setFlags(myIntent.getFlags() | Intent.FLAG_ACTIVITY_NO_HISTORY);
         FilterParameters filterObj = new FilterParameters(temp, introViewPagerAdapter.kind_preference,
-                introViewPagerAdapter.gender_preference, introViewPagerAdapter.religion_preference,introViewPagerAdapter.lower_bound, introViewPagerAdapter.upper_bound);
+                introViewPagerAdapter.gender_preference, introViewPagerAdapter.religion_preference, introViewPagerAdapter.lower_bound, introViewPagerAdapter.upper_bound);
         myIntent.putExtra("filterObject", filterObj);
         FilterMatchesActivity.this.startActivity(myIntent);
     }

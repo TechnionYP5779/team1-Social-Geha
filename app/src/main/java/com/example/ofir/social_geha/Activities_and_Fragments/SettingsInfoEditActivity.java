@@ -66,12 +66,12 @@ public class SettingsInfoEditActivity extends AppCompatActivity {
     //Gender related Fields
     String[] allGenders;
     String gender;
-    int gender_index =-1;
+    int gender_index = -1;
 
     //Religion related Fields
     String[] allReligions;
     String religion;
-    int religion_index =-1;
+    int religion_index = -1;
 
     //Bio related Fields
     String bio;
@@ -93,27 +93,26 @@ public class SettingsInfoEditActivity extends AppCompatActivity {
 
     private void setUpDoneButton() {
         doneButton = findViewById(R.id.done_button);
-        doneButton.setOnClickListener(new View.OnClickListener(){
+        doneButton.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View v) {
-                if(getIntent().getStringExtra("code") != null){
+                if (getIntent().getStringExtra("code") != null) {
                     // we need to preform register
-                    register( getIntent().getStringExtra("code"), givenName, calendar, gender,
+                    register(getIntent().getStringExtra("code"), givenName, calendar, gender,
                             religion, languagesAll, bio);
-                }
-                else {
+                } else {
                     onBackPressed();
                 }
             }
         });
     }
 
-    public void register(final String code,final String name,final Calendar c,final String gender,
-                         final String religion, final String[] languages,final String bio){
+    public void register(final String code, final String name, final Calendar c, final String gender,
+                         final String religion, final String[] languages, final String bio) {
         final ProgressDialog progressDialog = new ProgressDialog(SettingsInfoEditActivity.this);
-        progressDialog.setTitle("נרשם");
-        progressDialog.setMessage("אנא המתן...");
+        progressDialog.setTitle(this.getString(R.string.strings_register));
+        progressDialog.setMessage(this.getString(R.string.strings_please_wait));
         String email = code.concat("@geha-technion.temp.com");
         progressDialog.show();
         allGenders = getResources().getStringArray(R.array.gender_preferences);
@@ -130,9 +129,9 @@ public class SettingsInfoEditActivity extends AppCompatActivity {
                         Person.Religion mReligion = fromStringToReligion(religion, false);
                         List<Person.Language> spokenLanguages = languagesStringToLanguageEnum(languages);
                         Person p = new Person(name, FictitiousIdentityGenerator.getAnonymousIdentity(
-                                fromStringToGenderEnum(gender, SettingsInfoEditActivity.this,false)),
-                                    date,fromStringToGenderEnum(gender, SettingsInfoEditActivity.this, false), mReligion, spokenLanguages,
-                                    Person.Kind.PAST_PATIENT, Database.getInstance().getLoggedInUserID(), bio, new ArrayList<Integer>());
+                                fromStringToGenderEnum(gender, SettingsInfoEditActivity.this, false)),
+                                date, fromStringToGenderEnum(gender, SettingsInfoEditActivity.this, false), mReligion, spokenLanguages,
+                                Person.Kind.PAST_PATIENT, Database.getInstance().getLoggedInUserID(), bio, new ArrayList<Integer>());
                         if (task.isSuccessful()) {
                             Database.getInstance().addUserPerson(p);
                             setResult(RESULT_OK);
@@ -140,7 +139,7 @@ public class SettingsInfoEditActivity extends AppCompatActivity {
                             Intent myIntent = new Intent(SettingsInfoEditActivity.this, AllChatsActivity.class);
                             SettingsInfoEditActivity.this.startActivity(myIntent);
                         } else {
-                            Toast.makeText(SettingsInfoEditActivity.this, "Authentication failed:" +
+                            Toast.makeText(SettingsInfoEditActivity.this, SettingsInfoEditActivity.this.getString(R.string.strings_reg_ex) +
                                     task.getException(), Toast.LENGTH_SHORT).show();
 //                            Toast.makeText(SettingsInfoEditActivity.this, "שם המשתמש כבר תפוס!", Toast.LENGTH_SHORT).show();
                         }
@@ -153,7 +152,7 @@ public class SettingsInfoEditActivity extends AppCompatActivity {
         bioButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                AlertDialog.Builder mBuilder = new AlertDialog.Builder(SettingsInfoEditActivity.this,R.style.AlertDialogCustomWhite);
+                AlertDialog.Builder mBuilder = new AlertDialog.Builder(SettingsInfoEditActivity.this, R.style.AlertDialogCustomWhite);
                 mBuilder.setTitle(R.string.additional_info);
 
                 // Set up the input
@@ -189,7 +188,7 @@ public class SettingsInfoEditActivity extends AppCompatActivity {
         religionButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                AlertDialog.Builder mBuilder = new AlertDialog.Builder(SettingsInfoEditActivity.this,R.style.AlertDialogCustom);
+                AlertDialog.Builder mBuilder = new AlertDialog.Builder(SettingsInfoEditActivity.this, R.style.AlertDialogCustom);
                 mBuilder.setTitle(R.string.religious);
                 mBuilder.setSingleChoiceItems(allReligions, religion_index, new DialogInterface.OnClickListener() {
                     @Override
@@ -219,7 +218,7 @@ public class SettingsInfoEditActivity extends AppCompatActivity {
         genderButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                AlertDialog.Builder mBuilder = new AlertDialog.Builder(SettingsInfoEditActivity.this,R.style.AlertDialogCustom);
+                AlertDialog.Builder mBuilder = new AlertDialog.Builder(SettingsInfoEditActivity.this, R.style.AlertDialogCustom);
                 mBuilder.setTitle(R.string.gender);
                 mBuilder.setSingleChoiceItems(allGenders, gender_index, new DialogInterface.OnClickListener() {
                     @Override
@@ -242,7 +241,7 @@ public class SettingsInfoEditActivity extends AppCompatActivity {
         });
 
     }
-    
+
 
     private void setBdayButton() {
         bdayButton = (Button) findViewById(R.id.bday_button);
@@ -252,16 +251,16 @@ public class SettingsInfoEditActivity extends AppCompatActivity {
         month = calendar.get(Calendar.MONTH);
         dayOfMonth = calendar.get(Calendar.DAY_OF_MONTH);
 
-         datePickerDialog = new DatePickerDialog(SettingsInfoEditActivity.this,
+        datePickerDialog = new DatePickerDialog(SettingsInfoEditActivity.this,
                 new DatePickerDialog.OnDateSetListener() {
                     @Override
                     public void onDateSet(DatePicker datePicker, int y, int m, int d) {
                         year = y;
                         month = m;
-                        dayOfMonth=d;
+                        dayOfMonth = d;
                     }
                 }, year, month, dayOfMonth);
-        bdayButton.setOnClickListener(new View.OnClickListener(){
+        bdayButton.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View v) {
@@ -272,11 +271,11 @@ public class SettingsInfoEditActivity extends AppCompatActivity {
 
     private void setUpNameButton() {
         nameButton = (Button) findViewById(R.id.name_button);
-        nameButton.setOnClickListener(new View.OnClickListener(){
+        nameButton.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View v) {
-                AlertDialog.Builder mBuilder = new AlertDialog.Builder(SettingsInfoEditActivity.this,R.style.AlertDialogCustomWhite);
+                AlertDialog.Builder mBuilder = new AlertDialog.Builder(SettingsInfoEditActivity.this, R.style.AlertDialogCustomWhite);
                 mBuilder.setTitle(R.string.settings_info_edit_name_btn);
 
                 // Set up the input
@@ -314,7 +313,7 @@ public class SettingsInfoEditActivity extends AppCompatActivity {
         langButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                AlertDialog.Builder mBuilder = new AlertDialog.Builder(SettingsInfoEditActivity.this,R.style.AlertDialogCustom);
+                AlertDialog.Builder mBuilder = new AlertDialog.Builder(SettingsInfoEditActivity.this, R.style.AlertDialogCustom);
                 mBuilder.setMultiChoiceItems(languagesAll, langCheckedItems, new DialogInterface.OnMultiChoiceClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int position, boolean isChecked) {

@@ -74,7 +74,7 @@ public class mainScreen extends AppCompatActivity {
             }
         });
 
-        if(!Database.getInstance().isLoggedIn()){
+        if (!Database.getInstance().isLoggedIn()) {
             promptLogin();
         }
     }
@@ -86,19 +86,19 @@ public class mainScreen extends AppCompatActivity {
         loading.setVisibility(View.VISIBLE);
 
         Log.i("LOGGED_IN_UID", Database.getInstance().getLoggedInUserID());
-        Database.getInstance().getdb().collection("users").whereEqualTo("userID",Database.getInstance().getLoggedInUserID()).get()
+        Database.getInstance().getdb().collection("users").whereEqualTo("userID", Database.getInstance().getLoggedInUserID()).get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        if(task.isSuccessful()){
-                            for(QueryDocumentSnapshot doc: task.getResult()){
+                        if (task.isSuccessful()) {
+                            for (QueryDocumentSnapshot doc : task.getResult()) {
                                 p = doc.toObject(Person.class);
                                 anonymous_name.setText(p.getAnonymousIdentity().getName());
                                 real_name.setText(p.getRealName());
 
                                 // Display user image as profile pic
 
-                                int default_image = mainScreen.this.getResources().getIdentifier("@drawable/image_fail", null, mainScreen.this.getPackageName() );
+                                int default_image = mainScreen.this.getResources().getIdentifier("@drawable/image_fail", null, mainScreen.this.getPackageName());
                                 ImageLoader image_loader = ImageLoader.getInstance();
                                 image_loader.init(ImageLoaderConfiguration.createDefault(mainScreen.this));
                                 DisplayImageOptions options = new DisplayImageOptions.Builder().cacheInMemory(true)
@@ -106,10 +106,10 @@ public class mainScreen extends AppCompatActivity {
                                         .showImageForEmptyUri(default_image)
                                         .showImageOnFail(default_image)
                                         .showImageOnLoading(default_image).build();
-                                int image_id = mainScreen.this.getResources().getIdentifier("@drawable/" + p.getAnonymousIdentity().getImageName(), null, mainScreen.this.getPackageName() );
+                                int image_id = mainScreen.this.getResources().getIdentifier("@drawable/" + p.getAnonymousIdentity().getImageName(), null, mainScreen.this.getPackageName());
                                 final String photoString = "drawable://" + image_id;
                                 Log.i("PROFILE_PICTURE", photoString);
-                                image_loader.displayImage(photoString , profile_pic, options ); //display no_bg image
+                                image_loader.displayImage(photoString, profile_pic, options); //display no_bg image
                                 profile_pic.setCircleBackgroundColor(Color.parseColor(p.getAnonymousIdentity().imageColor));
 //                                profile_pic.setBackgroundColor(); //set color
 
@@ -137,9 +137,8 @@ public class mainScreen extends AppCompatActivity {
                                 LinearLayout buttons_layout = findViewById(R.id.buttons_layout);
                                 buttons_layout.setVisibility(View.VISIBLE);
                             }
-                        }
-                        else{
-                            loading.setText("אירעה שגיאה, נסה שוב מאוחר יותר.");
+                        } else {
+                            loading.setText(mainScreen.this.getString(R.string.strings_error));
                         }
                     }
                 });
@@ -152,54 +151,54 @@ public class mainScreen extends AppCompatActivity {
             final boolean[] usersChecked = {true, true};
 
 
-                AlertDialog.Builder mBuilder = new AlertDialog.Builder(mainScreen.this, R.style.AlertDialogCustom);
-                mBuilder.setMultiChoiceItems(usersAll, usersChecked, new DialogInterface.OnMultiChoiceClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int position, boolean isChecked) {
-                        if (isChecked) {
-                            mUserItems.add(position);
-                        } else {
-                            mUserItems.remove((Integer.valueOf(position)));
-                        }
+            AlertDialog.Builder mBuilder = new AlertDialog.Builder(mainScreen.this, R.style.AlertDialogCustom);
+            mBuilder.setMultiChoiceItems(usersAll, usersChecked, new DialogInterface.OnMultiChoiceClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int position, boolean isChecked) {
+                    if (isChecked) {
+                        mUserItems.add(position);
+                    } else {
+                        mUserItems.remove((Integer.valueOf(position)));
                     }
-                });
+                }
+            });
 
-                mBuilder.setCancelable(false);
-                mBuilder.setPositiveButton(R.string.ok_label, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int which) {
+            mBuilder.setCancelable(false);
+            mBuilder.setPositiveButton(R.string.ok_label, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int which) {
+                }
+            });
+
+            mBuilder.setNegativeButton(R.string.dismiss_label, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
+                    dialogInterface.dismiss();
+                }
+            });
+
+            mBuilder.setNeutralButton(R.string.clear_all_label, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int which) {
+                    for (int i = 0; i < usersChecked.length; i++) {
+                        usersChecked[i] = false;
+                        mUserItems.clear();
                     }
-                });
+                }
+            });
 
-                mBuilder.setNegativeButton(R.string.dismiss_label, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        dialogInterface.dismiss();
-                    }
-                });
-
-                mBuilder.setNeutralButton(R.string.clear_all_label, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int which) {
-                        for (int i = 0; i < usersChecked.length; i++) {
-                            usersChecked[i] = false;
-                            mUserItems.clear();
-                        }
-                    }
-                });
-
-                AlertDialog mDialog = mBuilder.create();
-                mDialog.show();
+            AlertDialog mDialog = mBuilder.create();
+            mDialog.show();
         }
-        if (view.equals(edit_info)){
+        if (view.equals(edit_info)) {
             Intent myIntent = new Intent(mainScreen.this, SettingsInfoEditActivity.class);
             mainScreen.this.startActivity(myIntent);
-         }
-        if (view.equals(delete_account)){
-            Toast.makeText(this,"deletion not implemented yet",Toast.LENGTH_SHORT).show();
         }
-        if(view.equals(about)) {
-            Intent myIntent = new Intent(mainScreen.this , SettingsHelp.class);
+        if (view.equals(delete_account)) {
+            Toast.makeText(this, "deletion not implemented yet", Toast.LENGTH_SHORT).show();
+        }
+        if (view.equals(about)) {
+            Intent myIntent = new Intent(mainScreen.this, SettingsHelp.class);
             mainScreen.this.startActivity(myIntent);
         }
     }

@@ -50,9 +50,10 @@
 
     <string-array name="age_preferences">
         <item>לא משנה</item>
-        <item>0–20</item>
-        <item>30–40</item>
-        <item>40–50</item>
+        <item>0–19</item>
+        <item>20–29</item>
+        <item>30–39</item>
+        <item>40–49</item>
         <item>50+</item>
     </string-array>
 
@@ -130,7 +131,16 @@
     <string name="vecteezy">תודה לvecteezy שסיפקו לנו תמונות עם רישיון לשימוש חוזר</string>
     <string name="profile">פרופיל אישי</string>
     <string name="transition_string">profile_zoom</string>
-    <string name="age_range_text">טווח גילאים</string>
+    <string name="age_range_text">טווח גילים</string>
     <string name="loading">טוען...</string>
     <string name="share_info">שתף מידע</string>
+    <string name="strings_filter_desc">מלא/י את הפרטים הבאים על האדם שאיתו תרצה/י לשוחח, על מנת שנוכל למצוא לך את ההתאמה הטובה ביותר.</string>
+    <string name="strings_filter_create_conv">יצירת שיחה חדשה</string>
+    <string name="strings_filter_basic_info">פרטים בסיסיים</string>
+    <string name="strings_filter_choose_lang">בחירת שפה</string>
+    <string name="strings_filter_lang_desc">בחר/י את השפות בהן תרצה/י לשוחח</string>
+    <string name="strings_register">נרשם</string>
+    <string name="strings_please_wait">אנא המתן...</string>
+    <string name="strings_reg_ex">בעיה בהרשמה:</string>
+    <string name="strings_error">אירעה שגיאה, נסה שוב מאוחר יותר.</string>
 </resources>
