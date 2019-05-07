@@ -1,6 +1,7 @@
 package com.example.ofir.social_geha.Activities_and_Fragments;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
@@ -16,10 +17,10 @@ import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 public class ZoomedPictureActivity extends AppCompatActivity {
     Toolbar mToolbar;
     String imageURL;
+    String imageColor;
 
     @Override
     public boolean onSupportNavigateUp() {
-//        getSupportActionBar().hide();
         mToolbar.setVisibility(View.GONE);
         onBackPressed();
         return true;
@@ -36,22 +37,15 @@ public class ZoomedPictureActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
-        //getSupportActionBar().setTitle();
-
-//        mToolbar.setNavigationIcon(R.drawable.ic_arrow_left_white_24dp);
-//
-//        mToolbar.setNavigationOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                startActivity(new Intent(getApplicationContext(), AllChatsActivity.class));
-//            }
-//        });
 
         //display the image from URL
-        ImageView imgView = findViewById(R.id.zoomed_profile_picture);
+        ImageView imgView = findViewById(R.id.zoomed_profile_picture); //here it's actually rectangular
         imageURL = getIntent().getStringExtra("EXTRA_IMAGE_URL");
+        imageColor = getIntent().getStringExtra("EXTRA_IMAGE_COLOR");
         Log.i("PROFILE_ZOOM", imageURL);
+        Log.i("PROFILE_ZOOM", imageColor);
 
+        //init loader and loader options
         int default_image = this.getResources().getIdentifier("@drawable/image_fail", null, this.getPackageName() );
         ImageLoader image_loader = ImageLoader.getInstance();
         DisplayImageOptions options = new DisplayImageOptions.Builder().cacheInMemory(true)
@@ -63,5 +57,8 @@ public class ZoomedPictureActivity extends AppCompatActivity {
 
         //download and display image from url
         image_loader.displayImage(imageURL, imgView, options);
+
+        //set color
+        imgView.setBackgroundColor(Color.parseColor(imageColor)); //set bg color
     }
 }

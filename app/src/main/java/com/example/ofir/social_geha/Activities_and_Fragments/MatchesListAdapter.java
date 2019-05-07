@@ -2,6 +2,7 @@ package com.example.ofir.social_geha.Activities_and_Fragments;
 
 import android.content.Context;
 import android.content.res.Resources;
+import android.graphics.Color;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -24,6 +25,8 @@ import com.nostra13.universalimageloader.core.display.FadeInBitmapDisplayer;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 
+import de.hdodenhof.circleimageview.CircleImageView;
+
 
 public class MatchesListAdapter extends ArrayAdapter<Person> {
     private Context mContext;
@@ -33,7 +36,7 @@ public class MatchesListAdapter extends ArrayAdapter<Person> {
     private static class ViewHolder{
         TextView name;
         TextView description;
-        ImageView image;
+        CircleImageView image;
         ImageView pick_arrow;
     }
 
@@ -49,6 +52,7 @@ public class MatchesListAdapter extends ArrayAdapter<Person> {
         String name = getItem(position).getAnonymousIdentity().getName();
         String description = getItem(position).getDescription();
         String imageUrl = getItem(position).getAnonymousIdentity().getImageName();
+        String imageColor = getItem(position).getAnonymousIdentity().getImageColor();
         Log.d("imageBug1", imageUrl);
         int image_id = mContext.getResources().getIdentifier("@drawable/" + imageUrl, null, mContext.getPackageName() );
         imageUrl = "drawable://" + image_id;
@@ -62,10 +66,10 @@ public class MatchesListAdapter extends ArrayAdapter<Person> {
             LayoutInflater inflater = LayoutInflater.from(mContext);
             convertView = inflater.inflate( mResource, parent, false);
             holder = new ViewHolder();
-            holder.name = (TextView) convertView.findViewById(R.id.row_name);
-            holder.description = (TextView) convertView.findViewById(R.id.row_description);
-            holder.image = (ImageView) convertView.findViewById(R.id.row_image);
-            holder.pick_arrow = (ImageView) convertView.findViewById(R.id.pick_arrow);
+            holder.name = convertView.findViewById(R.id.row_name);
+            holder.description = convertView.findViewById(R.id.row_description);
+            holder.image = convertView.findViewById(R.id.row_image);
+            holder.pick_arrow = convertView.findViewById(R.id.pick_arrow);
 
             result = convertView;
             convertView.setTag(holder);
@@ -90,7 +94,8 @@ public class MatchesListAdapter extends ArrayAdapter<Person> {
                 .showImageOnLoading(default_image).build();
 
         //download and display image from url
-        image_loader.displayImage(imageUrl, holder.image, options);
+        image_loader.displayImage(imageUrl, holder.image, options); //display no_bg photo
+        holder.image.setCircleBackgroundColor(Color.parseColor(imageColor)); //change bg color
 
         holder.name.setText(name);
         holder.description.setText(description);

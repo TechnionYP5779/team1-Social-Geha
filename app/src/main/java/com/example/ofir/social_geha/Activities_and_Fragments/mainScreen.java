@@ -2,6 +2,7 @@ package com.example.ofir.social_geha.Activities_and_Fragments;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
 import android.provider.ContactsContract;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -33,13 +34,15 @@ import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 
+import de.hdodenhof.circleimageview.CircleImageView;
+
 public class mainScreen extends AppCompatActivity {
 
     LinearLayout share_info;
     LinearLayout edit_info;
     LinearLayout delete_account;
     LinearLayout about;
-    ImageView profile_pic;
+    CircleImageView profile_pic;
     TextView real_name;
     TextView anonymous_name;
     Person p;
@@ -106,7 +109,9 @@ public class mainScreen extends AppCompatActivity {
                                 int image_id = mainScreen.this.getResources().getIdentifier("@drawable/" + p.getAnonymousIdentity().getImageName(), null, mainScreen.this.getPackageName() );
                                 final String photoString = "drawable://" + image_id;
                                 Log.i("PROFILE_PICTURE", photoString);
-                                image_loader.displayImage(photoString , profile_pic, options );
+                                image_loader.displayImage(photoString , profile_pic, options ); //display no_bg image
+                                profile_pic.setCircleBackgroundColor(Color.parseColor(p.getAnonymousIdentity().imageColor));
+//                                profile_pic.setBackgroundColor(); //set color
 
                                 //make sure the profile picture clicks and zooms
                                 final ImageView viewStart = profile_pic;
@@ -121,6 +126,7 @@ public class mainScreen extends AppCompatActivity {
                                                         transitionName    // The String
                                                 );
                                         intent.putExtra("EXTRA_IMAGE_URL", photoString);
+                                        intent.putExtra("EXTRA_IMAGE_COLOR", p.getAnonymousIdentity().imageColor); //pass the color to the zoom animation
                                         ActivityCompat.startActivity(mainScreen.this, intent, options.toBundle());
                                     }
                                 });
@@ -143,7 +149,7 @@ public class mainScreen extends AppCompatActivity {
         final ArrayList<Integer> mUserItems = new ArrayList<>();
         if (view.equals(share_info)) {
             String[] usersAll = {"אבי ישראלי", "ענת רימון"};
-            final boolean[] usersChecked = {};
+            final boolean[] usersChecked = {true, true};
 
 
                 AlertDialog.Builder mBuilder = new AlertDialog.Builder(mainScreen.this, R.style.AlertDialogCustom);

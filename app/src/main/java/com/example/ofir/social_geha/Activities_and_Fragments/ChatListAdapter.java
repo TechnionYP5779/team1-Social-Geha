@@ -3,6 +3,7 @@ package com.example.ofir.social_geha.Activities_and_Fragments;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.util.Log;
@@ -28,6 +29,8 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 
+import de.hdodenhof.circleimageview.CircleImageView;
+
 
 public class ChatListAdapter extends ArrayAdapter<ChatEntry> {
     private Context mContext;
@@ -37,11 +40,12 @@ public class ChatListAdapter extends ArrayAdapter<ChatEntry> {
     private static class ViewHolder{
         TextView name;
         TextView description;
-        ImageView image;
+        CircleImageView image;
         TextView unread_msg_count;
         TextView msg_time;
         RelativeLayout chat_message_layout;
         String imgURL;
+        String imgColor;
     }
 
     public ChatListAdapter(Context ctxt, int resource, ArrayList<ChatEntry> objects){
@@ -56,6 +60,7 @@ public class ChatListAdapter extends ArrayAdapter<ChatEntry> {
         String name = getItem(position).getPerson().getAnonymousIdentity().getName();
         String description = getItem(position).getPerson().getDescription();
         String imageUrl = getItem(position).getPerson().getAnonymousIdentity().getImageName();
+        String imageColor = getItem(position).getPerson().getAnonymousIdentity().getImageColor();
         Message lastMessage = getItem(position).getMessage();
         Log.d("imageBug1", imageUrl);
         int image_id = mContext.getResources().getIdentifier("@drawable/" + imageUrl, null, mContext.getPackageName() );
@@ -70,14 +75,15 @@ public class ChatListAdapter extends ArrayAdapter<ChatEntry> {
             LayoutInflater inflater = LayoutInflater.from(mContext);
             convertView = inflater.inflate( mResource, parent, false);
             holder = new ViewHolder();
-            holder.name = (TextView) convertView.findViewById(R.id.row_name);
-            holder.description = (TextView) convertView.findViewById(R.id.row_description);
-            holder.image = (ImageView) convertView.findViewById(R.id.row_image);
+            holder.name = convertView.findViewById(R.id.row_name);
+            holder.description = convertView.findViewById(R.id.row_description);
+            holder.image = convertView.findViewById(R.id.row_image);
             holder.imgURL = imageUrl;
+            holder.imgColor = imageColor;
             setUpOnClick(holder);
-            holder.msg_time = (TextView) convertView.findViewById(R.id.message_time);
-            holder.unread_msg_count = (TextView) convertView.findViewById(R.id.unread_messages_icon);
-            holder.chat_message_layout = (RelativeLayout) convertView.findViewById(R.id.chat_message_layout);
+            holder.msg_time = convertView.findViewById(R.id.message_time);
+            holder.unread_msg_count = convertView.findViewById(R.id.unread_messages_icon);
+            holder.chat_message_layout = convertView.findViewById(R.id.chat_message_layout);
 
             result = convertView;
             convertView.setTag(holder);
@@ -102,7 +108,8 @@ public class ChatListAdapter extends ArrayAdapter<ChatEntry> {
                 .showImageOnLoading(default_image).build();
 
         //download and display image from url
-        image_loader.displayImage(imageUrl, holder.image, options);
+        image_loader.displayImage(imageUrl, holder.image, options); //display no_bg image
+        holder.image.setCircleBackgroundColor(Color.parseColor(holder.imgColor));
 
         holder.name.setText(name);
         holder.description.setText(description);
@@ -136,6 +143,7 @@ public class ChatListAdapter extends ArrayAdapter<ChatEntry> {
 
                 //put extra
                 intent.putExtra("EXTRA_IMAGE_URL", holder.imgURL);
+                intent.putExtra("EXTRA_IMAGE_COLOR", holder.imgColor);
 
                 //Start the Intent
                 ActivityCompat.startActivity(mContext, intent, options.toBundle());

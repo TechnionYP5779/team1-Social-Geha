@@ -2,6 +2,7 @@ package com.example.ofir.social_geha.Activities_and_Fragments;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Color;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -32,6 +33,8 @@ import java.util.List;
 
 import javax.annotation.Nullable;
 
+import de.hdodenhof.circleimageview.CircleImageView;
+
 public class ChatActivity extends AppCompatActivity {
     private static final String MESSAGES = "messages";
     private EditText mMessageEdit;
@@ -40,6 +43,7 @@ public class ChatActivity extends AppCompatActivity {
     private MessageListAdapter mMessageListAdapter;
     private String mOtherPersonId;
     private String mAnonymousOtherPhotoUrl;
+    private String mAnonymousOtherPhotoColor;
     private String mAnonymousOtherName;
     private String mLoggedInPersonId;
     private FileHandler fileHandler;
@@ -66,17 +70,21 @@ public class ChatActivity extends AppCompatActivity {
         //Display user name and photo
         mAnonymousOtherName = getIntent().getStringExtra("EXTRA_NAME");
         mAnonymousOtherPhotoUrl = getIntent().getStringExtra("EXTRA_PHOTO_URL");
+        mAnonymousOtherPhotoColor = getIntent().getStringExtra("EXTRA_PHOTO_COLOR");
         int image_id = this.getResources().getIdentifier("@drawable/" + mAnonymousOtherPhotoUrl, null, this.getPackageName());
         mAnonymousOtherPhotoUrl = "drawable://" + image_id;
-        ImageView image_holder = findViewById(R.id.user_photo);
+        CircleImageView image_holder = findViewById(R.id.user_photo);
         TextView name_holder = findViewById(R.id.user_title);
 
         name_holder.setText(mAnonymousOtherName);
-        image_loader.displayImage(mAnonymousOtherPhotoUrl, image_holder, options);
-        final View viewStart = image_holder;
-        final String imageURL = mAnonymousOtherPhotoUrl;
+        image_loader.displayImage(mAnonymousOtherPhotoUrl, image_holder, options); //displays the no_bg image
+        image_holder.setCircleBackgroundColor(Color.parseColor(mAnonymousOtherPhotoColor));
+
 
         //make sure the profile picture clicks and zooms
+        final View viewStart = image_holder;
+        final String imageURL = mAnonymousOtherPhotoUrl;
+        final String imageColor = mAnonymousOtherPhotoColor;
         image_holder.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -88,6 +96,7 @@ public class ChatActivity extends AppCompatActivity {
                                 transitionName    // The String
                         );
                 intent.putExtra("EXTRA_IMAGE_URL", imageURL);
+                intent.putExtra("EXTRA_IMAGE_COLOR", imageColor);
 
                 //Start the Intent
                 ActivityCompat.startActivity(ChatActivity.this, intent, options.toBundle());

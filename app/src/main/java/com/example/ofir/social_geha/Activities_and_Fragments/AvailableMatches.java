@@ -45,8 +45,8 @@ public class AvailableMatches extends AppCompatActivity {
 
         FilterParameters filterParms = (FilterParameters) getIntent().getSerializableExtra("filterObject");
 
-        progressBar = (ProgressBar) findViewById(R.id.progressBar);
-        listView = (ListView)findViewById(R.id.available_matches);
+        progressBar = findViewById(R.id.progressBar);
+        listView = findViewById(R.id.available_matches);
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -54,6 +54,7 @@ public class AvailableMatches extends AppCompatActivity {
                 Person person = (Person)o; //As you are using Default String Adapter
                 Intent myIntent = new Intent(AvailableMatches.this, ChatActivity.class);
                 myIntent.putExtra("EXTRA_PHOTO_URL", person.getAnonymousIdentity().getImageName());
+                myIntent.putExtra("EXTRA_PHOTO_COLOR", person.getAnonymousIdentity().getImageColor());
                 myIntent.putExtra("EXTRA_NAME", person.getAnonymousIdentity().getName());
                 myIntent.putExtra("EXTRA_PERSON_ID", person.getUserID());
                 AvailableMatches.this.startActivity(myIntent);

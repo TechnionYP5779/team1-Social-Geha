@@ -72,8 +72,8 @@ public class AllChatsActivity extends AppCompatActivity {
 
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(mToolbar);
-        mListView = (ListView) findViewById(R.id.list);
-        mEmptyView = (TextView) findViewById(R.id.emptyView);
+        mListView = findViewById(R.id.list);
+        mEmptyView = findViewById(R.id.emptyView);
 
         loadList();
 
@@ -88,6 +88,7 @@ public class AllChatsActivity extends AppCompatActivity {
                 myIntent.putExtra("EXTRA_PERSON_ID", person.getUserID());
                 myIntent.putExtra("EXTRA_NAME", person.getAnonymousIdentity().getName());
                 myIntent.putExtra("EXTRA_PHOTO_URL", person.getAnonymousIdentity().getImageName());
+                myIntent.putExtra("EXTRA_PHOTO_COLOR", person.getAnonymousIdentity().getImageColor());
                 AllChatsActivity.this.startActivity(myIntent);
             }
         });
