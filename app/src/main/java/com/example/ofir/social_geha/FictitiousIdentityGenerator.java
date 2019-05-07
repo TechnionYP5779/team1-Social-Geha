@@ -2,12 +2,12 @@ package com.example.ofir.social_geha;
 
 public class FictitiousIdentityGenerator {
     private static String[] male_adjectives = {"שמח", "פרוותי", "חלקלק", "כתום", "עגלגל", "זורח", "קופץ", "מבעבע", "ירוק" , "אמיץ" , "פילוסופי", "רציונלי", "שנון" , "מדעי" , "נדיב" , "חייכן"};
-    private static String[] male_animals = {"חמור", "אריה", "שור"};
-    private static String[] male_animals_eng = {"donkey", "lion", "bull"};
+    private static String[] male_animals ={"דוב", "נשר", "סרטן נזיר", "סוס", "תמנון", "ינשוף", "אבו נפחא", "כלב ים", "חסילון", "דיונון", "תרנגול הודו"};
+    private static String[] male_animals_eng = {"bear", "eagle", "hermit crab", "horse", "octopus", "owl", "pufferfish", "seal", "shrimp", "squid", "turkey"};
 
     private static String[] female_adjectives = {"שמחה", "פרוותית", "חלקלקה", "כתומה", "עגלגלה", "זורחת", "קופצת", "מבעבעת", "ירוקה" , "אמיצה" , "פילוסופית", "רציונלית", "שנונה" , "מדעית" , "נדיבה" , "חייכנית"};
-    private static String[] female_animals = {"כבשה", "פרה"};
-    private static String[] female_animals_eng = {"sheep", "cow"};
+    private static String[] female_animals = {"דובה", "פרה", "סרטנית", "סוסה", "מדוזה", "ינשופית", "חסילונית", "דיונונית", "תרנגולת הודו"};
+    private static String[] female_animals_eng = {"bear", "cow", "crab", "horse", "jellyfish", "owl", "shrimp", "squid", "turkey"};
 
     private static String[] colors = {"#CD950C", "#6495ED", "#B22222", "#BB5E87", "#B0E0E6", "#BA55D3", "#458B00", "#00FA9A", "#8B008B", "#FFC0CB", "#F4A460"};
 
@@ -19,14 +19,13 @@ public class FictitiousIdentityGenerator {
         if(gender == Person.Gender.UNDISCLOSED || gender == Person.Gender.MALE){
             int randomAdjective = (int)(Math.random()*male_adjectives.length);
             int randomAnimal = (int)(Math.random()*male_animals.length);
-
             name = male_animals[randomAnimal] + " " + male_adjectives[randomAdjective];
-            randomPicture = male_animals_eng[randomAnimal] + "_no_bg";
+            randomPicture = male_animals_eng[randomAnimal] + "_removebg";
         } else {
             int randomAdjective = (int)(Math.random()*female_adjectives.length);
             int randomAnimal = (int)(Math.random()*female_animals.length);
             name = female_animals[randomAnimal] + " " + female_adjectives[randomAdjective];
-            randomPicture = female_animals_eng[randomAnimal] + "_no_bg";
+            randomPicture = female_animals_eng[randomAnimal] + "_removebg";
         }
         return new AnonymousIdentity(name, randomPicture, colors[randomColor]);
     }
