@@ -97,7 +97,9 @@ public class Person {
         return religion;
     }
 
-    public List<Language> getSpokenLanguages() { return spokenLanguages; }
+    public List<Language> getSpokenLanguages() {
+        return spokenLanguages;
+    }
 
     public Kind getKind() {
         return kind;
@@ -109,6 +111,10 @@ public class Person {
 
     public String getDescription() {
         return description;
+    }
+
+    public long getBirthDate() {
+        return birthDate;
     }
 
 
@@ -147,14 +153,14 @@ public class Person {
     }
 
 
-    public void setUserID(String id){
+    public void setUserID(String id) {
         this.userID = id;
     }
 
-    public static List<Person.Language> languagesStringToLanguageEnum(String[] languages){
+    public static List<Person.Language> languagesStringToLanguageEnum(String[] languages) {
         List<Person.Language> mLanguages = new ArrayList<>();
-        for(String l : languages){
-            switch(l){
+        for (String l : languages) {
+            switch (l) {
                 case "עברית":
                     mLanguages.add(Person.Language.HEBREW);
                     break;
@@ -178,8 +184,8 @@ public class Person {
         return mLanguages;
     }
 
-    public static Religion fromStringToReligion(String religion, boolean canBeNull){
-        switch (religion){
+    public static Religion fromStringToReligion(String religion, boolean canBeNull) {
+        switch (religion) {
             case "דתי":
                 return Person.Religion.RELIGIOUS;
             case "מסורתי":
@@ -189,19 +195,19 @@ public class Person {
             case "ערבי":
                 return Person.Religion.ARABIC;
         }
-        if(canBeNull)
+        if (canBeNull)
             return null;
         return Person.Religion.SECULAR;
     }
 
-    public static Gender fromStringToGenderEnum(String gender, Context mContext, boolean canBeNull){
+    public static Gender fromStringToGenderEnum(String gender, Context mContext, boolean canBeNull) {
         String[] allGenders = mContext.getResources().getStringArray(R.array.gender_preferences);
-        if(gender.equals(allGenders[0])){
-            if(canBeNull)
+        if (gender.equals(allGenders[0])) {
+            if (canBeNull)
                 return null;
             return Gender.UNDISCLOSED;
         }
-        if(gender.equals(allGenders[1]))
+        if (gender.equals(allGenders[1]))
             return Gender.MALE;
         return Gender.FEMALE;
     }
