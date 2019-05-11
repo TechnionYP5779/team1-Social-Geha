@@ -118,6 +118,22 @@ public class ChatActivity extends AppCompatActivity {
 
         mFirestore = FirebaseFirestore.getInstance();
 
+
+
+        for (Message msg : fileHandler.getMessages()) {
+            Log.d("COOLTEST", "readMessage: " + msg.getMessage() + "from: " + msg.getFromPersonID());
+            if (msg.getFromPersonID().equals(mOtherPersonId) || msg.getToPersonID().equals(mOtherPersonId)) {
+                messageList.add(msg);
+            }
+        }
+        mMessageListAdapter.notifyDataSetChanged();
+
+        setMessageListners();
+    }
+
+
+    private void setMessageListners()
+    {
         mFirestore.collection(MESSAGES).whereEqualTo("toPersonID", mLoggedInPersonId)
                 .whereEqualTo("fromPersonID", mOtherPersonId)
                 .addSnapshotListener(new EventListener<QuerySnapshot>() {
@@ -135,49 +151,22 @@ public class ChatActivity extends AppCompatActivity {
                                 Log.d("POPO", "onEvent: DOES THIS");
                                 Message message = doc.getDocument().toObject(Message.class);
                                 mFirestore.collection(MESSAGES).document(doc.getDocument().getId()).delete();
-                                fileHandler.writeMessage(message);
-                                mMessageListAdapter.notifyDataSetChanged();
-                            }
-                        }
-
-                    }
-                });
-
-        mFirestore.collection(MESSAGES).whereEqualTo("fromPersonID", mLoggedInPersonId)
-                .whereEqualTo("toPersonID", mOtherPersonId)
-                .addSnapshotListener(new EventListener<QuerySnapshot>() {
-                    @Override
-                    public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
-                        if (e != null) {
-                            Log.d("COOLTEST", "Error: " + e.getMessage());
-                            return;
-                        }
-
-                        for (DocumentChange doc : queryDocumentSnapshots.getDocumentChanges()) {
-                            if (doc.getType() == DocumentChange.Type.ADDED) {
-                                //String message = doc.getDocument().getString("message");
-                                //Log.d("COOLTEST","Content: " + message);
-                                Message message = doc.getDocument().toObject(Message.class);
                                 messageList.add(message);
+                                fileHandler.writeMessage(message);
                             }
                         }
                         mMessageListAdapter.notifyDataSetChanged();
                     }
                 });
-
-        for (Message msg : fileHandler.getMessages()) {
-            Log.d("COOLTEST", "readMessage: " + msg.getMessage() + "from: " + msg.getFromPersonID());
-            if (msg.getFromPersonID().equals(mOtherPersonId) || msg.getToPersonID().equals(mOtherPersonId)) {
-                messageList.add(msg);
-            }
-        }
-        mMessageListAdapter.notifyDataSetChanged();
     }
 
     public void onSendButtonClick(View v) {
         String message = mMessageEdit.getText().toString();
         Database.getInstance().sendMessage(message, mLoggedInPersonId, mOtherPersonId);
-        fileHandler.writeMessage(new Message(message, mLoggedInPersonId, mOtherPersonId));
+        Message mymessage = new Message(message, mLoggedInPersonId, mOtherPersonId);
+        fileHandler.writeMessage(mymessage);
+        messageList.add(mymessage);
+        mMessageListAdapter.notifyDataSetChanged();
         mMessageEdit.setText("");
     }
 
