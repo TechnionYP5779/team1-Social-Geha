@@ -148,7 +148,7 @@
             android:textColor="@color/black"
             android:layout_marginStart="32dp"
             android:layout_marginEnd="32dp"
-            android:text="האם תרצה לדבר עם מטופל עבר, או בן משפחה של אחד כזה?"/>
+            android:text="האם תרצה לדבר עם מטופל עבר, או עם בן משפחה של אחד כזה?"/>
 
         <Spinner
             android:layout_marginTop="10dp"

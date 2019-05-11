@@ -17,7 +17,7 @@
     <string name="verify">אישור</string>
     <string name="missing_fields_err_msg">אנא הזן קוד אישי</string>
     <string name="matches">התאמות שנמצאו</string>
-    <string name="skip">Skip</string>
+    <string name="skip">דלג</string>
     <string name="whats_this"><u>מה זה?</u></string>
     <string name="whats_this_msg">"הקוד הראשוני שהתקבל מגהה"</string>
     <string name="findMatch">מצא התאמה</string>
@@ -138,7 +138,7 @@
     <string name="strings_filter_create_conv">יצירת שיחה חדשה</string>
     <string name="strings_filter_basic_info">פרטים בסיסיים</string>
     <string name="strings_filter_choose_lang">בחירת שפה</string>
-    <string name="strings_filter_lang_desc">בחר/י את השפות בהן תרצה/י לשוחח</string>
+    <string name="strings_filter_lang_desc">בחר/י את השפות בהן תרצה/י לשוחח.\nאי בחירה שקול להסכמה לשוחח בכל השפות.</string>
     <string name="strings_register">נרשם</string>
     <string name="strings_please_wait">אנא המתן...</string>
     <string name="strings_reg_ex">בעיה בהרשמה:</string>
