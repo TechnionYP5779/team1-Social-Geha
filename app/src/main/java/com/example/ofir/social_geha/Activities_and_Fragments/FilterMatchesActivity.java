@@ -52,9 +52,9 @@ public class FilterMatchesActivity extends AppCompatActivity {
         // ALL PHOTOS FROM https://pixabay.com/
         mList = new ArrayList<>();
         String description = this.getString(R.string.strings_filter_desc);
-        mList.add(new ScreenItem(this.getString(R.string.strings_filter_create_conv), description, R.drawable.chat_icon_purple));
+        mList.add(new ScreenItem(this.getString(R.string.strings_filter_create_conv), description, R.drawable.chat_icon));
         mList.add(new ScreenItem(this.getString(R.string.strings_filter_basic_info), description, R.drawable.people));
-        mList.add(new ScreenItem(this.getString(R.string.strings_filter_choose_lang), this.getString(R.string.strings_filter_lang_desc), R.drawable.earth_round_purple));
+        mList.add(new ScreenItem(this.getString(R.string.strings_filter_choose_lang), this.getString(R.string.strings_filter_lang_desc), R.drawable.earth_round));
 
         // setup viewpager
         screenPager = findViewById(R.id.screen_viewpager);
