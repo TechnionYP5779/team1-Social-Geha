@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#008577</color>
-    <color name="colorPrimaryDark">#3D696A</color>
+    <color name="colorPrimary">#88001b</color>
+    <color name="colorPrimaryDark">#510010</color>
     <color name="colorAccent">#FC5102</color>
     <color name="black">#000000</color>
-    <color name="red">#ad111d</color>
+    <color name="red">#D61800</color>
     <color name="white">#ffffff</color>
     <color name="transparent">#8cFFFFFF</color>
     <color name="transparentBlack">#CF000000</color>
-    <color name="transparent_primary">#3D696A</color>
-    <color name="message_sent">#91B671</color>
-    <color name="message_recieved">#E98E63</color>
+    <color name="transparent_primary">#510010</color>
+    <color name="message_sent">#E94F08</color>
+    <color name="message_recieved">#EDAE01</color>
 </resources>

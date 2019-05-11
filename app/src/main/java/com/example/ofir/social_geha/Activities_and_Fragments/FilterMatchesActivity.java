@@ -1,34 +1,25 @@
 package com.example.ofir.social_geha.Activities_and_Fragments;
 
-import android.content.Context;
 import android.content.Intent;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
-import android.util.Range;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
-import android.view.animation.AnimationUtils;
 import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.ofir.social_geha.FilterParameters;
-import com.example.ofir.social_geha.Firebase.Database;
 import com.example.ofir.social_geha.Person;
 import com.example.ofir.social_geha.R;
 import com.example.ofir.social_geha.ScreenItem;
 
 import java.util.ArrayList;
 import java.util.EnumSet;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Set;
 
 public class FilterMatchesActivity extends AppCompatActivity {
 
@@ -61,9 +52,9 @@ public class FilterMatchesActivity extends AppCompatActivity {
         // ALL PHOTOS FROM https://pixabay.com/
         mList = new ArrayList<>();
         String description = this.getString(R.string.strings_filter_desc);
-        mList.add(new ScreenItem(this.getString(R.string.strings_filter_create_conv), description, R.drawable.chat_icon));
+        mList.add(new ScreenItem(this.getString(R.string.strings_filter_create_conv), description, R.drawable.chat_icon_purple));
         mList.add(new ScreenItem(this.getString(R.string.strings_filter_basic_info), description, R.drawable.people));
-        mList.add(new ScreenItem(this.getString(R.string.strings_filter_choose_lang), this.getString(R.string.strings_filter_lang_desc), R.drawable.earth_round));
+        mList.add(new ScreenItem(this.getString(R.string.strings_filter_choose_lang), this.getString(R.string.strings_filter_lang_desc), R.drawable.earth_round_purple));
 
         // setup viewpager
         screenPager = findViewById(R.id.screen_viewpager);
