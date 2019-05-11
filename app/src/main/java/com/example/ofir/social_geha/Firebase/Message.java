@@ -21,19 +21,19 @@ public class Message implements Serializable {
         this.message = message;
         this.fromPersonID = fromPersonID;
         this.toPersonID = toPersonID;
+        this.messageDate = new Date();
     }
 
     public Message(String message, Person fromPerson, Person toPerson){
         this.message = message;
         this.fromPersonID = fromPerson.getUserID();
         this.toPersonID = toPerson.getUserID();
+        this.messageDate = new Date();
     }
 
     public String getFromPersonID() {
         return fromPersonID;
     }
-
-
 
     public void setFromPersonID(String fromUserID) {
         this.fromPersonID = fromUserID;
