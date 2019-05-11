@@ -13,6 +13,8 @@ import com.example.ofir.social_geha.Firebase.Database;
 import com.example.ofir.social_geha.Firebase.Message;
 import com.example.ofir.social_geha.R;
 
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 public class MessageListAdapter extends RecyclerView.Adapter {
@@ -25,9 +27,29 @@ public class MessageListAdapter extends RecyclerView.Adapter {
         this.messageList = messageList;
     }
 
+    private static String getHourStringFromDate(Date date){
+        if(date == null)
+            return "NULL DATE";
+        Calendar cal = Calendar.getInstance();
+
+        cal.setTime(date);
+        int hour = cal.get(Calendar.HOUR_OF_DAY);
+        int minute = cal.get(Calendar.MINUTE);
+        StringBuilder sb = new StringBuilder();
+        if(hour < 10)
+            sb.append(0);
+        sb.append(hour);
+        sb.append(":");
+        if(minute < 10)
+            sb.append(0);
+        sb.append(minute);
+        return sb.toString();
+    }
+
     public class ViewHolder extends RecyclerView.ViewHolder {
         private View mView;
         public TextView messageText;
+        public TextView messageTime;
 
 
         public ViewHolder(@NonNull View itemView) {
@@ -35,10 +57,12 @@ public class MessageListAdapter extends RecyclerView.Adapter {
             mView = itemView;
 
             messageText = mView.findViewById(R.id.message_text_view);
+            messageTime = mView.findViewById(R.id.text_message_time);
         }
 
-        public void bind(String msg) {
-            messageText.setText(msg);
+        public void bind(Message msg) {
+            messageText.setText(msg.getMessage());
+            messageTime.setText(getHourStringFromDate(msg.getMessageDate()));
         }
     }
 
@@ -73,7 +97,7 @@ public class MessageListAdapter extends RecyclerView.Adapter {
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder viewHolder, int i) {
         ViewHolder vh = (ViewHolder)viewHolder;
-        vh.bind(messageList.get(i).getMessage());
+        vh.bind(messageList.get(i));
     }
 
     @Override
