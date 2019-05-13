@@ -79,6 +79,7 @@ public class mainScreen extends AppCompatActivity {
         }
     }
 
+    // Stores into p the loaded user
     private void loadUserData() {
         final ProgressBar pb = this.findViewById(R.id.mainscreen_pb);
         final TextView loading = this.findViewById(R.id.loading_txt);
