@@ -11,6 +11,7 @@
         android:theme="@style/AppTheme">
         <activity android:name=".Activities_and_Fragments.ZoomedPictureActivity"></activity>
         <activity android:name=".Activities_and_Fragments.SettingsHelp" />
+        <activity android:name=".Activities_and_Fragments.SettingsDeleteAccount" />
         <activity android:name=".Activities_and_Fragments.SettingsInfoEditActivity" />
         <activity
             android:name=".Activities_and_Fragments.SettingsMainActivity"

@@ -49,7 +49,7 @@ public class SettingsInfoEditActivity extends AppCompatActivity {
     Button bioButton;
     Button doneButton;
 
-    //Language related fields
+    //Language relshated fields
     String[] languagesAll;
     boolean[] langCheckedItems;
     ArrayList<Integer> mUserItems = new ArrayList<>();

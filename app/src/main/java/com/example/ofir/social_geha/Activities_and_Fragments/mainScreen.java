@@ -195,6 +195,26 @@ public class mainScreen extends AppCompatActivity {
             mainScreen.this.startActivity(myIntent);
         }
         if (view.equals(delete_account)) {
+            AlertDialog.Builder mBuilder = new AlertDialog.Builder(mainScreen.this, R.style.AlertDialogCustom);
+            mBuilder.setMessage("האם אתה בטוח שברצונך למחוק את החשבון?");
+
+            mBuilder.setCancelable(false);
+            mBuilder.setPositiveButton(R.string.agree, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int which) {
+
+                }
+            });
+
+            mBuilder.setNegativeButton(R.string.dont_agree, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
+                    dialogInterface.dismiss();
+                }
+            });
+
+            AlertDialog mDialog = mBuilder.create();
+            mDialog.show();
             Toast.makeText(this, "deletion not implemented yet", Toast.LENGTH_SHORT).show();
         }
         if (view.equals(about)) {
