@@ -196,7 +196,7 @@ public class mainScreen extends AppCompatActivity {
             mainScreen.this.startActivity(myIntent);
         }
         if (view.equals(delete_account)) {
-            AlertDialog.Builder mBuilder = new AlertDialog.Builder(mainScreen.this, R.style.AlertDialogCustom);
+            AlertDialog.Builder mBuilder = new AlertDialog.Builder(mainScreen.this, R.style.AlertDialogCustomDark);
             mBuilder.setMessage("האם אתה בטוח שברצונך למחוק את החשבון?");
 
             mBuilder.setCancelable(false);
