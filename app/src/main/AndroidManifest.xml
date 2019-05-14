@@ -34,7 +34,8 @@
         <activity android:name=".Activities_and_Fragments.AvailableMatches" />
         <activity
             android:name=".Activities_and_Fragments.FilterMatchesActivity"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"
+            android:noHistory="true"/>
         <activity android:name=".Activities_and_Fragments.AllChatsActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

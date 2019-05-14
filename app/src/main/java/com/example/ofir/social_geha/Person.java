@@ -13,6 +13,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
+import static com.example.ofir.social_geha.Person.Language.ENGLISH;
 import static java.util.Optional.empty;
 
 public class Person {
@@ -28,7 +29,7 @@ public class Person {
     }
 
     public enum Religion {
-        RELIGIOUS, TRADITIONAL, SECULAR, ARABIC
+        RELIGIOUS, TRADITIONAL, SECULAR, ARABIC,UNDISCLOSED
     }
 
     public enum Kind {
@@ -165,7 +166,7 @@ public class Person {
                     mLanguages.add(Person.Language.HEBREW);
                     break;
                 case "אנגלית":
-                    mLanguages.add(Person.Language.ENGLISH);
+                    mLanguages.add(ENGLISH);
                     break;
                 case "צרפתית":
                     mLanguages.add(Person.Language.FRENCH);
@@ -184,6 +185,34 @@ public class Person {
         return mLanguages;
     }
 
+    public static List<String> languagesEnumToLanguageString(List<Person.Language> languages) {
+        List<String> mLanguages = new ArrayList<>();
+        for (Person.Language l : languages) {
+            switch (l) {
+                case HEBREW:
+                    mLanguages.add("עברית");
+                    break;
+                case ENGLISH:
+                    mLanguages.add("אנגלית");
+                    break;
+                case FRENCH:
+                    mLanguages.add("צרפתית");
+                    break;
+                case RUSSIAN:
+                    mLanguages.add("רוסית");
+                    break;
+                case ARABIC:
+                    mLanguages.add("ערבית");
+                    break;
+                case AMHARIC:
+                    mLanguages.add("אמהרית");
+                    break;
+            }
+        }
+        return mLanguages;
+    }
+
+
     public static Religion fromStringToReligion(String religion, boolean canBeNull) {
         switch (religion) {
             case "דתי":
@@ -197,7 +226,7 @@ public class Person {
         }
         if (canBeNull)
             return null;
-        return Person.Religion.SECULAR;
+        return Person.Religion.UNDISCLOSED;
     }
 
     public static Gender fromStringToGenderEnum(String gender, Context mContext, boolean canBeNull) {
@@ -210,5 +239,32 @@ public class Person {
         if (gender.equals(allGenders[1]))
             return Gender.MALE;
         return Gender.FEMALE;
+    }
+
+    public static int fromGenderEnumToGenderIndex(Gender gender, Context mContext) {
+        String[] allGenders = mContext.getResources().getStringArray(R.array.gender_preferences);
+        switch (gender){
+            case UNDISCLOSED: return 0;
+            case MALE: return 1;
+            case FEMALE: return 2;
+        }
+        return -1;
+    }
+
+    public static int fromReligionToReligionIndex(Religion religion) {
+        switch (religion) {
+            case UNDISCLOSED:
+                return 0;
+            case RELIGIOUS:
+                return 1;
+            case TRADITIONAL:
+                return 2;
+            case SECULAR:
+                return 3;
+            case ARABIC:
+                return 4;
+
+        }
+        return -1;
     }
 }

@@ -115,7 +115,7 @@ public class ChatListAdapter extends ArrayAdapter<ChatEntry> {
         holder.description.setText(description);
         holder.chat_message_layout.setVisibility(View.VISIBLE);
         holder.msg_time.setText(getHourStringFromDate(lastMessage.getMessageDate()));
-        holder.unread_msg_count.setText("5");
+        holder.unread_msg_count.setText("0");
         holder.description.setText(lastMessage.getMessage());
         return convertView;
     }
@@ -158,10 +158,10 @@ public class ChatListAdapter extends ArrayAdapter<ChatEntry> {
         Calendar cal = Calendar.getInstance();
 
         cal.setTime(date);
-        int hour = cal.get(Calendar.HOUR);
+        int hour = cal.get(Calendar.HOUR_OF_DAY);
         int minute = cal.get(Calendar.MINUTE);
         StringBuilder sb = new StringBuilder();
-        if(hour < 10);
+        if(hour < 10)
             sb.append(0);
         sb.append(hour);
         sb.append(":");

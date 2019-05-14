@@ -43,6 +43,7 @@ public class AllChatsActivity extends AppCompatActivity {
     private FileHandler mFileHandler;
     ListView mListView;
     TextView mEmptyView;
+    Map<String,Message> messageMap;
     ArrayList<ChatEntry> conversationList;
     ArrayList<ChatEntry> allList;
     private FirebaseFirestore mFirestore;
@@ -148,6 +149,7 @@ public class AllChatsActivity extends AppCompatActivity {
         //Create the list of objects
         conversationList = new ArrayList<>();
         allList = new ArrayList<>();
+        messageMap = new HashMap<>();
         populateConversationsList();
 
         //Attach to adapter
@@ -182,47 +184,15 @@ public class AllChatsActivity extends AppCompatActivity {
                                 Message message = doc.getDocument().toObject(Message.class);
                                 mFirestore.collection(MESSAGES).document(doc.getDocument().getId()).delete();
                                 mFileHandler.writeMessage(message);
-                                updateList();
-                                mAdapter.notifyDataSetChanged();
                             }
                         }
-
+                        updateList();
                     }
                 });
-
-        mFirestore.collection(MESSAGES).whereEqualTo("fromPersonID", Database.getInstance().getLoggedInUserID())
-                .addSnapshotListener(new EventListener<QuerySnapshot>() {
-                    @Override
-                    public void onEvent(@javax.annotation.Nullable QuerySnapshot queryDocumentSnapshots, @javax.annotation.Nullable FirebaseFirestoreException e) {
-                        if(e != null){
-                            return;
-                        }
-                        for(DocumentChange doc : queryDocumentSnapshots.getDocumentChanges()){
-                            if(doc.getType() == DocumentChange.Type.ADDED){
-                                //String message = doc.getDocument().getString("message");
-                                //Log.d("COOLTEST","Content: " + message);
-
-                                Message message = doc.getDocument().toObject(Message.class);
-                                if(!message.getFromPersonID().equals(Database.getInstance().getLoggedInUserID())){
-                                    mFirestore.collection(MESSAGES).document(doc.getDocument().getId()).delete();
-                                    mFileHandler.writeMessage(message);
-                                    updateList();
-                                    mAdapter.notifyDataSetChanged();
-                                }
-                            }
-                        }
-
-                    }
-                });
-        updateList();
-
     }
 
 
     public void updateList(){
-        conversationList.clear();
-        allList.clear();
-        final Map<String,Message> messageMap = new HashMap<>();
         String loggedInUserID = Database.getInstance().getLoggedInUserID();
         for(Message msg : mFileHandler.getMessages()){
             Log.d("COOLTEST","found msg:" + msg.getFromPersonID());
@@ -244,6 +214,10 @@ public class AllChatsActivity extends AppCompatActivity {
                         Person myPerson = person.toObjects(Person.class).get(0);
                         Log.d("COOLTEST","got user: " + myPerson.getDescription());
                         ChatEntry chatEntry = new ChatEntry(myPerson,entry.getValue());
+                        if(conversationList.contains(chatEntry)){
+                            conversationList.remove(chatEntry);
+                            allList.remove(chatEntry);
+                        }
                         conversationList.add(chatEntry);
                         allList.add(chatEntry);
                         mAdapter.notifyDataSetChanged();

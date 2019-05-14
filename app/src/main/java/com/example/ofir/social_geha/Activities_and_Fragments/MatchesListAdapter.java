@@ -37,6 +37,7 @@ public class MatchesListAdapter extends ArrayAdapter<Person> {
         TextView name;
         TextView description;
         CircleImageView image;
+        RelativeLayout chat_message_layout;
         ImageView pick_arrow;
     }
 
@@ -69,6 +70,7 @@ public class MatchesListAdapter extends ArrayAdapter<Person> {
             holder.name = convertView.findViewById(R.id.row_name);
             holder.description = convertView.findViewById(R.id.row_description);
             holder.image = convertView.findViewById(R.id.row_image);
+            holder.chat_message_layout = (RelativeLayout) convertView.findViewById(R.id.chat_message_layout);
             holder.pick_arrow = convertView.findViewById(R.id.pick_arrow);
 
             result = convertView;
@@ -99,6 +101,7 @@ public class MatchesListAdapter extends ArrayAdapter<Person> {
 
         holder.name.setText(name);
         holder.description.setText(description);
+        holder.chat_message_layout.setVisibility(View.GONE);
         holder.pick_arrow.setVisibility(View.VISIBLE);
         return convertView;
     }

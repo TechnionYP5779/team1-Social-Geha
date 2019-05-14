@@ -3,7 +3,6 @@ package com.example.ofir.social_geha.Activities_and_Fragments;
 import android.app.DatePickerDialog;
 import android.app.ProgressDialog;
 import android.content.Intent;
-import android.provider.ContactsContract;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -13,13 +12,13 @@ import com.example.ofir.social_geha.Firebase.Database;
 import com.example.ofir.social_geha.Person;
 import com.example.ofir.social_geha.R;
 import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.FirebaseFirestore;
-
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.UserProfileChangeRequest;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 import android.content.DialogInterface;
 import android.support.v7.app.AlertDialog;
 import android.text.InputType;
@@ -31,12 +30,16 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Calendar;
+import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
 
+import static com.example.ofir.social_geha.Person.fromGenderEnumToGenderIndex;
+import static com.example.ofir.social_geha.Person.fromReligionToReligionIndex;
 import static com.example.ofir.social_geha.Person.fromStringToGenderEnum;
 import static com.example.ofir.social_geha.Person.fromStringToReligion;
+import static com.example.ofir.social_geha.Person.languagesEnumToLanguageString;
 import static com.example.ofir.social_geha.Person.languagesStringToLanguageEnum;
 
 
@@ -51,8 +54,8 @@ public class SettingsInfoEditActivity extends AppCompatActivity {
 
     //Language relshated fields
     String[] languagesAll;
-    boolean[] langCheckedItems;
-    ArrayList<Integer> mUserItems = new ArrayList<>();
+    boolean[] languagesAll_BooleanSelection;
+    List<String> selectedLanguages = new ArrayList<>();
 
     //Name related Fields
     private String givenName;
@@ -90,6 +93,51 @@ public class SettingsInfoEditActivity extends AppCompatActivity {
         setUpReligionButton();
         setUpBioButton();
         setUpDoneButton();
+        setUpFieldValues();
+    }
+
+    private void setUpFieldValues() {
+        Database.getInstance().getdb().collection("users").whereEqualTo("userID", Database.getInstance().getLoggedInUserID()).get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            for (QueryDocumentSnapshot doc : task.getResult()) {
+
+                            }
+                        } else {
+//                            loading.setText(mainScreen.this.getString(R.string.strings_error));
+                        }
+                    }
+
+                    private void updateFieldsAccordingToPeson(Person p) {
+                        selectedLanguages = languagesEnumToLanguageString(p.getSpokenLanguages());
+                        for (int i = 0; i < languagesAll.length; i++) {
+                            languagesAll_BooleanSelection[i] = false;
+                        }
+                        for (int i = 0; i < languagesAll.length; i++) {
+                            Iterator iterator = selectedLanguages.iterator();
+                            while(iterator.hasNext()) {
+                                if (iterator.next().equals(languagesAll[i])){
+                                    languagesAll_BooleanSelection[i] = true;
+                                }
+                            }
+                        }
+                        givenName = p.getRealName();
+
+                        Calendar cal = Calendar.getInstance();
+                        cal.setTime(new Date(p.getBirthDate()));
+                        year = cal.get(Calendar.YEAR);
+                        month = cal.get(Calendar.MONTH);
+                        dayOfMonth = cal.get(Calendar.DAY_OF_MONTH);
+                        gender_index = fromGenderEnumToGenderIndex(p.getGender(),SettingsInfoEditActivity.this);
+                        gender = (gender_index != -1 )?  allGenders[gender_index] : null;
+
+                        bio = p.getDescription();
+                        religion_index= fromReligionToReligionIndex(p.getReligion());
+                        String religion= allReligions[religion_index];
+                    }
+                });
     }
 
     private void setUpDoneButton() {
@@ -102,13 +150,41 @@ public class SettingsInfoEditActivity extends AppCompatActivity {
                     // we need to preform register
                     calendar.set(year, month, dayOfMonth);
                     register(getIntent().getStringExtra("code"), givenName, calendar, gender,
-                            religion, languagesAll, bio);
+                            religion, selectedLanguages.toArray(new String[] {}), bio);
                 } else {
+                    calendar.set(year, month, dayOfMonth);
+//                    updateDBWithUserInfo(givenName, calendar, gender,
+//                            religion, selectedLanguages.toArray(new String[] {}), bio);)
                     onBackPressed();
                 }
             }
+
+
         });
     }
+
+//    private void updateDBWithUserInfo(String givenName, Calendar calendar, String gender, String religion, String[] toArray, String bio) {
+//        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+//        if (user != null) {
+//            UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
+//                    .setDisplayName("Jane Q. User")
+//                    .setPhotoUri(Uri.parse("https://example.com/jane-q-user/profile.jpg"))
+//                    .build();
+//
+//            user.updateProfile(profileUpdates)
+//                    .addOnCompleteListener(new OnCompleteListener<Void>() {
+//                        @Override
+//                        public void onComplete(@NonNull Task<Void> task) {
+//                            if (task.isSuccessful()) {
+//                                Log.d(TAG, "User profile updated.");
+//                            }
+//                        }
+//                    });            // User is signed in
+//        } else {
+//            // No user is signed in
+//        }
+//
+//    }
 
     public void register(final String code, final String name, final Calendar c, final String gender,
                          final String religion, final String[] languages, final String bio) {
@@ -133,7 +209,7 @@ public class SettingsInfoEditActivity extends AppCompatActivity {
                             Log.d("REGISTER_LANG", lang);
                         }
 
-                        for (boolean flag : langCheckedItems){
+                        for (boolean flag : languagesAll_BooleanSelection){
                             Log.d("REGISTER_LANG_CHECKED", String.valueOf(flag));
                         }
 
@@ -255,7 +331,6 @@ public class SettingsInfoEditActivity extends AppCompatActivity {
 
     }
 
-
     private void setBdayButton() {
         bdayButton = (Button) findViewById(R.id.bday_button);
 
@@ -321,19 +396,19 @@ public class SettingsInfoEditActivity extends AppCompatActivity {
     private void setUpLangButton() {
         langButton = (Button) findViewById(R.id.language_button);
         languagesAll = getResources().getStringArray(R.array.languages);
-        langCheckedItems = new boolean[languagesAll.length];
+        languagesAll_BooleanSelection = new boolean[languagesAll.length];
 
         langButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 AlertDialog.Builder mBuilder = new AlertDialog.Builder(SettingsInfoEditActivity.this, R.style.AlertDialogCustom);
-                mBuilder.setMultiChoiceItems(languagesAll, langCheckedItems, new DialogInterface.OnMultiChoiceClickListener() {
+                mBuilder.setMultiChoiceItems(languagesAll, languagesAll_BooleanSelection, new DialogInterface.OnMultiChoiceClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int position, boolean isChecked) {
                         if (isChecked) {
-                            mUserItems.add(position);
+                            selectedLanguages.add(languagesAll[position]);
                         } else {
-                            mUserItems.remove((Integer.valueOf(position)));
+                            selectedLanguages.remove(languagesAll[position]);
                         }
                     }
                 });
@@ -344,9 +419,9 @@ public class SettingsInfoEditActivity extends AppCompatActivity {
                     public void onClick(DialogInterface dialogInterface, int which) {
                         //TODO: Replace this with what to do on click
 //                        String item = "";
-//                        for (int i = 0; i < mUserItems.size(); i++) {
-//                            item = item + languagesAll[mUserItems.get(i)];
-//                            if (i != mUserItems.size() - 1) {
+//                        for (int i = 0; i < selectedLanguages.size(); i++) {
+//                            item = item + languagesAll[selectedLanguages.get(i)];
+//                            if (i != selectedLanguages.size() - 1) {
 //                                item = item + ", ";
 //                            }
 //                        }
@@ -364,9 +439,9 @@ public class SettingsInfoEditActivity extends AppCompatActivity {
                 mBuilder.setNeutralButton(R.string.select_all_label, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int which) {
-                        for (int i = 0; i < langCheckedItems.length; i++) {
-                            langCheckedItems[i] = true;
-                            mUserItems.add(i);
+                        for (int i = 0; i < languagesAll_BooleanSelection.length; i++) {
+                            languagesAll_BooleanSelection[i] = true;
+                            selectedLanguages.add(languagesAll[i]);
 //                            mItemSelected.setText("");
                         }
                     }

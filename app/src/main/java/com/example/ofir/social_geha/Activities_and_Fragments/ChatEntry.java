@@ -14,6 +14,22 @@ public class ChatEntry {
         this.message = message;
     }
 
+    @Override
+    public boolean equals(Object o) {
+
+        if (o == this) {
+            return true;
+        }
+
+        if (!(o instanceof ChatEntry)) {
+            return false;
+        }
+
+        ChatEntry c = (ChatEntry) o;
+
+        return this.person.equals(c.person);
+    }
+
     public Person getPerson() {
         return person;
     }
