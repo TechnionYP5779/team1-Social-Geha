@@ -9,7 +9,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".Activities_and_Fragments.ZoomedPictureActivity"></activity>
+        <activity android:name=".Activities_and_Fragments.ZoomedPictureActivity" />
         <activity android:name=".Activities_and_Fragments.SettingsHelp" />
         <activity android:name=".Activities_and_Fragments.SettingsDeleteAccount" />
         <activity android:name=".Activities_and_Fragments.SettingsInfoEditActivity" />
@@ -24,7 +24,7 @@
         <activity android:name=".Activities_and_Fragments.ChatActivity" />
         <activity
             android:name=".Activities_and_Fragments.mainScreen"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".Activities_and_Fragments.Login"
             android:screenOrientation="portrait" />
@@ -34,14 +34,23 @@
         <activity android:name=".Activities_and_Fragments.AvailableMatches" />
         <activity
             android:name=".Activities_and_Fragments.FilterMatchesActivity"
-            android:screenOrientation="portrait"
-            android:noHistory="true"/>
+            android:noHistory="true"
+            android:screenOrientation="portrait" />
         <activity android:name=".Activities_and_Fragments.AllChatsActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+        </activity>
+        <activity
+            android:name=".Activities_and_Fragments.SplashActivity"
+            android:theme="@style/SplashTheme">
+            <!--<intent-filter>-->
+                <!--<action android:name="android.intent.action.MAIN" />-->
+
+                <!--<category android:name="android.intent.category.LAUNCHER" />-->
+            <!--</intent-filter>-->
         </activity>
     </application>
 

@@ -214,15 +214,17 @@ public class Person {
 
 
     public static Religion fromStringToReligion(String religion, boolean canBeNull) {
-        switch (religion) {
-            case "דתי":
-                return Person.Religion.RELIGIOUS;
-            case "מסורתי":
-                return Person.Religion.TRADITIONAL;
-            case "חילוני":
-                return Person.Religion.SECULAR;
-            case "ערבי":
-                return Person.Religion.ARABIC;
+        if (religion != null) {
+            switch (religion) {
+                case "דתי":
+                    return Person.Religion.RELIGIOUS;
+                case "מסורתי":
+                    return Person.Religion.TRADITIONAL;
+                case "חילוני":
+                    return Person.Religion.SECULAR;
+                case "ערבי":
+                    return Person.Religion.ARABIC;
+            }
         }
         if (canBeNull)
             return null;
