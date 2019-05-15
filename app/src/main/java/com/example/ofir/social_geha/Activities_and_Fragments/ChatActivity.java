@@ -123,7 +123,8 @@ public class ChatActivity extends AppCompatActivity {
         for (Message msg : fileHandler.getMessages()) {
             Log.d("COOLTEST", "readMessage: " + msg.getMessage() + "from: " + msg.getFromPersonID());
             if (msg.getFromPersonID().equals(mOtherPersonId) || msg.getToPersonID().equals(mOtherPersonId)) {
-                messageList.add(msg);
+                if(msg.getShown())
+                    messageList.add(msg);
             }
         }
         mMessageListAdapter.notifyDataSetChanged();
@@ -151,7 +152,8 @@ public class ChatActivity extends AppCompatActivity {
                                 Log.d("POPO", "onEvent: DOES THIS");
                                 Message message = doc.getDocument().toObject(Message.class);
                                 mFirestore.collection(MESSAGES).document(doc.getDocument().getId()).delete();
-                                messageList.add(message);
+                                if(message.getShown())
+                                    messageList.add(message);
                                 fileHandler.writeMessage(message);
                             }
                         }
@@ -163,7 +165,7 @@ public class ChatActivity extends AppCompatActivity {
     public void onSendButtonClick(View v) {
         String message = mMessageEdit.getText().toString();
         Database.getInstance().sendMessage(message, mLoggedInPersonId, mOtherPersonId);
-        Message mymessage = new Message(message, mLoggedInPersonId, mOtherPersonId);
+        Message mymessage = new Message(message, mLoggedInPersonId, mOtherPersonId, true);
         fileHandler.writeMessage(mymessage);
         messageList.add(mymessage);
         mMessageListAdapter.notifyDataSetChanged();
