@@ -1,6 +1,5 @@
 package com.example.ofir.social_geha.Activities_and_Fragments;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Color;
 import android.support.v4.app.ActivityCompat;
@@ -14,9 +13,9 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.example.ofir.social_geha.Activities_and_Fragments.FileHandlers.MessageFileHandler;
 import com.example.ofir.social_geha.Firebase.Database;
 import com.example.ofir.social_geha.Firebase.Message;
 import com.example.ofir.social_geha.R;
@@ -46,7 +45,7 @@ public class ChatActivity extends AppCompatActivity {
     private String mAnonymousOtherPhotoColor;
     private String mAnonymousOtherName;
     private String mLoggedInPersonId;
-    private FileHandler fileHandler;
+    private MessageFileHandler fileHandler;
     private List<Message> messageList;
 
     @Override
@@ -106,7 +105,7 @@ public class ChatActivity extends AppCompatActivity {
         // HANDLE THE CHAT
         mLoggedInPersonId = Database.getInstance().getLoggedInUserID();
         messageList = new ArrayList<>();
-        fileHandler = new FileHandler(this);
+        fileHandler = new MessageFileHandler(this);
         mMessageListAdapter = new MessageListAdapter(messageList);
         mOtherPersonId = getIntent().getStringExtra("EXTRA_PERSON_ID");
         Log.d("POPO", "onCreate: " + mOtherPersonId);

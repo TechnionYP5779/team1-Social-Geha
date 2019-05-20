@@ -1,4 +1,4 @@
-package com.example.ofir.social_geha.Activities_and_Fragments;
+package com.example.ofir.social_geha.Activities_and_Fragments.FileHandlers;
 
 import android.content.Context;
 import android.util.Log;
@@ -13,7 +13,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 
-public class FileHandler {
+public class MessageFileHandler {
     private String messagesFile = "messages";
     private File mFile;
     private Context context;
@@ -21,7 +21,7 @@ public class FileHandler {
     FileInputStream inputStream;
 
 
-    public FileHandler(Context context){
+    public MessageFileHandler(Context context){
         mFile = new File(context.getFilesDir(), messagesFile);
         this.context = context;
     }

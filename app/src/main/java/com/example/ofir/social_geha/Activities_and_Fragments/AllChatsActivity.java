@@ -5,8 +5,6 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
@@ -15,12 +13,11 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.ofir.social_geha.Activities_and_Fragments.FileHandlers.MessageFileHandler;
 import com.example.ofir.social_geha.Firebase.Database;
 import com.example.ofir.social_geha.Firebase.Message;
 import com.example.ofir.social_geha.Person;
@@ -40,7 +37,7 @@ import java.util.Map;
 public class AllChatsActivity extends AppCompatActivity {
     Toolbar mToolbar;
     ChatListAdapter mAdapter;
-    private FileHandler mFileHandler;
+    private MessageFileHandler mFileHandler;
     ListView mListView;
     TextView mEmptyView;
     Map<String,Message> messageMap;
@@ -61,7 +58,7 @@ public class AllChatsActivity extends AppCompatActivity {
             promptLogin();
         }
 
-        mFileHandler = new FileHandler(this);
+        mFileHandler = new MessageFileHandler(this);
         mFirestore = FirebaseFirestore.getInstance();
         FloatingActionButton fab = (FloatingActionButton)findViewById(R.id.new_conversation_fb);
         fab.setOnClickListener(new View.OnClickListener() {
