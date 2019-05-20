@@ -8,6 +8,7 @@ import java.util.Date;
 
 public class Message implements Serializable {
     private static final long serialVersionUID = 1L;
+    private boolean shown;
     private String message;
     private String fromPersonID;
     private String toPersonID;
@@ -17,18 +18,28 @@ public class Message implements Serializable {
 
     }
 
-    public Message(String message, String fromPersonID, String toPersonID){
+    public Message(String message, String fromPersonID, String toPersonID, boolean shown){
         this.message = message;
         this.fromPersonID = fromPersonID;
         this.toPersonID = toPersonID;
         this.messageDate = new Date();
+        this.shown = shown;
     }
 
-    public Message(String message, Person fromPerson, Person toPerson){
+    public Message(String message, Person fromPerson, Person toPerson, boolean shown){
         this.message = message;
         this.fromPersonID = fromPerson.getUserID();
         this.toPersonID = toPerson.getUserID();
         this.messageDate = new Date();
+        this.shown = shown;
+    }
+
+    public void setShown(boolean shown) {
+        this.shown = shown;
+    }
+
+    public boolean getShown() {
+        return shown;
     }
 
     public String getFromPersonID() {

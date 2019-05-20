@@ -47,9 +47,17 @@ public final class Database {
         sendMessage(message, from.getUserID(), to.getUserID());
     }
 
+    public void sendControlMessage(String message, String fromUser, String toUser) {
+        sendMessageInner(message, fromUser,toUser, false);
+    }
+
     public void sendMessage(String message, String fromUser, String toUser) {
+        sendMessageInner(message, fromUser,toUser, true);
+    }
+
+    public void sendMessageInner(String message, String fromUser, String toUser,boolean shown) {
         db.collection(MESSAGES)
-                .add(new Message(message, fromUser, toUser))
+                .add(new Message(message, fromUser, toUser, shown))
                 .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
                     @Override
                     public void onSuccess(DocumentReference documentReference) {
