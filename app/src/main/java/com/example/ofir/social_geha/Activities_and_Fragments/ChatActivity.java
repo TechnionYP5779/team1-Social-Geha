@@ -15,6 +15,7 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.example.ofir.social_geha.Activities_and_Fragments.FileHandlers.MessageFileHandler;
 import com.example.ofir.social_geha.Firebase.Database;
 import com.example.ofir.social_geha.Firebase.Message;
 import com.example.ofir.social_geha.R;
@@ -183,9 +184,5 @@ public class ChatActivity extends AppCompatActivity {
     public boolean onSupportNavigateUp() {
         onBackPressed();
         return true;
-    }
-
-    public void onShareWithContact(){
-
     }
 }
