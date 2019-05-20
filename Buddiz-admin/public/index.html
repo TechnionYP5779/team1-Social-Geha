@@ -15,17 +15,25 @@
     <!-- initialize the SDK after all desired features are loaded -->
     <script defer src="/__/firebase/init.js"></script>
 	<link rel="stylesheet" href="styles.css">
+	<link rel="stylesheet"
+		href="https://fonts.googleapis.com/css?family=Titillium+Web&display=swap">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
   </head>
   <body>
-    <div id="message">
-      <h2>Hello Admin</h2>
-      <h1>Welcome to Buddiz!</h1>
-      <p>What do you want to do next?</p>
-      <a target="_blank" href="https://firebase.google.com/docs/hosting/">Add a user</a>
-	  <a target="_blank" href="https://firebase.google.com/docs/hosting/">Find a user</a>
-	  <a target="_blank" href="https://firebase.google.com/docs/hosting/">Delete a user</a>
-	  <a target="_blank" href="https://firebase.google.com/docs/hosting/">Export</a>
-    </div>
+    <div id="card">
+		<div id ="text">
+		    <h2>Hello Admin</h2>
+		    <h1>Welcome to Buddiz!</h1>
+		    <p>What do you want to do next?</p>
+		    <div class="btn-group" style="width:100%">
+			    <button style="width:25%"><i class="fa fa-plus"></i> Add a user</button>
+			    <button style="width:25%"><i class="fa fa-search"></i> Find a user</button>
+			    <button style="width:25%"><i class="fa fa-trash"></i> Delete a user</button>
+			    <button style="width:25%"><i class="fa fa-rocket"></i> Export</button>
+			</div>
+		</div>
+	</div>
     <p id="load">Firebase SDK Loading&hellip;</p>
 
     <script>
