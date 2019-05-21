@@ -15,7 +15,9 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.example.ofir.social_geha.Activities_and_Fragments.FileHandlers.KeyFileHandler;
 import com.example.ofir.social_geha.Activities_and_Fragments.FileHandlers.MessageFileHandler;
+import com.example.ofir.social_geha.Encryption.AES;
 import com.example.ofir.social_geha.Firebase.Database;
 import com.example.ofir.social_geha.Firebase.Message;
 import com.example.ofir.social_geha.R;
@@ -28,9 +30,11 @@ import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import javax.annotation.Nullable;
+import javax.crypto.SecretKey;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -46,6 +50,8 @@ public class ChatActivity extends AppCompatActivity {
     private String mAnonymousOtherName;
     private String mLoggedInPersonId;
     private MessageFileHandler fileHandler;
+    private KeyFileHandler keyFileHandler;
+    private AES aes;
     private List<Message> messageList;
 
     @Override
@@ -108,6 +114,14 @@ public class ChatActivity extends AppCompatActivity {
         fileHandler = new MessageFileHandler(this);
         mMessageListAdapter = new MessageListAdapter(messageList);
         mOtherPersonId = getIntent().getStringExtra("EXTRA_PERSON_ID");
+        keyFileHandler = new KeyFileHandler(this, mOtherPersonId);
+        SecretKey key = keyFileHandler.getKey();
+        if (key != null) {
+            Log.d("AES_ENCRYPT", "Reading key from file");
+            Log.d("AES_ENCRYPT_RESULT", AES.keyToString(key));
+            aes = new AES(key);
+        }
+
         Log.d("POPO", "onCreate: " + mOtherPersonId);
         mMessageEdit = findViewById(R.id.message_text);
         mMessageRecycler = findViewById(R.id.message_list);
@@ -118,11 +132,10 @@ public class ChatActivity extends AppCompatActivity {
         mFirestore = FirebaseFirestore.getInstance();
 
 
-
         for (Message msg : fileHandler.getMessages()) {
             Log.d("COOLTEST", "readMessage: " + msg.getMessage() + "from: " + msg.getFromPersonID());
             if (msg.getFromPersonID().equals(mOtherPersonId) || msg.getToPersonID().equals(mOtherPersonId)) {
-                if(msg.getShown())
+                if (msg.getShown())
                     messageList.add(msg);
             }
         }
@@ -132,8 +145,7 @@ public class ChatActivity extends AppCompatActivity {
     }
 
 
-    private void setMessageListners()
-    {
+    private void setMessageListners() {
         mFirestore.collection(MESSAGES).whereEqualTo("toPersonID", mLoggedInPersonId)
                 .whereEqualTo("fromPersonID", mOtherPersonId)
                 .addSnapshotListener(new EventListener<QuerySnapshot>() {
@@ -151,7 +163,7 @@ public class ChatActivity extends AppCompatActivity {
                                 Log.d("POPO", "onEvent: DOES THIS");
                                 Message message = doc.getDocument().toObject(Message.class);
                                 mFirestore.collection(MESSAGES).document(doc.getDocument().getId()).delete();
-                                if(message.getShown())
+                                if (message.getShown())
                                     messageList.add(message);
                                 fileHandler.writeMessage(message);
                             }
@@ -163,6 +175,14 @@ public class ChatActivity extends AppCompatActivity {
 
     public void onSendButtonClick(View v) {
         String message = mMessageEdit.getText().toString();
+        if (aes == null) {
+            Log.d("AES_ENCRYPT_INIT", "Starting Convo with " + mOtherPersonId);
+            Database.getInstance().sendControlMessage("Starting Convo", mLoggedInPersonId, mOtherPersonId);
+            aes = new AES(128);
+            keyFileHandler.writeKey(aes.key);
+            Database.getInstance().sendControlMessage(AES.keyToString(aes.key), mLoggedInPersonId, mOtherPersonId);
+            Log.d("AES_ENCRYPT_SEND", "Sending " + mOtherPersonId + " key:" + AES.keyToString(aes.key));
+        }
         Database.getInstance().sendMessage(message, mLoggedInPersonId, mOtherPersonId);
         Message mymessage = new Message(message, mLoggedInPersonId, mOtherPersonId, true);
         fileHandler.writeMessage(mymessage);
