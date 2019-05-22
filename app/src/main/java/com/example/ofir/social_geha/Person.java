@@ -1,20 +1,15 @@
 package com.example.ofir.social_geha;
 
 import android.content.Context;
-import android.util.Pair;
 
-import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.Exclude;
 
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.EnumSet;
 import java.util.List;
 import java.util.Objects;
-import java.util.Optional;
 
 import static com.example.ofir.social_geha.Person.Language.ENGLISH;
-import static java.util.Optional.empty;
 
 public class Person {
     // ==================================
@@ -268,5 +263,55 @@ public class Person {
 
         }
         return -1;
+    }
+
+    public Person setPersonID(String personID) {
+        this.personID = personID;
+        return this;
+    }
+
+    public Person setRealName(String realName) {
+        this.realName = realName;
+        return this;
+    }
+
+    public Person setAnonymousIdentity(AnonymousIdentity anonymousIdentity) {
+        this.anonymousIdentity = anonymousIdentity;
+        return this;
+    }
+
+    public Person setBirthDate(long birthDate) {
+        this.birthDate = birthDate;
+        return this;
+    }
+
+    public Person setGender(Gender gender) {
+        this.gender = gender;
+        return this;
+    }
+
+    public Person setReligion(Religion religion) {
+        this.religion = religion;
+        return this;
+    }
+
+    public Person setSpokenLanguages(List<Language> spokenLanguages) {
+        this.spokenLanguages = spokenLanguages;
+        return this;
+    }
+
+    public Person setKind(Kind kind) {
+        this.kind = kind;
+        return this;
+    }
+
+    public Person setDescription(String description) {
+        this.description = description;
+        return this;
+    }
+
+    public Person setWhiteList(List<Integer> whiteList) {
+        this.whiteList = whiteList;
+        return this;
     }
 }
