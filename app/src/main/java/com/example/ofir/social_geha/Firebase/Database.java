@@ -1,10 +1,7 @@
 package com.example.ofir.social_geha.Firebase;
 
-import android.os.Build;
 import android.support.annotation.NonNull;
-import android.support.annotation.RequiresApi;
 import android.util.Log;
-import android.util.Range;
 
 import com.example.ofir.social_geha.Activities_and_Fragments.MatchesListAdapter;
 import com.example.ofir.social_geha.Person;
@@ -16,17 +13,13 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.EnumSet;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Objects;
-import java.util.Set;
 
 
 public final class Database {
@@ -34,6 +27,7 @@ public final class Database {
     private static String TAG = "DatabaseStatus";
     private static String MESSAGES = "messages";
     private static String USERS = "users";
+    private Person p;
 
     public FirebaseFirestore db = FirebaseFirestore.getInstance();
     private FirebaseAuth auth = FirebaseAuth.getInstance();
@@ -204,6 +198,8 @@ public final class Database {
     }
 
     public Person getLoggedInPerson() {
+        if(this.p != null) return this.p;
+
         final Person[] p = {null};
         Database.getInstance().getdb().collection("users").whereEqualTo("userID", Database.getInstance().getLoggedInUserID()).get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
@@ -216,7 +212,8 @@ public final class Database {
                         }
                     }
                 });
-        return p[0];
+        this.p = p[0];
+        return this.p;
     }
 
 }
