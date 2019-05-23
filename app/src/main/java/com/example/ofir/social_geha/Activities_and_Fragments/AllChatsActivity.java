@@ -1,6 +1,5 @@
 package com.example.ofir.social_geha.Activities_and_Fragments;
 
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -21,7 +20,9 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.ofir.social_geha.Activities_and_Fragments.FileHandlers.ContactListFileHandler;
 import com.example.ofir.social_geha.Activities_and_Fragments.FileHandlers.MessageFileHandler;
+import com.example.ofir.social_geha.AnonymousIdentity;
 import com.example.ofir.social_geha.Firebase.Database;
 import com.example.ofir.social_geha.Firebase.Message;
 import com.example.ofir.social_geha.Person;
@@ -66,7 +67,7 @@ public class AllChatsActivity extends AppCompatActivity {
 
         mFileHandler = new MessageFileHandler(this);
         mFirestore = FirebaseFirestore.getInstance();
-        FloatingActionButton fab = (FloatingActionButton)findViewById(R.id.new_conversation_fb);
+        FloatingActionButton fab = findViewById(R.id.new_conversation_fb);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -74,7 +75,7 @@ public class AllChatsActivity extends AppCompatActivity {
             }
         });
 
-        mToolbar = (Toolbar) findViewById(R.id.toolbar);
+        mToolbar = findViewById(R.id.toolbar);
         setSupportActionBar(mToolbar);
         mListView = findViewById(R.id.list);
         mEmptyView = findViewById(R.id.emptyView);
@@ -106,8 +107,8 @@ public class AllChatsActivity extends AppCompatActivity {
                 LayoutInflater inflater = getLayoutInflater();
                 View dialogView = inflater.inflate(R.layout.alert_dialog_information_exposre,null);
                 builder.setView(dialogView);
-                Button one = (Button) dialogView.findViewById(R.id.button1);
-                Button three = (Button) dialogView.findViewById(R.id.button3);
+                Button one = dialogView.findViewById(R.id.button1);
+                Button three = dialogView.findViewById(R.id.button3);
                 final AlertDialog dialog = builder.create();
                 one.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -128,7 +129,7 @@ public class AllChatsActivity extends AppCompatActivity {
 
 
                 String are_you_sure_msg = "האם אתה בטוח שברצונך לשתף את זהותך עם "+conversationList.get(pos).getPerson().getAnonymousIdentity().getName()+"?";
-                TextView message = (TextView) dialogView.findViewById(R.id.textView2);
+                TextView message = dialogView.findViewById(R.id.textView2);
                 message.setText(are_you_sure_msg);
                 dialog.show();
                 return true;
@@ -136,6 +137,14 @@ public class AllChatsActivity extends AppCompatActivity {
         });
 
         mListView.setEmptyView(mEmptyView);
+
+        // =================================  CONTACTLIST TEST  ==================================
+        ContactListFileHandler handle = new ContactListFileHandler(this);
+        handle.getContacts();
+        ContactListFileHandler.Contact c = new ContactListFileHandler.Contact("default-uid", "default-realname",
+                new AnonymousIdentity("default-name", "default-image", "default-color"));
+        handle.addContact(c);
+        // ===================================================================
     }
 
     @Override
@@ -273,26 +282,5 @@ public class AllChatsActivity extends AppCompatActivity {
         updateList();
     }
 
-    //    public void animateIntent(View view, ImageView originalImage) {
-//
-//        // Ordinary Intent for launching a new activity
-//        Intent intent = new Intent(this, ZoomedPictureActivity.class);
-//
-//        // Get the transition name from the string
-//        String transitionName = getString(R.string.transition_string);
-//
-//        // Define the view that the animation will start from
-//        View viewStart = findViewById(R.id.row_image);
-//
-//        ActivityOptionsCompat options =
-//
-//                ActivityOptionsCompat.makeSceneTransitionAnimation(this,
-//                        viewStart,   // Starting view
-//                        transitionName    // The String
-//                );
-//        //Start the Intent
-//        ActivityCompat.startActivity(this, intent, options.toBundle());
-//
-//    }
 
 }

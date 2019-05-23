@@ -1,6 +1,8 @@
 package com.example.ofir.social_geha;
 
-public class AnonymousIdentity {
+import java.io.Serializable;
+
+public class AnonymousIdentity implements Serializable {
     public String name;
     public String imageName;
     public String imageColor;
@@ -24,5 +26,10 @@ public class AnonymousIdentity {
 
     public String getImageColor() {
         return imageColor;
+    }
+
+    @Override
+    public String toString() {
+        return "{" + name + "|" + imageName + "|" + imageColor + "}";
     }
 }
