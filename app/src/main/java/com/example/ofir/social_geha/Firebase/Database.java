@@ -55,7 +55,7 @@ public final class Database {
         sendMessageInner(message, fromUser,toUser, true);
     }
 
-    public void sendMessageInner(String message, String fromUser, String toUser,boolean shown) {
+    public void sendMessageInner(String message, String fromUser, String toUser, boolean shown) {
         db.collection(MESSAGES)
                 .add(new Message(message, fromUser, toUser, shown))
                 .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
@@ -201,6 +201,22 @@ public final class Database {
 
     public FirebaseFirestore getdb(){
         return db;
+    }
+
+    public Person getLoggedInPerson() {
+        final Person[] p = {null};
+        Database.getInstance().getdb().collection("users").whereEqualTo("userID", Database.getInstance().getLoggedInUserID()).get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            for (QueryDocumentSnapshot doc : task.getResult()) {
+                                p[0] = doc.toObject(Person.class);
+                            }
+                        }
+                    }
+                });
+        return p[0];
     }
 
 }

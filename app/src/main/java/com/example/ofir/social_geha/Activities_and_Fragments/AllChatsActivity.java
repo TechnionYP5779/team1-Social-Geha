@@ -103,7 +103,7 @@ public class AllChatsActivity extends AppCompatActivity {
         mListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
             public boolean onItemLongClick(AdapterView<?> arg0, View arg1,
-                                           int pos, long id) {
+                                           final int pos, long id) {
                 AlertDialog.Builder builder = new AlertDialog.Builder(AllChatsActivity.this);
                 LayoutInflater inflater = getLayoutInflater();
                 View dialogView = inflater.inflate(R.layout.alert_dialog_information_exposre, null);
@@ -114,7 +114,6 @@ public class AllChatsActivity extends AppCompatActivity {
                 one.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        // TODO: ACTUALLY SHRE INFO WHEN CONTACTLIST IS IMPLEMENTED
                         Toast.makeText(AllChatsActivity.this, "בוטל", Toast.LENGTH_SHORT).show();
                         dialog.dismiss();
                     }
@@ -123,6 +122,8 @@ public class AllChatsActivity extends AppCompatActivity {
                 three.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
+                        String content = "IDENTITY$" + Database.getInstance().getLoggedInUserID() + "#" + Database.getInstance().getLoggedInPerson().getRealName();
+                        Database.getInstance().sendControlMessage(content, Database.getInstance().getLoggedInUserID(), conversationList.get(pos).getUserID());
                         Toast.makeText(AllChatsActivity.this, "שותף בהצלחה", Toast.LENGTH_SHORT).show();
                         dialog.dismiss();
                     }
@@ -334,6 +335,4 @@ public class AllChatsActivity extends AppCompatActivity {
         }
         return -1;
     }
-
-
 }
