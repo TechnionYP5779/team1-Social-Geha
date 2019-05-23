@@ -113,14 +113,16 @@ public class AllChatsActivity extends AppCompatActivity {
                     @Override
                     public void onClick(View v) {
                         // TODO: ACTUALLY SHRE INFO WHEN CONTACTLIST IS IMPLEMENTED
-                        Toast.makeText(AllChatsActivity.this, "שותף בהצלחה" , Toast.LENGTH_SHORT).show();
+                        Toast.makeText(AllChatsActivity.this, "בוטל" , Toast.LENGTH_SHORT).show();
+                        dialog.dismiss();
                     }
                 });
 
                 three.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        Toast.makeText(AllChatsActivity.this, "בוטל" , Toast.LENGTH_SHORT).show();
+                        Toast.makeText(AllChatsActivity.this, "שותף בהצלחה" , Toast.LENGTH_SHORT).show();
+                        dialog.dismiss();
                     }
                 });
 
