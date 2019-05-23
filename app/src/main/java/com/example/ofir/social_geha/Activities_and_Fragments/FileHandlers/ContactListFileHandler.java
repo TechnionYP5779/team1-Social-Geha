@@ -24,25 +24,24 @@ public class ContactListFileHandler {
 
     public ContactListFileHandler(Context context) {
         Log.d("CONTACTS", "FileHandler c'tor");
-
         mFile = new File(context.getFilesDir(), filename); //just to actually create the file
         this.context = context;
-
-        try {
-            FileOutputStream outputStream = context.openFileOutput(filename, Context.MODE_PRIVATE);
-            ObjectOutputStream oos = new ObjectOutputStream(outputStream);
-            oos.writeObject(new ArrayList<Contact>());
-            oos.flush();
-            oos.close();
-            outputStream.close();
-        } catch (IOException e) {
-            throw new RuntimeException("File was not created properly");
-        }
     }
 
+    //overwrites is uid is already found
     public ArrayList<Contact> addContact(Contact c) {
         ArrayList<Contact> contacts = getContacts();
-        contacts.add(c);
+
+        for(int i = 0; i < contacts.size(); i++) {
+            if(contacts.get(i).getUid().equals(c.getUid())) {
+                contacts.set(i, c);
+            }
+        }
+
+        //we haven't found it in the scan
+        if(!contacts.contains(c)) {
+            contacts.add(c);
+        }
 
         StringBuilder lstStr = new StringBuilder();
         for (Contact con : contacts) {
@@ -59,12 +58,10 @@ public class ContactListFileHandler {
             oos.flush();
             oos.close();
             outputStream.close();
-            return contacts;
         } catch (Exception e) {
             Log.d("CONTACTS", e.getClass().getSimpleName());
-            throw new RuntimeException("Failed writing contacts file");
         }
-
+        return contacts;
     }
 
 
@@ -85,20 +82,24 @@ public class ContactListFileHandler {
 
             return contacts;
         } catch (Exception e) {
-            throw new RuntimeException("Failed reading contacts file");
+            Log.d("CONTACTS", e.getClass().getSimpleName());
+            return new ArrayList<>();
         }
     }
 
 
     public static class Contact implements Serializable {
+        public static final String UNKNOWN_NAME = "UNKNOWN";
         private String uid;
         private String realName;
+        private String desc;
         private AnonymousIdentity anonID;
 
-        public Contact(String uid, String realName, AnonymousIdentity anonID) {
+        public Contact(String uid, String realName, String desc, AnonymousIdentity anonID) {
             this.uid = uid;
             this.realName = realName;
             this.anonID = anonID;
+            this.desc = desc;
         }
 
         public String getUid() {
@@ -128,6 +129,14 @@ public class ContactListFileHandler {
         @Override
         public String toString() {
             return "{" + uid + "|" + realName + "|" + anonID.toString() + "}";
+        }
+
+        public String getDescription() {
+            return desc;
+        }
+
+        public void setDescription(String desc) {
+            this.desc = desc;
         }
     }
 }
