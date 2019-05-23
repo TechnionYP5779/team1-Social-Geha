@@ -139,6 +139,9 @@ public class AllChatsActivity extends AppCompatActivity {
         });
 
         mListView.setEmptyView(mEmptyView);
+
+        //TEST CONTROL EXPOSURE MESSAGE
+        //Database.getInstance().sendControlMessage("IDENTITY$P0ExiyNScOX7CyT0DoRA3DiFWJK2#HEYYYYYYYYYYYYYYYY", "P0ExiyNScOX7CyT0DoRA3DiFWJK2", Database.getInstance().getLoggedInUserID());
     }
 
     @Override
@@ -250,7 +253,33 @@ public class AllChatsActivity extends AppCompatActivity {
 
         ArrayList<ContactListFileHandler.Contact> contacts = new ContactListFileHandler(this).getContacts();
         for (final Map.Entry<String, Message> entry : messageMap.entrySet()) {
-            if (!entry.getValue().getShown()) {
+            if (!entry.getValue().getShown()) { //it's a control message
+                String contactUID = entry.getValue().getFromPersonID();
+
+                if(contactUID.equals(Database.getInstance().getLoggedInUserID()) ||
+                        !entry.getValue().getMessage().substring(0, "IDENTITY".length()).equals("IDENTITY")) {
+                    continue; // a message we should ignore because it's not an identity reveal
+                }
+
+                String text = entry.getValue().getMessage();
+                String realName = text.substring(text.indexOf('#') + 1);
+                Log.d("SHAI", "got control message from " + entry.getKey());
+                Log.d("SHAI", "his/her realname is " + realName);
+
+                new ContactListFileHandler(this).changeName(contactUID, realName);
+
+                //for the full effect
+                for(int i = 0; i < conversationList.size(); i++) {
+                    if(conversationList.get(i).getUserID().equals(contactUID)) {
+                        conversationList.get(i).setRealName(realName);
+                    }
+                }
+
+                for(int i = 0; i < allList.size(); i++) {
+                    if(allList.get(i).getUserID().equals(contactUID)) {
+                        allList.get(i).setRealName(realName);
+                    }
+                }
                 continue;
             }
 

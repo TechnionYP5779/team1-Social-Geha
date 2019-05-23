@@ -28,6 +28,19 @@ public class ContactListFileHandler {
         this.context = context;
     }
 
+    public void changeName(String uid, String realname) {
+        ArrayList<Contact> contacts = getContacts();
+
+        for(int i = 0; i < contacts.size(); i++) {
+            if(contacts.get(i).getUid().equals(uid)) {
+                Contact newContact = new Contact(uid, realname, contacts.get(i).getDescription(), contacts.get(i).getAnonID());
+                addContact(newContact);
+                return;
+            }
+        }
+
+    }
+
     //overwrites is uid is already found
     public ArrayList<Contact> addContact(Contact c) {
         ArrayList<Contact> contacts = getContacts();

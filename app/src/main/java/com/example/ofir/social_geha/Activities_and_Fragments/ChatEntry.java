@@ -58,4 +58,8 @@ public class ChatEntry {
     String getDescription() {
         return contact.getDescription();
     }
+
+    public void setRealName(String realName) {
+        contact.setRealName(realName);
+    }
 }
