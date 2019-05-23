@@ -104,8 +104,8 @@
     <string name="dismiss_label">חזור</string>
     <string name="clear_all_label">נקה הכל</string>
     <string name="select_all_label">בחר הכל</string>
-    <string name="agree">אכן</string>
-    <string name="dont_agree">לא ולא</string>
+    <string name="agree">כן</string>
+    <string name="dont_agree">לא</string>
 
     <string-array name="months_array">
         <item>ינואר</item>
@@ -145,4 +145,5 @@
     <string name="strings_please_wait">אנא המתן...</string>
     <string name="strings_reg_ex">בעיה בהרשמה:</string>
     <string name="strings_error">אירעה שגיאה, נסה שוב מאוחר יותר.</string>
+    <string name="share_info_header">שיתוף מידע</string>
 </resources>

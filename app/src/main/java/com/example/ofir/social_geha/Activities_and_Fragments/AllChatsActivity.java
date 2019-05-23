@@ -1,18 +1,22 @@
 package com.example.ofir.social_geha.Activities_and_Fragments;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -29,6 +33,8 @@ import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QuerySnapshot;
+
+import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -75,7 +81,6 @@ public class AllChatsActivity extends AppCompatActivity {
 
         loadList();
 
-
         mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -91,6 +96,42 @@ public class AllChatsActivity extends AppCompatActivity {
             }
         });
 
+        //Set long click listener
+        mListView.setLongClickable(true);
+        mListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> arg0, View arg1,
+                                           int pos, long id) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(AllChatsActivity.this);
+                LayoutInflater inflater = getLayoutInflater();
+                View dialogView = inflater.inflate(R.layout.alert_dialog_information_exposre,null);
+                builder.setView(dialogView);
+                Button one = (Button) dialogView.findViewById(R.id.button1);
+                Button three = (Button) dialogView.findViewById(R.id.button3);
+                final AlertDialog dialog = builder.create();
+                one.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        // TODO: ACTUALLY SHRE INFO WHEN CONTACTLIST IS IMPLEMENTED
+                        Toast.makeText(AllChatsActivity.this, "שותף בהצלחה" , Toast.LENGTH_SHORT).show();
+                    }
+                });
+
+                three.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Toast.makeText(AllChatsActivity.this, "בוטל" , Toast.LENGTH_SHORT).show();
+                    }
+                });
+
+
+                String are_you_sure_msg = "האם אתה בטוח שברצונך לשתף את זהותך עם "+conversationList.get(pos).getPerson().getAnonymousIdentity().getName()+"?";
+                TextView message = (TextView) dialogView.findViewById(R.id.textView2);
+                message.setText(are_you_sure_msg);
+                dialog.show();
+                return true;
+            }
+        });
 
         mListView.setEmptyView(mEmptyView);
     }
