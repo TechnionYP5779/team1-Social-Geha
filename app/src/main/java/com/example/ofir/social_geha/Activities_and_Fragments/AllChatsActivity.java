@@ -127,6 +127,16 @@ public class AllChatsActivity extends AppCompatActivity {
             @Override
             public boolean onItemLongClick(AdapterView<?> arg0, View arg1,
                                            final int pos, long id) {
+
+                String uid = conversationList.get(pos).getUserID();
+
+                //cannot click once it's been shared
+                for(ContactListFileHandler.Contact c : new ContactListFileHandler(AllChatsActivity.this).getContacts()) {
+                    if(c.getUid().equals(uid) && !c.getRealName().equals(ContactListFileHandler.Contact.UNKNOWN_NAME)) {
+                        return true;
+                    }
+                }
+
                 AlertDialog.Builder builder = new AlertDialog.Builder(AllChatsActivity.this);
                 LayoutInflater inflater = getLayoutInflater();
                 View dialogView = inflater.inflate(R.layout.alert_dialog_information_exposre, null);
