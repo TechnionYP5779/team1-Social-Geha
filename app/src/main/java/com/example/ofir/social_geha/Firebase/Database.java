@@ -27,7 +27,7 @@ public final class Database {
     private static String TAG = "DatabaseStatus";
     private static String MESSAGES = "messages";
     private static String USERS = "users";
-    private Person p;
+    //private Person p;
 
     public FirebaseFirestore db = FirebaseFirestore.getInstance();
     private FirebaseAuth auth = FirebaseAuth.getInstance();
@@ -197,23 +197,35 @@ public final class Database {
         return db;
     }
 
-    public Person getLoggedInPerson() {
-        if(this.p != null) return this.p;
-
-        final Person[] p = {null};
-        Database.getInstance().getdb().collection("users").whereEqualTo("userID", Database.getInstance().getLoggedInUserID()).get()
-                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        if (task.isSuccessful()) {
-                            for (QueryDocumentSnapshot doc : task.getResult()) {
-                                p[0] = doc.toObject(Person.class);
-                            }
-                        }
-                    }
-                });
-        this.p = p[0];
-        return this.p;
-    }
+//    public Person getLoggedInPerson() {
+//        if(this.p != null) return this.p;
+//
+//        final Person[] p = {null};
+//        Log.d("SHAI", "LOGGEDINID = " + getLoggedInUserID());
+//
+//        this.getdb().collection("users").whereEqualTo("userID", this.getLoggedInUserID()).get()
+//                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+//                    @Override
+//                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+//                        if (task.isSuccessful()) {
+//                            for (QueryDocumentSnapshot doc : task.getResult()) {
+//                                p[0] = doc.toObject(Person.class);
+//                                Log.d("SHAI", "found PERSON!!!");
+//                            }
+//                            if(p[0] == null) Log.d("SHAI", "didn't find anyone");
+//                        }
+//                        Log.d("SHAI", "task unsuccessful!");
+//                    }
+//                });
+//
+//        if(p[0] == null) {
+//            Log.d("SHAI", "PERSON = null");
+//        } else {
+//            Log.d("SHAI", "PERSON != null");
+//        }
+//
+//        this.p = p[0];
+//        return this.p;
+//    }
 
 }

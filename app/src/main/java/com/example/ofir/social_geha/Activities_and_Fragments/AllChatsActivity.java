@@ -33,6 +33,7 @@ import com.google.firebase.firestore.DocumentChange;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import org.w3c.dom.Text;
@@ -54,6 +55,7 @@ public class AllChatsActivity extends AppCompatActivity {
     private FirebaseFirestore mFirestore;
     private static final String MESSAGES = "messages";
     private static final String USERS = "users";
+    private Person p;
 
     private static final int LOGIN_RETURN_CODE = 1;
 
@@ -80,6 +82,27 @@ public class AllChatsActivity extends AppCompatActivity {
         setSupportActionBar(mToolbar);
         mListView = findViewById(R.id.list);
         mEmptyView = findViewById(R.id.emptyView);
+
+        Database.getInstance().getdb().collection("users").whereEqualTo("userID", Database.getInstance().getLoggedInUserID()).get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        //Log.d("SHAI", "task complete!");
+                        if (task.isSuccessful()) {
+                            for (QueryDocumentSnapshot doc : task.getResult()) {
+                                AllChatsActivity.this.p = doc.toObject(Person.class);
+                            }
+                        } else {
+                            //Log.d("SHAI", "TASK NOT SUCCESSFUL");
+                        }
+                    }
+                });
+
+//        if(this.p == null) {
+//            Log.d("SHAI", "logged in person IS null");
+//        } else {
+//            Log.d("SHAI", "logged in person ISN'T null");
+//        }
 
         loadList();
 
@@ -122,13 +145,13 @@ public class AllChatsActivity extends AppCompatActivity {
                 three.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        String content = "IDENTITY$" + Database.getInstance().getLoggedInUserID() + "#" + Database.getInstance().getLoggedInPerson().getRealName();
+                        String content = "IDENTITY$" + Database.getInstance().getLoggedInUserID() + "#" + AllChatsActivity.this.p.getRealName();
+                        Log.d("SHAI", "going to send reveal message:" + content);
                         Database.getInstance().sendControlMessage(content, Database.getInstance().getLoggedInUserID(), conversationList.get(pos).getUserID());
                         Toast.makeText(AllChatsActivity.this, "שותף בהצלחה", Toast.LENGTH_SHORT).show();
                         dialog.dismiss();
                     }
                 });
-
 
                 String are_you_sure_msg = "האם אתה בטוח שברצונך לשתף את זהותך עם " + conversationList.get(pos).getName() + "?";
                 TextView message = dialogView.findViewById(R.id.textView2);
