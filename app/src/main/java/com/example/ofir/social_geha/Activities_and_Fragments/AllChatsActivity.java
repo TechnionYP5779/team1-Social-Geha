@@ -129,10 +129,11 @@ public class AllChatsActivity extends AppCompatActivity {
                                            final int pos, long id) {
 
                 String uid = conversationList.get(pos).getUserID();
-
                 //cannot click once it's been shared
                 for(ContactListFileHandler.Contact c : new ContactListFileHandler(AllChatsActivity.this).getContacts()) {
                     if(c.getUid().equals(uid) && !c.getRealName().equals(ContactListFileHandler.Contact.UNKNOWN_NAME)) {
+                        String toastText =  "לא ניתן לבטל את שיתוף המידע עם " + c.getRealName();
+                        Toast.makeText(AllChatsActivity.this, toastText, Toast.LENGTH_SHORT).show();
                         return true;
                     }
                 }
@@ -172,9 +173,6 @@ public class AllChatsActivity extends AppCompatActivity {
         });
 
         mListView.setEmptyView(mEmptyView);
-
-        //TEST CONTROL EXPOSURE MESSAGE
-        //Database.getInstance().sendControlMessage("IDENTITY$P0ExiyNScOX7CyT0DoRA3DiFWJK2#HEYYYYYYYYYYYYYYYY", "P0ExiyNScOX7CyT0DoRA3DiFWJK2", Database.getInstance().getLoggedInUserID());
     }
 
     @Override
@@ -305,7 +303,6 @@ public class AllChatsActivity extends AppCompatActivity {
                 });
     }
 
-
     public void updateList() {
         Log.d("SHAI", "IN UPDATE LIST");
         String loggedInUserID = Database.getInstance().getLoggedInUserID();
@@ -373,7 +370,7 @@ public class AllChatsActivity extends AppCompatActivity {
                 }
                 mAdapter.notifyDataSetChanged();
             } else {
-                Log.d("SHAI", "got shown message from unkown contact " + entry.getKey());
+                Log.d("SHAI", "got shown message from unknown contact " + entry.getKey());
                 //new message from someone we do not know
                 Task<QuerySnapshot> personQueryTask = mFirestore.collection(USERS).whereEqualTo("userID", entry.getKey()).get();
                 personQueryTask.addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
