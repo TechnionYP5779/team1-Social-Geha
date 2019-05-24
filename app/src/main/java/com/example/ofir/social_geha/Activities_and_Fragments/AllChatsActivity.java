@@ -225,12 +225,47 @@ public class AllChatsActivity extends AppCompatActivity {
                         if (e != null) {
                             return;
                         }
+
                         for (DocumentChange doc : queryDocumentSnapshots.getDocumentChanges()) {
                             if (doc.getType() == DocumentChange.Type.ADDED) {
-                                Message message = doc.getDocument().toObject(Message.class);
+                                Message message = doc.getDocument().toObject(Message.class); //added message
                                 mFirestore.collection(MESSAGES).document(doc.getDocument().getId()).delete();
-                                mFileHandler.writeMessage(message);
+                                mFileHandler.writeMessage(message); //non shown messages will be ignored anyway but may as well write them
+
+                                if (message.getShown()) {
+                                    continue;
+                                }
+
+                                //it's a control message - our business
+                                String contactUID = message.getFromPersonID();
+                                String text = message.getMessage();
+
+                                if (contactUID.equals(Database.getInstance().getLoggedInUserID()) /* seflf message*/ ||
+                                        !text.substring(0, "IDENTITY".length()).equals("IDENTITY") /*a control message but not an identity reveal*/) {
+                                    continue; // a message we should ignore because it's not an identity reveal - to the next change
+                                }
+
+                                String realName = text.substring(text.indexOf('#') + 1);
+                                Log.d("SHAI", "got control message from " + message.getFromPersonID());
+                                Log.d("SHAI", "his/her realname is " + realName);
+                                new ContactListFileHandler(AllChatsActivity.this).changeName(contactUID, realName);
+
+                                //for the full effect - swap the names in the lists
+                                //The contact must be in the list since a first message can not be an identity reveal one
+                                for (int i = 0; i < conversationList.size(); i++) {
+                                    if (conversationList.get(i).getUserID().equals(contactUID)) {
+                                        conversationList.get(i).setRealName(realName);
+                                    }
+                                }
+
+                                for (int i = 0; i < allList.size(); i++) {
+                                    if (allList.get(i).getUserID().equals(contactUID)) {
+                                        allList.get(i).setRealName(realName);
+                                    }
+                                }
+
                             }
+
                         }
                         updateList();
                     }
@@ -241,7 +276,10 @@ public class AllChatsActivity extends AppCompatActivity {
     public void updateList() {
         Log.d("SHAI", "IN UPDATE LIST");
         String loggedInUserID = Database.getInstance().getLoggedInUserID();
+
         for (Message msg : mFileHandler.getMessages()) {
+            if (!msg.getShown()) continue; //ensures that the last SHOWN message is in the map
+
             Log.d("COOLTEST", "found msg:" + msg.getFromPersonID());
             if (loggedInUserID.equals(msg.getFromPersonID()))
                 messageMap.put(msg.getToPersonID(), msg);
@@ -249,40 +287,41 @@ public class AllChatsActivity extends AppCompatActivity {
                 messageMap.put(msg.getFromPersonID(), msg);
         }
 
-        messageMap.remove(loggedInUserID);
+        //messageMap.remove(loggedInUserID);
 
         ArrayList<ContactListFileHandler.Contact> contacts = new ContactListFileHandler(this).getContacts();
         for (final Map.Entry<String, Message> entry : messageMap.entrySet()) {
-            if (!entry.getValue().getShown()) { //it's a control message
-                String contactUID = entry.getValue().getFromPersonID();
-
-                if(contactUID.equals(Database.getInstance().getLoggedInUserID()) ||
-                        !entry.getValue().getMessage().substring(0, "IDENTITY".length()).equals("IDENTITY")) {
-                    continue; // a message we should ignore because it's not an identity reveal
-                }
-
-                String text = entry.getValue().getMessage();
-                String realName = text.substring(text.indexOf('#') + 1);
-                Log.d("SHAI", "got control message from " + entry.getKey());
-                Log.d("SHAI", "his/her realname is " + realName);
-
-                new ContactListFileHandler(this).changeName(contactUID, realName);
-
-                //for the full effect
-                for(int i = 0; i < conversationList.size(); i++) {
-                    if(conversationList.get(i).getUserID().equals(contactUID)) {
-                        conversationList.get(i).setRealName(realName);
-                    }
-                }
-
-                for(int i = 0; i < allList.size(); i++) {
-                    if(allList.get(i).getUserID().equals(contactUID)) {
-                        allList.get(i).setRealName(realName);
-                    }
-                }
-                continue;
-            }
-
+//            if (!entry.getValue().getShown()) { //it's a control message
+//                String contactUID = entry.getValue().getFromPersonID();
+//
+//                if(contactUID.equals(Database.getInstance().getLoggedInUserID()) ||
+//                        !entry.getValue().getMessage().substring(0, "IDENTITY".length()).equals("IDENTITY")) {
+//                    continue; // a message we should ignore because it's not an identity reveal
+//                }
+//
+//                String text = entry.getValue().getMessage();
+//                String realName = text.substring(text.indexOf('#') + 1);
+//                Log.d("SHAI", "got control message from " + entry.getKey());
+//                Log.d("SHAI", "his/her realname is " + realName);
+//
+//                new ContactListFileHandler(this).changeName(contactUID, realName);
+//
+//                //for the full effect
+//                boolean found = false;
+//                for(int i = 0; i < conversationList.size(); i++) {
+//                    if(conversationList.get(i).getUserID().equals(contactUID)) {
+//                        conversationList.get(i).setRealName(realName);
+//                        found = true;
+//                    }
+//                }
+//
+//                for(int i = 0; i < allList.size(); i++) {
+//                    if(allList.get(i).getUserID().equals(contactUID)) {
+//                        allList.get(i).setRealName(realName);
+//                    }
+//                }
+//                continue;
+//            }
             int i = knowContact(contacts, entry.getKey());
             if (i != -1) {
                 Log.d("SHAI", "got shown message from known contact " + entry.getKey());
@@ -301,9 +340,8 @@ public class AllChatsActivity extends AppCompatActivity {
                 }
                 mAdapter.notifyDataSetChanged();
             } else {
-
-                Log.d("SHAI", "got shown message from unknown contact " + entry.getKey());
-                //new message from someone we don't know
+                Log.d("SHAI", "got shown message from unkown contact " + entry.getKey());
+                //new message from someone we do not know
                 Task<QuerySnapshot> personQueryTask = mFirestore.collection(USERS).whereEqualTo("userID", entry.getKey()).get();
                 personQueryTask.addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
