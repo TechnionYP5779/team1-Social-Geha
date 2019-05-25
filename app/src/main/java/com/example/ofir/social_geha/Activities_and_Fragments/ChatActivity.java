@@ -131,16 +131,6 @@ public class ChatActivity extends AppCompatActivity {
 
         mFirestore = FirebaseFirestore.getInstance();
 
-
-        for (Message msg : fileHandler.getMessages()) {
-            Log.d("COOLTEST", "readMessage: " + msg.getMessage() + "from: " + msg.getFromPersonID());
-            if (msg.getFromPersonID().equals(mOtherPersonId) || msg.getToPersonID().equals(mOtherPersonId)) {
-                if (msg.getShown())
-                    messageList.add(msg);
-            }
-        }
-        mMessageListAdapter.notifyDataSetChanged();
-
         setMessageListners();
     }
 
@@ -168,10 +158,23 @@ public class ChatActivity extends AppCompatActivity {
                                 fileHandler.writeMessage(message);
                             }
                         }
-                        mMessageListAdapter.notifyDataSetChanged();
+                        updateMessageList();
                     }
                 });
     }
+
+    public void updateMessageList(){
+        messageList.clear();
+        for (Message msg : fileHandler.getMessages()) {
+            Log.d("COOLTEST", "readMessage: " + msg.getMessage() + "from: " + msg.getFromPersonID());
+            if (msg.getFromPersonID().equals(mOtherPersonId) || msg.getToPersonID().equals(mOtherPersonId)) {
+                if (msg.getShown())
+                    messageList.add(msg);
+            }
+        }
+        mMessageListAdapter.notifyDataSetChanged();
+    }
+
 
     public void onSendButtonClick(View v) {
         String message = mMessageEdit.getText().toString();
