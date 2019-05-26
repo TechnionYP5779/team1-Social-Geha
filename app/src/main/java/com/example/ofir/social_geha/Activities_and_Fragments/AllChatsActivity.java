@@ -21,8 +21,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.ofir.social_geha.Activities_and_Fragments.FileHandlers.ContactListFileHandler;
+import com.example.ofir.social_geha.Activities_and_Fragments.FileHandlers.KeyFileHandler;
 import com.example.ofir.social_geha.Activities_and_Fragments.FileHandlers.MessageFileHandler;
-import com.example.ofir.social_geha.AnonymousIdentity;
+import com.example.ofir.social_geha.Encryption.AES;
 import com.example.ofir.social_geha.Firebase.Database;
 import com.example.ofir.social_geha.Firebase.Message;
 import com.example.ofir.social_geha.Person;
@@ -35,8 +36,6 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
-
-import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -92,9 +91,8 @@ public class AllChatsActivity extends AppCompatActivity {
                             for (QueryDocumentSnapshot doc : task.getResult()) {
                                 AllChatsActivity.this.p = doc.toObject(Person.class);
                             }
-                        } else {
-                            //Log.d("SHAI", "TASK NOT SUCCESSFUL");
                         }
+
                     }
                 });
 
@@ -117,6 +115,7 @@ public class AllChatsActivity extends AppCompatActivity {
                 myIntent.putExtra("EXTRA_NAME", chatEntry.getName());
                 myIntent.putExtra("EXTRA_PHOTO_URL", chatEntry.getImageName());
                 myIntent.putExtra("EXTRA_PHOTO_COLOR", chatEntry.getImageColor());
+                myIntent.putExtra("EXTRA_INITIATOR", false);
                 AllChatsActivity.this.startActivity(myIntent);
             }
         });
@@ -130,9 +129,9 @@ public class AllChatsActivity extends AppCompatActivity {
 
                 String uid = conversationList.get(pos).getUserID();
                 //cannot click once it's been shared
-                for(ContactListFileHandler.Contact c : new ContactListFileHandler(AllChatsActivity.this).getContacts()) {
-                    if(c.getUid().equals(uid) && !c.getRealName().equals(ContactListFileHandler.Contact.UNKNOWN_NAME)) {
-                        String toastText =  "לא ניתן לבטל את שיתוף המידע עם " + c.getRealName();
+                for (ContactListFileHandler.Contact c : new ContactListFileHandler(AllChatsActivity.this).getContacts()) {
+                    if (c.getUid().equals(uid) && !c.getRealName().equals(ContactListFileHandler.Contact.UNKNOWN_NAME)) {
+                        String toastText = "לא ניתן לבטל את שיתוף המידע עם " + c.getRealName();
                         Toast.makeText(AllChatsActivity.this, toastText, Toast.LENGTH_SHORT).show();
                         return true;
                     }
@@ -271,28 +270,35 @@ public class AllChatsActivity extends AppCompatActivity {
                                 String contactUID = message.getFromPersonID();
                                 String text = message.getMessage();
 
-                                if (contactUID.equals(Database.getInstance().getLoggedInUserID()) /* seflf message*/ ||
-                                        !text.substring(0, "IDENTITY".length()).equals("IDENTITY") /*a control message but not an identity reveal*/) {
-                                    continue; // a message we should ignore because it's not an identity reveal - to the next change
-                                }
+                                /* self message*/
+                                if (contactUID.equals(Database.getInstance().getLoggedInUserID()))
+                                    continue;
 
-                                String realName = text.substring(text.indexOf('#') + 1);
-                                Log.d("SHAI", "got control message from " + message.getFromPersonID());
-                                Log.d("SHAI", "his/her realname is " + realName);
-                                new ContactListFileHandler(AllChatsActivity.this).changeName(contactUID, realName);
+                                /*a control message but not an identity reveal*/
+                                if (text.substring(0, "IDENTITY".length()).equals("IDENTITY")) {
+                                    String realName = text.substring(text.indexOf('#') + 1);
+                                    Log.d("SHAI", "got control message from " + message.getFromPersonID());
+                                    Log.d("SHAI", "his/her realname is " + realName);
+                                    new ContactListFileHandler(AllChatsActivity.this).changeName(contactUID, realName);
 
-                                //for the full effect - swap the names in the lists
-                                //The contact must be in the list since a first message can not be an identity reveal one
-                                for (int i = 0; i < conversationList.size(); i++) {
-                                    if (conversationList.get(i).getUserID().equals(contactUID)) {
-                                        conversationList.get(i).setRealName(realName);
+                                    //for the full effect - swap the names in the lists
+                                    //The contact must be in the list since a first message can not be an identity reveal one
+                                    for (int i = 0; i < conversationList.size(); i++) {
+                                        if (conversationList.get(i).getUserID().equals(contactUID)) {
+                                            conversationList.get(i).setRealName(realName);
+                                        }
                                     }
-                                }
 
-                                for (int i = 0; i < allList.size(); i++) {
-                                    if (allList.get(i).getUserID().equals(contactUID)) {
-                                        allList.get(i).setRealName(realName);
+                                    for (int i = 0; i < allList.size(); i++) {
+                                        if (allList.get(i).getUserID().equals(contactUID)) {
+                                            allList.get(i).setRealName(realName);
+                                        }
                                     }
+                                    // a message we should ignore because it's not an identity reveal - to the next change
+                                } else if (text.substring(0, "AES".length()).equals("AES")) {
+                                    KeyFileHandler keyFileHandler = new KeyFileHandler(AllChatsActivity.this, contactUID);
+                                    keyFileHandler.writeKey(AES.stringToKey(text.substring("AES".length())));
+                                    Log.d("AES_READ", "received key from " + contactUID + " and the key is " + text.substring("AES".length()));
                                 }
 
                             }
