@@ -260,6 +260,13 @@ public class AllChatsActivity extends AppCompatActivity {
                             if (doc.getType() == DocumentChange.Type.ADDED) {
                                 Message message = doc.getDocument().toObject(Message.class); //added message
                                 mFirestore.collection(MESSAGES).document(doc.getDocument().getId()).delete();
+                                // decrypt regular messages
+                                String contactUID = message.getFromPersonID();
+                                if (message.getShown()) {
+                                    KeyFileHandler keyFileHandler = new KeyFileHandler(AllChatsActivity.this, contactUID);
+                                    AES aes = new AES(keyFileHandler.getKey());
+                                    message.setMessage(aes.decrypt(message.getMessage().getBytes()));
+                                }
                                 mFileHandler.writeMessage(message); //non shown messages will be ignored anyway but may as well write them
 
                                 if (message.getShown()) {
@@ -267,7 +274,6 @@ public class AllChatsActivity extends AppCompatActivity {
                                 }
 
                                 //it's a control message - our business
-                                String contactUID = message.getFromPersonID();
                                 String text = message.getMessage();
 
                                 /* self message*/
