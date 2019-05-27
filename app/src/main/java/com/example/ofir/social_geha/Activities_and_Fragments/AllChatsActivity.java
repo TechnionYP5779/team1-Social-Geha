@@ -265,7 +265,7 @@ public class AllChatsActivity extends AppCompatActivity {
                                 if (message.getShown()) {
                                     KeyFileHandler keyFileHandler = new KeyFileHandler(AllChatsActivity.this, contactUID);
                                     AES aes = new AES(keyFileHandler.getKey());
-                                    message.setMessage(aes.decrypt(message.getMessage().getBytes()));
+                                    message.setMessage(aes.decrypt(message.getMessage()));
                                 }
                                 mFileHandler.writeMessage(message); //non shown messages will be ignored anyway but may as well write them
 
