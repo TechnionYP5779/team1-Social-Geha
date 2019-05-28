@@ -1,10 +1,7 @@
 package com.example.ofir.social_geha.Firebase;
 
-import android.os.Build;
 import android.support.annotation.NonNull;
-import android.support.annotation.RequiresApi;
 import android.util.Log;
-import android.util.Range;
 
 import com.example.ofir.social_geha.Activities_and_Fragments.MatchesListAdapter;
 import com.example.ofir.social_geha.Person;
@@ -16,17 +13,13 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.EnumSet;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Objects;
-import java.util.Set;
 
 
 public final class Database {
@@ -34,6 +27,7 @@ public final class Database {
     private static String TAG = "DatabaseStatus";
     private static String MESSAGES = "messages";
     private static String USERS = "users";
+    //private Person p;
 
     public FirebaseFirestore db = FirebaseFirestore.getInstance();
     private FirebaseAuth auth = FirebaseAuth.getInstance();
@@ -55,7 +49,7 @@ public final class Database {
         sendMessageInner(message, fromUser,toUser, true);
     }
 
-    public void sendMessageInner(String message, String fromUser, String toUser,boolean shown) {
+    public void sendMessageInner(String message, String fromUser, String toUser, boolean shown) {
         db.collection(MESSAGES)
                 .add(new Message(message, fromUser, toUser, shown))
                 .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
@@ -202,5 +196,36 @@ public final class Database {
     public FirebaseFirestore getdb(){
         return db;
     }
+
+//    public Person getLoggedInPerson() {
+//        if(this.p != null) return this.p;
+//
+//        final Person[] p = {null};
+//        Log.d("SHAI", "LOGGEDINID = " + getLoggedInUserID());
+//
+//        this.getdb().collection("users").whereEqualTo("userID", this.getLoggedInUserID()).get()
+//                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+//                    @Override
+//                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+//                        if (task.isSuccessful()) {
+//                            for (QueryDocumentSnapshot doc : task.getResult()) {
+//                                p[0] = doc.toObject(Person.class);
+//                                Log.d("SHAI", "found PERSON!!!");
+//                            }
+//                            if(p[0] == null) Log.d("SHAI", "didn't find anyone");
+//                        }
+//                        Log.d("SHAI", "task unsuccessful!");
+//                    }
+//                });
+//
+//        if(p[0] == null) {
+//            Log.d("SHAI", "PERSON = null");
+//        } else {
+//            Log.d("SHAI", "PERSON != null");
+//        }
+//
+//        this.p = p[0];
+//        return this.p;
+//    }
 
 }

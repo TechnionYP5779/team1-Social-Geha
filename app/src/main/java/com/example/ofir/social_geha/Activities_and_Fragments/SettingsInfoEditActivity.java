@@ -124,8 +124,8 @@ public class SettingsInfoEditActivity extends AppCompatActivity {
         religion= allReligions[religion_index];
     }
 
-
     private void setUpFieldValues() {
+        if(getIntent().getStringExtra("code") == null)
         Database.getInstance().getdb().collection("users").document(Database.getInstance().getLoggedInUserID()).get()
                         .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                             @Override
@@ -143,10 +143,12 @@ public class SettingsInfoEditActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if (getIntent().getStringExtra("code") != null) {
-                    // we need to preform register
-                    calendar.set(year, month, dayOfMonth);
-                    register(getIntent().getStringExtra("code"), givenName, calendar, gender,
-                            religion, selectedLanguages.toArray(new String[] {}), bio);
+                    if(checkAllFilled()) {
+                        // we need to preform register
+                        calendar.set(year, month, dayOfMonth);
+                        register(getIntent().getStringExtra("code"), givenName, calendar, gender,
+                                religion, selectedLanguages.toArray(new String[]{}), bio);
+                    }
                 } else {
                     calendar.set(year, month, dayOfMonth);
                     updateDBWithUserInfo(givenName, calendar, gender,
@@ -430,5 +432,30 @@ public class SettingsInfoEditActivity extends AppCompatActivity {
                 mDialog.show();
             }
         });
+    }
+
+    private boolean checkAllFilled(){
+        String error = "";
+        if(selectedLanguages.size() == 0)
+            error = "אנא בחר לפחות שפה אחת";
+
+        if(givenName == null || givenName.equals(""))
+            error="אנא מלא את שמך";
+
+        if(gender == null || gender.equals(""))
+            error="אנא בחר מגדר";
+
+        if(religion == null || religion.equals(""))
+            error="אנא בחר דת";
+
+        if(bio == null || bio.equals(""))
+            error="אנא מלא משפט קצר אודותיך";
+
+        if(!error.equals("")){
+            Toast.makeText(SettingsInfoEditActivity.this,error,Toast.LENGTH_SHORT).show();
+            return false;
+        }
+        else
+            return true;
     }
 }

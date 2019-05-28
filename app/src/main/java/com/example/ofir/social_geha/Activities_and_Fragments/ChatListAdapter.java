@@ -57,10 +57,10 @@ public class ChatListAdapter extends ArrayAdapter<ChatEntry> {
     public View getView(int position, View convertView, ViewGroup parent){
         setupImageLoader();
 
-        String name = getItem(position).getPerson().getAnonymousIdentity().getName();
-        String description = getItem(position).getPerson().getDescription();
-        String imageUrl = getItem(position).getPerson().getAnonymousIdentity().getImageName();
-        String imageColor = getItem(position).getPerson().getAnonymousIdentity().getImageColor();
+        String name = getItem(position).getName();
+        String description = getItem(position).getDescription();
+        String imageUrl = getItem(position).getImageName();
+        String imageColor = getItem(position).getImageColor();
         Message lastMessage = getItem(position).getMessage();
         Log.d("imageBug1", imageUrl);
         int image_id = mContext.getResources().getIdentifier("@drawable/" + imageUrl, null, mContext.getPackageName() );

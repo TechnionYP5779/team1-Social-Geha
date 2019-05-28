@@ -33,13 +33,13 @@ import java.util.Set;
 public class AvailableMatches extends AppCompatActivity {
 
     ListView listView;
-    ArrayList<Person>  matches_list;
+    ArrayList<Person> matches_list;
     ProgressBar progressBar;
     MatchesListAdapter adapter;
 
 
     @Override
-    public void onCreate(Bundle savedInstances){
+    public void onCreate(Bundle savedInstances) {
         super.onCreate(savedInstances);
         setContentView(R.layout.activity_available_matches);
 
@@ -51,12 +51,13 @@ public class AvailableMatches extends AppCompatActivity {
 
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Object o = listView.getItemAtPosition(position);
-                Person person = (Person)o; //As you are using Default String Adapter
+                Person person = (Person) o; //As you are using Default String Adapter
                 Intent myIntent = new Intent(AvailableMatches.this, ChatActivity.class);
                 myIntent.putExtra("EXTRA_PHOTO_URL", person.getAnonymousIdentity().getImageName());
                 myIntent.putExtra("EXTRA_PHOTO_COLOR", person.getAnonymousIdentity().getImageColor());
                 myIntent.putExtra("EXTRA_NAME", person.getAnonymousIdentity().getName());
                 myIntent.putExtra("EXTRA_PERSON_ID", person.getUserID());
+                myIntent.putExtra("EXTRA_INITIATOR", true);
                 AvailableMatches.this.startActivity(myIntent);
                 //Toast.makeText(getBaseContext(),person.getPersonID(),Toast.LENGTH_SHORT).show();
             }
@@ -91,7 +92,7 @@ public class AvailableMatches extends AppCompatActivity {
     //          PRIVATE FUNCTIONS
     // ==================================
 
-    private void loadList(){
+    private void loadList() {
         //Create the list of objects
         matches_list = new ArrayList<>();
 
@@ -100,13 +101,13 @@ public class AvailableMatches extends AppCompatActivity {
         listView.setAdapter(adapter);
     }
 
-    private void loadToolbar(){
+    private void loadToolbar() {
         android.support.v7.widget.Toolbar toolbar = (android.support.v7.widget.Toolbar) findViewById(R.id.toolbar_top);
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle("");
 
         // add back arrow to toolbar
-        if (getSupportActionBar() != null){
+        if (getSupportActionBar() != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             getSupportActionBar().setDisplayShowHomeEnabled(true);
         }
@@ -114,18 +115,17 @@ public class AvailableMatches extends AppCompatActivity {
         toolbar.getNavigationIcon().setColorFilter(this.getColor(R.color.white), PorterDuff.Mode.SRC_ATOP);
     }
 
-    private void showItems(boolean progress_bar_shown){
-        if(progress_bar_shown){
+    private void showItems(boolean progress_bar_shown) {
+        if (progress_bar_shown) {
             progressBar.setVisibility(View.VISIBLE);
             listView.setVisibility(View.GONE);
-        }
-        else{
+        } else {
             listView.setVisibility(View.VISIBLE);
             progressBar.setVisibility(View.GONE);
         }
     }
 
-    private void filterUsers(FilterParameters f){
+    private void filterUsers(FilterParameters f) {
         // query users
         Database.getInstance().queryUsers(f.getKind(), f.getGender(), f.getReligion(),
                 f.getLanguages(), f.getLower_bound(), f.getUpper_bound(), matches_list, adapter);

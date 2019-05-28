@@ -33,7 +33,6 @@
             android:layout_height="40dp"
             android:background="@drawable/rounded_edittext"
             android:hint="@string/personal_code"
-            android:inputType="number"
             app:layout_constraintTop_toBottomOf="@id/log_in_header"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
