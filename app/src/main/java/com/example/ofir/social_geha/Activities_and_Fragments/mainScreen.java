@@ -208,7 +208,6 @@ public class mainScreen extends AppCompatActivity {
                 public void onClick(DialogInterface dialogInterface, int which) {
                     FirebaseFirestore.getInstance().collection("users").document(Database.getInstance().getLoggedInUserID()).delete();
                     AppStorageManipulation.deleteAppData(getApplicationContext());
-                    Database.getInstance().disconnectUser();
                     Intent myIntent = new Intent(mainScreen.this, Login.class);
                     mainScreen.this.startActivity(myIntent);
                 }
