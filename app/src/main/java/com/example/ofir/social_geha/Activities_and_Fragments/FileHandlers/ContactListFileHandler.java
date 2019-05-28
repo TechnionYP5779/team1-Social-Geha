@@ -8,13 +8,13 @@ import com.example.ofir.social_geha.AnonymousIdentity;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
-import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.util.ArrayList;
-
-import javax.crypto.SecretKey;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 public class ContactListFileHandler {
     private static final String filename = "contactList";
@@ -29,40 +29,28 @@ public class ContactListFileHandler {
     }
 
     public void changeName(String uid, String realname) {
-        ArrayList<Contact> contacts = getContacts();
+        HashMap<String, Contact> contacts = getContacts();
+        Contact contact = contacts.get(uid);
+        contact.setRealName(realname);
+        addContact(contact);
+    }
 
-        for(int i = 0; i < contacts.size(); i++) {
-            if(contacts.get(i).getUid().equals(uid)) {
-                Contact newContact = new Contact(uid, realname, contacts.get(i).getDescription(), contacts.get(i).getAnonID());
-                addContact(newContact);
-                return;
-            }
-        }
 
+    public void changeLastChatViewDate(String uid, Date date) {
+
+        HashMap<String, Contact> contacts = getContacts();
+        if(!contacts.containsKey(uid))
+            return;
+        Contact contact = contacts.get(uid);
+        contact.setLastChatViewDate(date);
+        addContact(contact);
     }
 
     //overwrites is uid is already found
-    public ArrayList<Contact> addContact(Contact c) {
-        ArrayList<Contact> contacts = getContacts();
+    public HashMap<String, Contact> addContact(Contact c) {
+        HashMap<String, Contact> contacts = getContacts();
 
-        for(int i = 0; i < contacts.size(); i++) {
-            if(contacts.get(i).getUid().equals(c.getUid())) {
-                contacts.set(i, c);
-            }
-        }
-
-        //we haven't found it in the scan
-        if(!contacts.contains(c)) {
-            contacts.add(c);
-        }
-
-        StringBuilder lstStr = new StringBuilder();
-        for (Contact con : contacts) {
-            lstStr.append(con.toString()).append(" ");
-        }
-
-        Log.d("CONTACTS", "addContact: ADDING CONTACT " + c.toString());
-        Log.d("CONTACTS", "addContact: new contactList is:" + lstStr);
+        contacts.put(c.getUid(),c);
 
         try {
             FileOutputStream outputStream = context.openFileOutput(filename, Context.MODE_PRIVATE);
@@ -78,25 +66,17 @@ public class ContactListFileHandler {
     }
 
 
-    public ArrayList<Contact> getContacts() {
-        ArrayList<Contact> contacts;
+    public HashMap<String, Contact> getContacts() {
+        HashMap<String, Contact> contacts;
         try {
             FileInputStream inputStream = context.openFileInput(filename);
             ObjectInputStream ois = new ObjectInputStream(inputStream);
-            contacts = (ArrayList<Contact>) ois.readObject();
+            contacts = (HashMap<String, Contact>) ois.readObject();
             ois.close();
             inputStream.close();
-
-            StringBuilder lstStr = new StringBuilder();
-            for (Contact con : contacts) {
-                lstStr.append(con.toString()).append(" ");
-            }
-            Log.d("CONTACTS", "getContacts: contactList is:" + lstStr);
-
             return contacts;
         } catch (Exception e) {
-            Log.d("CONTACTS", e.getClass().getSimpleName());
-            return new ArrayList<>();
+            return new HashMap<>();
         }
     }
 
@@ -107,12 +87,14 @@ public class ContactListFileHandler {
         private String realName;
         private String desc;
         private AnonymousIdentity anonID;
+        private Date lastChatViewDate;
 
-        public Contact(String uid, String realName, String desc, AnonymousIdentity anonID) {
+        public Contact(String uid, String realName, String desc, AnonymousIdentity anonID, Date lastChatViewDate) {
             this.uid = uid;
             this.realName = realName;
             this.anonID = anonID;
             this.desc = desc;
+            this.lastChatViewDate = lastChatViewDate;
         }
 
         public String getUid() {
@@ -137,6 +119,14 @@ public class ContactListFileHandler {
 
         public void setAnonID(AnonymousIdentity anonID) {
             this.anonID = anonID;
+        }
+
+        public Date getLastChatReadDate() {
+            return lastChatViewDate;
+        }
+
+        public void setLastChatViewDate(Date lastChatViewDate) {
+            this.lastChatViewDate = lastChatViewDate;
         }
 
         @Override
