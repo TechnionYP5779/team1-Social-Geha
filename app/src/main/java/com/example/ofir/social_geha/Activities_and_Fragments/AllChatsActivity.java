@@ -38,6 +38,7 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -48,7 +49,6 @@ public class AllChatsActivity extends AppCompatActivity {
     private MessageFileHandler mFileHandler;
     ListView mListView;
     TextView mEmptyView;
-    Map<String, Message> messageMap;
     ArrayList<ChatEntry> conversationList;
     ArrayList<ChatEntry> allList;
     private FirebaseFirestore mFirestore;
@@ -129,9 +129,10 @@ public class AllChatsActivity extends AppCompatActivity {
 
                 String uid = conversationList.get(pos).getUserID();
                 //cannot click once it's been shared
-                for (ContactListFileHandler.Contact c : new ContactListFileHandler(AllChatsActivity.this).getContacts()) {
-                    if (c.getUid().equals(uid) && !c.getRealName().equals(ContactListFileHandler.Contact.UNKNOWN_NAME)) {
-                        String toastText = "לא ניתן לבטל את שיתוף המידע עם " + c.getRealName();
+                Map<String, ContactListFileHandler.Contact> contactMap = new ContactListFileHandler(AllChatsActivity.this).getContacts();
+                for (Map.Entry<String, ContactListFileHandler.Contact> c : contactMap.entrySet()) {
+                    if (c.getValue().getUid().equals(uid) && !c.getValue().getRealName().equals(ContactListFileHandler.Contact.UNKNOWN_NAME)) {
+                        String toastText = "לא ניתן לבטל את שיתוף המידע עם " + c.getValue().getRealName();
                         Toast.makeText(AllChatsActivity.this, toastText, Toast.LENGTH_SHORT).show();
                         return true;
                     }
@@ -225,7 +226,6 @@ public class AllChatsActivity extends AppCompatActivity {
         //Create the list of objects
         conversationList = new ArrayList<>();
         allList = new ArrayList<>();
-        messageMap = new HashMap<>();
         populateConversationsList();
 
         //Attach to adapter
@@ -312,56 +312,45 @@ public class AllChatsActivity extends AppCompatActivity {
     public void updateList() {
         Log.d("SHAI", "IN UPDATE LIST");
         String loggedInUserID = Database.getInstance().getLoggedInUserID();
+        Map<String, ChatEntry> chatEntryMap = new HashMap<>();
+        Map<String, ContactListFileHandler.Contact> contactMap = new ContactListFileHandler(this).getContacts();
+        final String dummyName = "CONTACT DUMMY";
+
+        for(Map.Entry<String, ContactListFileHandler.Contact> contact : contactMap.entrySet()){
+            chatEntryMap.put(contact.getKey(), new ChatEntry(contact.getValue(),null,0));
+        }
 
         for (Message msg : mFileHandler.getMessages()) {
             if (!msg.getShown()) continue; //ensures that the last SHOWN message is in the map
+            ChatEntry chatEntry;
 
-            Log.d("COOLTEST", "found msg:" + msg.getFromPersonID());
-            if (loggedInUserID.equals(msg.getFromPersonID()))
-                messageMap.put(msg.getToPersonID(), msg);
-            else
-                messageMap.put(msg.getFromPersonID(), msg);
+            if (loggedInUserID.equals(msg.getFromPersonID())){
+                if(!chatEntryMap.containsKey(msg.getToPersonID())){
+                    ContactListFileHandler.Contact dummy = new ContactListFileHandler.Contact(msg.getToPersonID(),dummyName,"",null, new Date(Long.MIN_VALUE));
+                    chatEntryMap.put(msg.getToPersonID(),new ChatEntry(dummy,null,0));
+                }
+                chatEntry = chatEntryMap.get(msg.getToPersonID());
+            }
+            else{
+                if(!chatEntryMap.containsKey(msg.getFromPersonID())){
+                    ContactListFileHandler.Contact dummy = new ContactListFileHandler.Contact(msg.getFromPersonID(),dummyName,"",null, new Date(Long.MIN_VALUE));
+                    chatEntryMap.put(msg.getFromPersonID(),new ChatEntry(dummy,null,0));
+                }
+                chatEntry = chatEntryMap.get(msg.getFromPersonID());
+            }
+
+            chatEntry.setMessage(msg);
+            if(msg.getMessageDate().after(chatEntry.getLastChatReadDate())){
+                chatEntry.setUnreadCount(chatEntry.getUnreadCount() + 1);
+            }
         }
 
-        //messageMap.remove(loggedInUserID);
+        chatEntryMap.remove(loggedInUserID);
 
-        ArrayList<ContactListFileHandler.Contact> contacts = new ContactListFileHandler(this).getContacts();
-        for (final Map.Entry<String, Message> entry : messageMap.entrySet()) {
-//            if (!entry.getValue().getShown()) { //it's a control message
-//                String contactUID = entry.getValue().getFromPersonID();
-//
-//                if(contactUID.equals(Database.getInstance().getLoggedInUserID()) ||
-//                        !entry.getValue().getMessage().substring(0, "IDENTITY".length()).equals("IDENTITY")) {
-//                    continue; // a message we should ignore because it's not an identity reveal
-//                }
-//
-//                String text = entry.getValue().getMessage();
-//                String realName = text.substring(text.indexOf('#') + 1);
-//                Log.d("SHAI", "got control message from " + entry.getKey());
-//                Log.d("SHAI", "his/her realname is " + realName);
-//
-//                new ContactListFileHandler(this).changeName(contactUID, realName);
-//
-//                //for the full effect
-//                boolean found = false;
-//                for(int i = 0; i < conversationList.size(); i++) {
-//                    if(conversationList.get(i).getUserID().equals(contactUID)) {
-//                        conversationList.get(i).setRealName(realName);
-//                        found = true;
-//                    }
-//                }
-//
-//                for(int i = 0; i < allList.size(); i++) {
-//                    if(allList.get(i).getUserID().equals(contactUID)) {
-//                        allList.get(i).setRealName(realName);
-//                    }
-//                }
-//                continue;
-//            }
-            int i = knowContact(contacts, entry.getKey());
-            if (i != -1) {
+        for (final Map.Entry<String, ChatEntry> entry : chatEntryMap.entrySet()) {
+            if (!entry.getValue().getName().equals(dummyName)) {
                 Log.d("SHAI", "got shown message from known contact " + entry.getKey());
-                ChatEntry chatEntry = new ChatEntry(contacts.get(i), entry.getValue());
+                ChatEntry chatEntry = entry.getValue();
 
                 int j = listContains(conversationList, chatEntry.getUserID());
                 if (j != -1) {
@@ -388,11 +377,9 @@ public class AllChatsActivity extends AppCompatActivity {
                         if (!person.isEmpty()) {
                             Person myPerson = person.toObjects(Person.class).get(0);
                             Log.d("COOLTEST", "got user: " + myPerson.getDescription());
-
-                            //general unknown person from person - in case of new message
                             ContactListFileHandler.Contact myContact = new ContactListFileHandler.Contact(myPerson.getUserID(), ContactListFileHandler.Contact.UNKNOWN_NAME,
-                                    myPerson.getDescription(), myPerson.getAnonymousIdentity());
-                            ChatEntry chatEntry = new ChatEntry(myContact, entry.getValue()); //contact & message might have been updated
+                                    myPerson.getDescription(), myPerson.getAnonymousIdentity(), new Date(Long.MIN_VALUE));
+                            ChatEntry chatEntry = new ChatEntry(myContact, entry.getValue().getMessage(),entry.getValue().getUnreadCount()); //contact & message might have been updated
 
                             int j = listContains(conversationList, chatEntry.getUserID());
                             if (j != -1) {

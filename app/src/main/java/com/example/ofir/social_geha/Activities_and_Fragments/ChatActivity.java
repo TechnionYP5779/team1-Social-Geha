@@ -15,6 +15,7 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.example.ofir.social_geha.Activities_and_Fragments.FileHandlers.ContactListFileHandler;
 import com.example.ofir.social_geha.Activities_and_Fragments.FileHandlers.KeyFileHandler;
 import com.example.ofir.social_geha.Activities_and_Fragments.FileHandlers.MessageFileHandler;
 import com.example.ofir.social_geha.Encryption.AES;
@@ -30,6 +31,7 @@ import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import javax.annotation.Nullable;
@@ -176,6 +178,11 @@ public class ChatActivity extends AppCompatActivity {
         mMessageListAdapter.notifyDataSetChanged();
     }
 
+    @Override
+    public void onPause(){
+        super.onPause();
+        new ContactListFileHandler(this).changeLastChatViewDate(mOtherPersonId, new Date());
+    }
 
     public void onSendButtonClick(View v) {
         String message = mMessageEdit.getText().toString();

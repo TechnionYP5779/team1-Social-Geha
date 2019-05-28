@@ -62,6 +62,7 @@ public class ChatListAdapter extends ArrayAdapter<ChatEntry> {
         String imageUrl = getItem(position).getImageName();
         String imageColor = getItem(position).getImageColor();
         Message lastMessage = getItem(position).getMessage();
+        int unreadCount = getItem(position).getUnreadCount();
         Log.d("imageBug1", imageUrl);
         int image_id = mContext.getResources().getIdentifier("@drawable/" + imageUrl, null, mContext.getPackageName() );
         imageUrl = "drawable://" + image_id;
@@ -115,7 +116,7 @@ public class ChatListAdapter extends ArrayAdapter<ChatEntry> {
         holder.description.setText(description);
         holder.chat_message_layout.setVisibility(View.VISIBLE);
         holder.msg_time.setText(getHourStringFromDate(lastMessage.getMessageDate()));
-        holder.unread_msg_count.setText("0");
+        holder.unread_msg_count.setText(String.valueOf(unreadCount));
         holder.description.setText(lastMessage.getMessage());
         return convertView;
     }
