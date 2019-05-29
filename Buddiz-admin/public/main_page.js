@@ -2,7 +2,8 @@ $( function() {
     var dialog_add, dialog_search, dialog_delete, form_add, form_search, form_delete,
       emailRegex = /^[a-zA-Z0-9.!#$%&'*+\/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/,
       name = $( "#name" ),
-      allFields = $( [] ).add( name );
+      allFields = $( [] ).add( name ),
+	  userCode = "";
  
     function updateTips( t ) {
       tips
