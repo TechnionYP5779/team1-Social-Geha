@@ -3,6 +3,7 @@ package com.example.ofir.social_geha.Activities_and_Fragments;
 import android.app.DatePickerDialog;
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.provider.ContactsContract;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -15,10 +16,8 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.auth.UserProfileChangeRequest;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
-import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.firestore.DocumentSnapshot;
+
 import android.content.DialogInterface;
 import android.support.v7.app.AlertDialog;
 import android.text.InputType;
@@ -79,6 +78,7 @@ public class SettingsInfoEditActivity extends AppCompatActivity {
 
     //Bio related Fields
     String bio;
+    private Person currentPerson;
 
 
     @Override
@@ -96,48 +96,44 @@ public class SettingsInfoEditActivity extends AppCompatActivity {
         setUpFieldValues();
     }
 
+    private void updateFieldsAccordingToPerson(Person p) {
+        selectedLanguages = languagesEnumToLanguageString(p.getSpokenLanguages());
+        for (int i = 0; i < languagesAll.length; i++) {
+            languagesAll_BooleanSelection[i] = false;
+        }
+        for (int i = 0; i < languagesAll.length; i++) {
+            Iterator iterator = selectedLanguages.iterator();
+            while (iterator.hasNext()) {
+                if (iterator.next().equals(languagesAll[i])) {
+                    languagesAll_BooleanSelection[i] = true;
+                }
+            }
+        }
+        givenName = p.getRealName();
+
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(new Date(p.getBirthDate()));
+        year = cal.get(Calendar.YEAR);
+        month = cal.get(Calendar.MONTH);
+        dayOfMonth = cal.get(Calendar.DAY_OF_MONTH);
+        gender_index = fromGenderEnumToGenderIndex(p.getGender(), SettingsInfoEditActivity.this);
+        gender = (gender_index != -1) ? allGenders[gender_index] : null;
+
+        bio = p.getDescription();
+        religion_index = fromReligionToReligionIndex(p.getReligion());
+        religion = allReligions[religion_index];
+    }
+
     private void setUpFieldValues() {
-        Database.getInstance().getdb().collection("users").whereEqualTo("userID", Database.getInstance().getLoggedInUserID()).get()
-                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        if (task.isSuccessful()) {
-                            for (QueryDocumentSnapshot doc : task.getResult()) {
-
-                            }
-                        } else {
-//                            loading.setText(mainScreen.this.getString(R.string.strings_error));
+        if (getIntent().getStringExtra("code") == null)
+            Database.getInstance().getdb().collection("users").document(Database.getInstance().getLoggedInUserID()).get()
+                    .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                        @Override
+                        public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                            currentPerson = task.getResult().toObject(Person.class);
+                            updateFieldsAccordingToPerson(currentPerson);
                         }
-                    }
-
-                    private void updateFieldsAccordingToPeson(Person p) {
-                        selectedLanguages = languagesEnumToLanguageString(p.getSpokenLanguages());
-                        for (int i = 0; i < languagesAll.length; i++) {
-                            languagesAll_BooleanSelection[i] = false;
-                        }
-                        for (int i = 0; i < languagesAll.length; i++) {
-                            Iterator iterator = selectedLanguages.iterator();
-                            while(iterator.hasNext()) {
-                                if (iterator.next().equals(languagesAll[i])){
-                                    languagesAll_BooleanSelection[i] = true;
-                                }
-                            }
-                        }
-                        givenName = p.getRealName();
-
-                        Calendar cal = Calendar.getInstance();
-                        cal.setTime(new Date(p.getBirthDate()));
-                        year = cal.get(Calendar.YEAR);
-                        month = cal.get(Calendar.MONTH);
-                        dayOfMonth = cal.get(Calendar.DAY_OF_MONTH);
-                        gender_index = fromGenderEnumToGenderIndex(p.getGender(),SettingsInfoEditActivity.this);
-                        gender = (gender_index != -1 )?  allGenders[gender_index] : null;
-
-                        bio = p.getDescription();
-                        religion_index= fromReligionToReligionIndex(p.getReligion());
-                        String religion= allReligions[religion_index];
-                    }
-                });
+                    });
     }
 
     private void setUpDoneButton() {
@@ -147,14 +143,16 @@ public class SettingsInfoEditActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if (getIntent().getStringExtra("code") != null) {
-                    // we need to preform register
-                    calendar.set(year, month, dayOfMonth);
-                    register(getIntent().getStringExtra("code"), givenName, calendar, gender,
-                            religion, selectedLanguages.toArray(new String[] {}), bio);
+                    if (checkAllFilled()) {
+                        // we need to preform register
+                        calendar.set(year, month, dayOfMonth);
+                        register(getIntent().getStringExtra("code"), givenName, calendar, gender,
+                                religion, selectedLanguages.toArray(new String[]{}), bio);
+                    }
                 } else {
                     calendar.set(year, month, dayOfMonth);
-//                    updateDBWithUserInfo(givenName, calendar, gender,
-//                            religion, selectedLanguages.toArray(new String[] {}), bio);)
+                    updateDBWithUserInfo(givenName, calendar, gender,
+                            religion, selectedLanguages.toArray(new String[]{}), bio);
                     onBackPressed();
                 }
             }
@@ -163,28 +161,11 @@ public class SettingsInfoEditActivity extends AppCompatActivity {
         });
     }
 
-//    private void updateDBWithUserInfo(String givenName, Calendar calendar, String gender, String religion, String[] toArray, String bio) {
-//        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-//        if (user != null) {
-//            UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
-//                    .setDisplayName("Jane Q. User")
-//                    .setPhotoUri(Uri.parse("https://example.com/jane-q-user/profile.jpg"))
-//                    .build();
-//
-//            user.updateProfile(profileUpdates)
-//                    .addOnCompleteListener(new OnCompleteListener<Void>() {
-//                        @Override
-//                        public void onComplete(@NonNull Task<Void> task) {
-//                            if (task.isSuccessful()) {
-//                                Log.d(TAG, "User profile updated.");
-//                            }
-//                        }
-//                    });            // User is signed in
-//        } else {
-//            // No user is signed in
-//        }
-//
-//    }
+    private void updateDBWithUserInfo(String givenName, Calendar calendar, String gender, String religion, String[] langs, String bio) {
+        currentPerson.setBirthDate(calendar.getTimeInMillis()).setDescription(bio).setRealName(givenName).setGender(fromStringToGenderEnum(gender, SettingsInfoEditActivity.this, false))
+                .setReligion(fromStringToReligion(religion, false)).setSpokenLanguages(languagesStringToLanguageEnum(langs));
+        Database.getInstance().addUserPerson(currentPerson);
+    }
 
     public void register(final String code, final String name, final Calendar c, final String gender,
                          final String religion, final String[] languages, final String bio) {
@@ -205,11 +186,11 @@ public class SettingsInfoEditActivity extends AppCompatActivity {
                         progressDialog.dismiss();
                         long date = c.getTimeInMillis();
                         Person.Religion mReligion = fromStringToReligion(religion, false);
-                        for (String lang : languages){
+                        for (String lang : languages) {
                             Log.d("REGISTER_LANG", lang);
                         }
 
-                        for (boolean flag : languagesAll_BooleanSelection){
+                        for (boolean flag : languagesAll_BooleanSelection) {
                             Log.d("REGISTER_LANG_CHECKED", String.valueOf(flag));
                         }
 
@@ -220,7 +201,7 @@ public class SettingsInfoEditActivity extends AppCompatActivity {
                         Person p = new Person(name, FictitiousIdentityGenerator.getAnonymousIdentity(
                                 fromStringToGenderEnum(gender, SettingsInfoEditActivity.this, false)),
                                 date, fromStringToGenderEnum(gender, SettingsInfoEditActivity.this, false), mReligion, spokenLanguages,
-                                Person.Kind.PAST_PATIENT, Database.getInstance().getLoggedInUserID(), bio, new ArrayList<Integer>());
+                                Person.Kind.PAST_PATIENT, Database.getInstance().getLoggedInUserID(), bio, false, new ArrayList<Integer>());
                         if (task.isSuccessful()) {
                             Database.getInstance().addUserPerson(p);
                             setResult(RESULT_OK);
@@ -451,5 +432,29 @@ public class SettingsInfoEditActivity extends AppCompatActivity {
                 mDialog.show();
             }
         });
+    }
+
+    private boolean checkAllFilled() {
+        String error = "";
+        if (selectedLanguages.size() == 0)
+            error = "אנא בחר לפחות שפה אחת";
+
+        if (givenName == null || givenName.equals(""))
+            error = "אנא מלא את שמך";
+
+        if (gender == null || gender.equals(""))
+            error = "אנא בחר מגדר";
+
+        if (religion == null || religion.equals(""))
+            error = "אנא בחר דת";
+
+        if (bio == null || bio.equals(""))
+            error = "אנא מלא משפט קצר אודותיך";
+
+        if (!error.equals("")) {
+            Toast.makeText(SettingsInfoEditActivity.this, error, Toast.LENGTH_SHORT).show();
+            return false;
+        } else
+            return true;
     }
 }

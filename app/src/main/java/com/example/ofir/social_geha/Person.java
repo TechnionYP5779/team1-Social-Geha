@@ -1,20 +1,15 @@
 package com.example.ofir.social_geha;
 
 import android.content.Context;
-import android.util.Pair;
 
-import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.Exclude;
 
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.EnumSet;
 import java.util.List;
 import java.util.Objects;
-import java.util.Optional;
 
 import static com.example.ofir.social_geha.Person.Language.ENGLISH;
-import static java.util.Optional.empty;
 
 public class Person {
     // ==================================
@@ -29,7 +24,7 @@ public class Person {
     }
 
     public enum Religion {
-        RELIGIOUS, TRADITIONAL, SECULAR, ARABIC,UNDISCLOSED
+        RELIGIOUS, TRADITIONAL, SECULAR, ARABIC, UNDISCLOSED
     }
 
     public enum Kind {
@@ -46,6 +41,7 @@ public class Person {
     private Kind kind;
     private String userID;
     private String description;
+    private Boolean availability;
     //List of personIDs to whom this person is willing to expose details to
     private List<Integer> whiteList;
     // Immutable - Given at initialization
@@ -62,7 +58,7 @@ public class Person {
     public Person(String realName, AnonymousIdentity anonymousIdentity,
                   long birthDate, Gender gender, Religion religion,
                   List<Language> spokenLanguages, Kind kind, String userID,
-                  String description, List<Integer> whiteList) {
+                  String description, Boolean availability, List<Integer> whiteList) {
         this.realName = realName;
         this.anonymousIdentity = anonymousIdentity;
         this.birthDate = birthDate;
@@ -72,6 +68,7 @@ public class Person {
         this.kind = kind;
         this.userID = userID;
         this.description = description;
+        this.availability = availability;
         this.whiteList = whiteList;
     }
 
@@ -116,6 +113,10 @@ public class Person {
 
     public long getBirthDate() {
         return birthDate;
+    }
+
+    public Boolean getAvailability() {
+        return availability;
     }
 
 
@@ -245,10 +246,13 @@ public class Person {
 
     public static int fromGenderEnumToGenderIndex(Gender gender, Context mContext) {
         String[] allGenders = mContext.getResources().getStringArray(R.array.gender_preferences);
-        switch (gender){
-            case UNDISCLOSED: return 0;
-            case MALE: return 1;
-            case FEMALE: return 2;
+        switch (gender) {
+            case UNDISCLOSED:
+                return 0;
+            case MALE:
+                return 1;
+            case FEMALE:
+                return 2;
         }
         return -1;
     }
@@ -268,5 +272,55 @@ public class Person {
 
         }
         return -1;
+    }
+
+    public Person setPersonID(String personID) {
+        this.personID = personID;
+        return this;
+    }
+
+    public Person setRealName(String realName) {
+        this.realName = realName;
+        return this;
+    }
+
+    public Person setAnonymousIdentity(AnonymousIdentity anonymousIdentity) {
+        this.anonymousIdentity = anonymousIdentity;
+        return this;
+    }
+
+    public Person setBirthDate(long birthDate) {
+        this.birthDate = birthDate;
+        return this;
+    }
+
+    public Person setGender(Gender gender) {
+        this.gender = gender;
+        return this;
+    }
+
+    public Person setReligion(Religion religion) {
+        this.religion = religion;
+        return this;
+    }
+
+    public Person setSpokenLanguages(List<Language> spokenLanguages) {
+        this.spokenLanguages = spokenLanguages;
+        return this;
+    }
+
+    public Person setKind(Kind kind) {
+        this.kind = kind;
+        return this;
+    }
+
+    public Person setDescription(String description) {
+        this.description = description;
+        return this;
+    }
+
+    public Person setWhiteList(List<Integer> whiteList) {
+        this.whiteList = whiteList;
+        return this;
     }
 }

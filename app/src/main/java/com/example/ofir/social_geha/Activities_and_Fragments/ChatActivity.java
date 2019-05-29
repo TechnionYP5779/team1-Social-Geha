@@ -2,10 +2,10 @@ package com.example.ofir.social_geha.Activities_and_Fragments;
 
 import android.content.Intent;
 import android.graphics.Color;
+import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -15,6 +15,7 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.example.ofir.social_geha.Activities_and_Fragments.FileHandlers.ContactListFileHandler;
 import com.example.ofir.social_geha.Activities_and_Fragments.FileHandlers.KeyFileHandler;
 import com.example.ofir.social_geha.Activities_and_Fragments.FileHandlers.MessageFileHandler;
 import com.example.ofir.social_geha.Encryption.AES;
@@ -30,7 +31,7 @@ import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.Date;
 import java.util.List;
 
 import javax.annotation.Nullable;
@@ -52,6 +53,7 @@ public class ChatActivity extends AppCompatActivity {
     private MessageFileHandler fileHandler;
     private KeyFileHandler keyFileHandler;
     private AES aes;
+    private boolean isInitiator;
     private List<Message> messageList;
 
     @Override
@@ -114,6 +116,7 @@ public class ChatActivity extends AppCompatActivity {
         fileHandler = new MessageFileHandler(this);
         mMessageListAdapter = new MessageListAdapter(messageList);
         mOtherPersonId = getIntent().getStringExtra("EXTRA_PERSON_ID");
+        isInitiator = getIntent().getBooleanExtra("EXTRA_INITIATOR", false);
         keyFileHandler = new KeyFileHandler(this, mOtherPersonId);
         SecretKey key = keyFileHandler.getKey();
         if (key != null) {
@@ -131,16 +134,6 @@ public class ChatActivity extends AppCompatActivity {
 
         mFirestore = FirebaseFirestore.getInstance();
 
-
-        for (Message msg : fileHandler.getMessages()) {
-            Log.d("COOLTEST", "readMessage: " + msg.getMessage() + "from: " + msg.getFromPersonID());
-            if (msg.getFromPersonID().equals(mOtherPersonId) || msg.getToPersonID().equals(mOtherPersonId)) {
-                if (msg.getShown())
-                    messageList.add(msg);
-            }
-        }
-        mMessageListAdapter.notifyDataSetChanged();
-
         setMessageListners();
     }
 
@@ -156,34 +149,56 @@ public class ChatActivity extends AppCompatActivity {
                             return;
                         }
 
+                        if (aes == null)
+                            throw new AssertionError("AES should not be null");
                         for (DocumentChange doc : queryDocumentSnapshots.getDocumentChanges()) {
                             if (doc.getType() == DocumentChange.Type.ADDED) {
                                 String message_text = doc.getDocument().getString("message");
                                 Log.d("COOLTEST", "Content: " + message_text);
                                 Log.d("POPO", "onEvent: DOES THIS");
                                 Message message = doc.getDocument().toObject(Message.class);
+                                message.setMessage(aes.decrypt(message.getMessage()));
                                 mFirestore.collection(MESSAGES).document(doc.getDocument().getId()).delete();
                                 if (message.getShown())
                                     messageList.add(message);
                                 fileHandler.writeMessage(message);
                             }
                         }
-                        mMessageListAdapter.notifyDataSetChanged();
+                        updateMessageList();
                     }
                 });
     }
 
+    public void updateMessageList() {
+        messageList.clear();
+        for (Message msg : fileHandler.getMessages()) {
+            Log.d("COOLTEST", "readMessage: " + msg.getMessage() + "from: " + msg.getFromPersonID());
+            if (msg.getFromPersonID().equals(mOtherPersonId) || msg.getToPersonID().equals(mOtherPersonId)) {
+                if (msg.getShown())
+                    messageList.add(msg);
+            }
+        }
+        mMessageListAdapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void onPause(){
+        super.onPause();
+        new ContactListFileHandler(this).changeLastChatViewDate(mOtherPersonId, new Date());
+    }
+
     public void onSendButtonClick(View v) {
         String message = mMessageEdit.getText().toString();
-        if (aes == null) {
+        if (aes == null && isInitiator) {
             Log.d("AES_ENCRYPT_INIT", "Starting Convo with " + mOtherPersonId);
-            Database.getInstance().sendControlMessage("Starting Convo", mLoggedInPersonId, mOtherPersonId);
+            //Database.getInstance().sendControlMessage("Starting Convo", mLoggedInPersonId, mOtherPersonId);
             aes = new AES(128);
             keyFileHandler.writeKey(aes.key);
-            Database.getInstance().sendControlMessage(AES.keyToString(aes.key), mLoggedInPersonId, mOtherPersonId);
-            Log.d("AES_ENCRYPT_SEND", "Sending " + mOtherPersonId + " key:" + AES.keyToString(aes.key));
+            Database.getInstance().sendControlMessage("AES" + AES.keyToString(aes.key), mLoggedInPersonId, mOtherPersonId);
+            Log.d("AES_ENCRYPT_SEND", "Sending " + mOtherPersonId + " message:" + "AES" + AES.keyToString(aes.key));
         }
-        Database.getInstance().sendMessage(message, mLoggedInPersonId, mOtherPersonId);
+        Database.getInstance().sendMessage(aes.encrypt(message), mLoggedInPersonId, mOtherPersonId);
+        Log.d("AES_SEND_MESSAGE", aes.encrypt(message));
         Message mymessage = new Message(message, mLoggedInPersonId, mOtherPersonId, true);
         fileHandler.writeMessage(mymessage);
         messageList.add(mymessage);

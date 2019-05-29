@@ -19,13 +19,19 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.ofir.social_geha.AppStorageManipulation;
 import com.example.ofir.social_geha.Firebase.Database;
+import com.example.ofir.social_geha.GehaMessagingService;
 import com.example.ofir.social_geha.Person;
 import com.example.ofir.social_geha.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.iid.FirebaseInstanceId;
+import com.google.firebase.iid.InstanceIdResult;
+import com.google.firestore.v1.WriteResult;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
@@ -76,6 +82,20 @@ public class mainScreen extends AppCompatActivity {
 
         if (!Database.getInstance().isLoggedIn()) {
             promptLogin();
+        }
+        else {
+            Log.d("GETNEWTOKEN", "onCreate: Starting");
+            FirebaseInstanceId.getInstance().getInstanceId()
+                    .addOnCompleteListener(new OnCompleteListener<InstanceIdResult>() {
+                        @Override
+                        public void onComplete(@NonNull Task<InstanceIdResult> task) {
+                            if (task.isSuccessful()) {
+                                Log.d("GETNEWTOKEN", "onCreate: Did it! Token is: "+task.getResult().getToken());
+                                GehaMessagingService.storeToken(Database.getInstance().getAuth(), Database.getInstance().getdb(), task.getResult().getToken());
+                            }
+                            Log.d("GETNEWTOKEN", "DONE");
+                        }
+                    });
         }
     }
 
@@ -203,7 +223,10 @@ public class mainScreen extends AppCompatActivity {
             mBuilder.setPositiveButton(R.string.agree, new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialogInterface, int which) {
-
+                    FirebaseFirestore.getInstance().collection("users").document(Database.getInstance().getLoggedInUserID()).delete();
+                    AppStorageManipulation.deleteAppData(getApplicationContext());
+                    Intent myIntent = new Intent(mainScreen.this, Login.class);
+                    mainScreen.this.startActivity(myIntent);
                 }
             });
 
@@ -216,7 +239,6 @@ public class mainScreen extends AppCompatActivity {
 
             AlertDialog mDialog = mBuilder.create();
             mDialog.show();
-            Toast.makeText(this, "deletion not implemented yet", Toast.LENGTH_SHORT).show();
         }
         if (view.equals(about)) {
             Intent myIntent = new Intent(mainScreen.this, SettingsHelp.class);

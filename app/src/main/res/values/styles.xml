@@ -27,6 +27,7 @@
         <!--<item name="colorControlNormal">@color/colorPrimary</item>-->
         <!--<item name="colorControlHighlight">@color/colorPrimary</item>-->
     </style>
+
     <style name="AlertDialogCustomWhite" parent="Theme.AppCompat.Dialog.Alert">
         <item name="android:layoutDirection">rtl</item>
         <item name="android:colorAccent">@color/colorPrimary</item>
@@ -51,7 +52,6 @@
         <item name="colorControlNormal">@color/white</item>
         <item name="colorControlHighlight">@color/white</item>
     </style>
-
 
 
     <style name="ToolbarDotsColor">
