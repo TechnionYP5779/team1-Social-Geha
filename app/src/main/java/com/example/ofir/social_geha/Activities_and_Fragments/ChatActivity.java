@@ -149,12 +149,15 @@ public class ChatActivity extends AppCompatActivity {
                             return;
                         }
 
+                        if (aes == null)
+                            throw new AssertionError("AES should not be null");
                         for (DocumentChange doc : queryDocumentSnapshots.getDocumentChanges()) {
                             if (doc.getType() == DocumentChange.Type.ADDED) {
                                 String message_text = doc.getDocument().getString("message");
                                 Log.d("COOLTEST", "Content: " + message_text);
                                 Log.d("POPO", "onEvent: DOES THIS");
                                 Message message = doc.getDocument().toObject(Message.class);
+                                message.setMessage(aes.decrypt(message.getMessage()));
                                 mFirestore.collection(MESSAGES).document(doc.getDocument().getId()).delete();
                                 if (message.getShown())
                                     messageList.add(message);
@@ -194,7 +197,8 @@ public class ChatActivity extends AppCompatActivity {
             Database.getInstance().sendControlMessage("AES" + AES.keyToString(aes.key), mLoggedInPersonId, mOtherPersonId);
             Log.d("AES_ENCRYPT_SEND", "Sending " + mOtherPersonId + " message:" + "AES" + AES.keyToString(aes.key));
         }
-        Database.getInstance().sendMessage(message, mLoggedInPersonId, mOtherPersonId);
+        Database.getInstance().sendMessage(aes.encrypt(message), mLoggedInPersonId, mOtherPersonId);
+        Log.d("AES_SEND_MESSAGE", aes.encrypt(message));
         Message mymessage = new Message(message, mLoggedInPersonId, mOtherPersonId, true);
         fileHandler.writeMessage(mymessage);
         messageList.add(mymessage);
