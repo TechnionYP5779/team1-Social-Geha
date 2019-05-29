@@ -14,28 +14,62 @@
     <script defer src="/__/firebase/6.0.2/firebase-storage.js"></script>
     <!-- initialize the SDK after all desired features are loaded -->
     <script defer src="/__/firebase/init.js"></script>
+	<script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+	<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+	<script type="text/javascript" src="main_page.js"></script>
+	
 	<link rel="stylesheet" href="styles.css">
 	<link rel="stylesheet"
 		href="https://fonts.googleapis.com/css?family=Titillium+Web&display=swap">
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-
   </head>
   <body>
+	  <div id="add-user-form" title="Add a User" class="add-user">		 
+		  <form>
+			<fieldset>
+			  <label for="name" class="form-label">Name</label>
+			  <input type="text" name="name" id="name" value="" class="text ui-widget-content ui-corner-all">
+			  
+			  <label for="phone" class="form-label">Phone number</label>
+			  <input type="text" name="phone" id="phone" value="+972-5" class="text ui-widget-content ui-corner-all">
+			  
+			  <label for="category" class="form-label">Category</label><br/>
+			  <input type="radio" name="category" id="patient" value="Patient" class="ui-widget-content ui-corner-all">Patient<br/>
+			  <input type="radio" name="category" id="family_member" value="Family_member" class="ui-widget-content ui-corner-all">Family member<br/>
+			  <input type="radio" name="category" id="staff" value="Staff_member" class="ui-widget-content ui-corner-all">Staff member<br/>
+			  <br/>
+			  <label for="kind" class="form-label">Kind</label><br/>
+			  <input type="radio" name="kind" id="former" value="Former_patient" class="ui-widget-content ui-corner-all">Former patient<br/>
+			  <input type="radio" name="kind" id="current" value="Current_patient" class="ui-widget-content ui-corner-all">Current patient<br/>
+			  <br/>
+			  <label for="kind" class="form-label">Department - fields</label><br/>
+			  <input type="checkbox" name="department" id="adults-day" value="Adults_day" class="ui-widget-content ui-corner-all">Adults - Day care<br/>
+			  <input type="checkbox" name="department" id="adults-open" value="Adults_open" class="ui-widget-content ui-corner-all">Adults - Open dep.<br/>
+			  <input type="checkbox" name="department" id="adults-closed" value="Adults_closed" class="ui-widget-content ui-corner-all">Adults - Closed dep.<br/>
+			  <input type="checkbox" name="department" id="minor-day" value="Minor_day" class="ui-widget-content ui-corner-all">Minor - Day care<br/>
+			  <input type="checkbox" name="department" id="minor-closed" value="Minor_closed" class="ui-widget-content ui-corner-all">Minor - Closed dep.<br/>
+			  <br/>
+			  <!-- Allow form submission with keyboard without duplicating the dialog button -->
+			  <input type="submit" tabindex="-1" style="position:absolute; top:-1000px">
+			</fieldset>
+		  </form>
+	  </div>
+	
+	<div id="overlay-back"></div>
+	<div id="overlay"><span></span></div> 
     <div id="card">
 		<div id ="text">
 		    <h2>Hello Admin</h2>
 		    <h1>Welcome to BUDDIZ!</h1>
 		    <p>What do you want to do next?</p>
 		    <div class="btn-group" style="width:100%">
-			    <button style="width:25%"><i class="fa fa-plus"></i> Add a user</button>
-			    <button style="width:25%"><i class="fa fa-search"></i> Find a user</button>
-			    <button style="width:25%"><i class="fa fa-trash"></i> Delete a user</button>
-			    <button style="width:25%"><i class="fa fa-rocket"></i> Export</button>
+			    <button style="width:33%" id="add-user"><i class="fa fa-plus"></i> Add a user</button>
+			    <button style="width:33%" id="find-user"><i class="fa fa-search"></i> Find a user</button>
+			    <button style="width:33%" id="delete-user"><i class="fa fa-trash"></i> Delete a user</button>
 			</div>
 		</div>
 	</div>
     <p id="load">Firebase SDK Loading&hellip;</p>
-
     <script>
       document.addEventListener('DOMContentLoaded', function() {
         // // 🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥
