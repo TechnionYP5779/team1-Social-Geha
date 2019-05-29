@@ -1,13 +1,8 @@
 $( function() {
-    var dialog, form,
- 
-      // From http://www.whatwg.org/specs/web-apps/current-work/multipage/states-of-the-type-attribute.html#e-mail-state-%28type=email%29
+    var dialog_add, dialog_search, dialog_delete, form_add, form_search, form_delete,
       emailRegex = /^[a-zA-Z0-9.!#$%&'*+\/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/,
       name = $( "#name" ),
-      email = $( "#email" ),
-      password = $( "#password" ),
-      allFields = $( [] ).add( name ).add( email ).add( password ),
-      tips = $( ".validateTips" );
+      allFields = $( [] ).add( name );
  
     function updateTips( t ) {
       tips
@@ -57,12 +52,38 @@ $( function() {
           "<td>" + email.val() + "</td>" +
           "<td>" + password.val() + "</td>" +
         "</tr>" );
-        dialog.dialog( "close" );
+        dialog_add.dialog( "close" );
       }
       return valid;
     }
+	
+	function findUser() {
+		var valid = true;
+		if ( valid ) {
+			$( "#users tbody" ).append( "<tr>" +
+			  "<td>" + name.val() + "</td>" +
+			  "<td>" + email.val() + "</td>" +
+			  "<td>" + password.val() + "</td>" +
+			"</tr>" );
+			dialog_search.dialog( "close" );
+		}
+		return valid;
+	}
+	
+	function deleteUser() {
+		var valid = true;
+		if ( valid ) {
+			$( "#users tbody" ).append( "<tr>" +
+			  "<td>" + name.val() + "</td>" +
+			  "<td>" + email.val() + "</td>" +
+			  "<td>" + password.val() + "</td>" +
+			"</tr>" );
+			dialog_delete.dialog( "close" );
+		}
+		return valid;
+	}
  
-    dialog = $( "#add-user-form" ).dialog({
+    dialog_add = $( "#add-user-form" ).dialog({
       autoOpen: false,
       height: 400,
       width: 350,
@@ -70,24 +91,82 @@ $( function() {
       buttons: {
         "Add this user": addUser,
         Cancel: function() {
-          dialog.dialog( "close" );
+          dialog_add.dialog( "close" );
 		  $('#overlay, #overlay-back').fadeOut(500);
         }
       },
       close: function() {
-        form[ 0 ].reset();
+        form_add[ 0 ].reset();
+        allFields.removeClass( "ui-state-error" );
+		$('#overlay, #overlay-back').fadeOut(500);
+      }
+    });
+	
+	dialog_search = $( "#search-user-form" ).dialog({
+      autoOpen: false,
+      height: 400,
+      width: 350,
+      modal: true,
+      buttons: {
+        "Find this user": findUser,
+        Cancel: function() {
+          dialog_search.dialog( "close" );
+		  $('#overlay, #overlay-back').fadeOut(500);
+        }
+      },
+      close: function() {
+        form_search[ 0 ].reset();
+        allFields.removeClass( "ui-state-error" );
+		$('#overlay, #overlay-back').fadeOut(500);
+      }
+    });
+	
+	dialog_delete = $( "#delete-user-form" ).dialog({
+      autoOpen: false,
+      height: 400,
+      width: 350,
+      modal: true,
+      buttons: {
+        "Delete this user": deleteUser,
+        Cancel: function() {
+          dialog_delete.dialog( "close" );
+		  $('#overlay, #overlay-back').fadeOut(500);
+        }
+      },
+      close: function() {
+        form_delete[ 0 ].reset();
         allFields.removeClass( "ui-state-error" );
 		$('#overlay, #overlay-back').fadeOut(500);
       }
     });
  
-    form = dialog.find( "form" ).on( "submit", function( event ) {
+    form_add = dialog_add.find( "form" ).on( "submit", function( event ) {
       event.preventDefault();
       addUser();
     });
+	
+	form_search = dialog_search.find( "form" ).on( "submit", function( event ) {
+      event.preventDefault();
+      findUser();
+    });
+	
+	form_delete = dialog_delete.find( "form" ).on( "submit", function( event ) {
+      event.preventDefault();
+      deleteUser();
+    });
  
     $( "#add-user" ).button().on( "click", function() {
-      dialog.dialog( "open" );
+      dialog_add.dialog( "open" );
 	  $('#overlay, #overlay-back').fadeIn(500);
     });
-  } );
+	
+	$( "#find-user" ).button().on( "click", function() {
+      dialog_search.dialog( "open" );
+	  $('#overlay, #overlay-back').fadeIn(500);
+    });
+	
+	$( "#delete-user" ).button().on( "click", function() {
+      dialog_delete.dialog( "open" );
+	  $('#overlay, #overlay-back').fadeIn(500);
+    });
+  });
