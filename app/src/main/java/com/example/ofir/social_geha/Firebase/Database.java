@@ -30,7 +30,7 @@ public final class Database {
     //private Person p;
 
     public FirebaseFirestore db = FirebaseFirestore.getInstance();
-    private FirebaseAuth auth = FirebaseAuth.getInstance();
+    public FirebaseAuth auth = FirebaseAuth.getInstance();
 
 
     public static Database getInstance() {
@@ -197,7 +197,11 @@ public final class Database {
         return db;
     }
 
-//    public Person getLoggedInPerson() {
+    public FirebaseAuth getAuth() {
+        return auth;
+    }
+
+    //    public Person getLoggedInPerson() {
 //        if(this.p != null) return this.p;
 //
 //        final Person[] p = {null};

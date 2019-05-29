@@ -21,6 +21,7 @@ import android.widget.Toast;
 
 import com.example.ofir.social_geha.AppStorageManipulation;
 import com.example.ofir.social_geha.Firebase.Database;
+import com.example.ofir.social_geha.GehaMessagingService;
 import com.example.ofir.social_geha.Person;
 import com.example.ofir.social_geha.R;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -28,6 +29,8 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.iid.FirebaseInstanceId;
+import com.google.firebase.iid.InstanceIdResult;
 import com.google.firestore.v1.WriteResult;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
@@ -79,6 +82,20 @@ public class mainScreen extends AppCompatActivity {
 
         if (!Database.getInstance().isLoggedIn()) {
             promptLogin();
+        }
+        else {
+            Log.d("GETNEWTOKEN", "onCreate: Starting");
+            FirebaseInstanceId.getInstance().getInstanceId()
+                    .addOnCompleteListener(new OnCompleteListener<InstanceIdResult>() {
+                        @Override
+                        public void onComplete(@NonNull Task<InstanceIdResult> task) {
+                            if (task.isSuccessful()) {
+                                Log.d("GETNEWTOKEN", "onCreate: Did it! Token is: "+task.getResult().getToken());
+                                GehaMessagingService.storeToken(Database.getInstance().getAuth(), Database.getInstance().getdb(), task.getResult().getToken());
+                            }
+                            Log.d("GETNEWTOKEN", "DONE");
+                        }
+                    });
         }
     }
 

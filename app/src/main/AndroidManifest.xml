@@ -21,7 +21,12 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.example.ofir.social_geha.Activities_and_Fragments.mainScreen" />
         </activity>
-        <activity android:name=".Activities_and_Fragments.ChatActivity" />
+        <activity android:name=".Activities_and_Fragments.ChatActivity">
+            <intent-filter>
+                <action android:name="com.technion.cookeat.DISPLAY_MESSAGE" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
         <activity
             android:name=".Activities_and_Fragments.mainScreen"
             android:screenOrientation="portrait" />
@@ -52,6 +57,11 @@
                 <!--<category android:name="android.intent.category.LAUNCHER" />-->
             <!--</intent-filter>-->
         </activity>
+        <service android:name=".GehaMessagingService">
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
+            </intent-filter>
+        </service>
     </application>
 
 </manifest>
