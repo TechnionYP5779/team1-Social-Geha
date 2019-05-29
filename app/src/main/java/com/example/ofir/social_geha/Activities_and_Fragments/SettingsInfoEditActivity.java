@@ -103,8 +103,8 @@ public class SettingsInfoEditActivity extends AppCompatActivity {
         }
         for (int i = 0; i < languagesAll.length; i++) {
             Iterator iterator = selectedLanguages.iterator();
-            while(iterator.hasNext()) {
-                if (iterator.next().equals(languagesAll[i])){
+            while (iterator.hasNext()) {
+                if (iterator.next().equals(languagesAll[i])) {
                     languagesAll_BooleanSelection[i] = true;
                 }
             }
@@ -116,24 +116,24 @@ public class SettingsInfoEditActivity extends AppCompatActivity {
         year = cal.get(Calendar.YEAR);
         month = cal.get(Calendar.MONTH);
         dayOfMonth = cal.get(Calendar.DAY_OF_MONTH);
-        gender_index = fromGenderEnumToGenderIndex(p.getGender(),SettingsInfoEditActivity.this);
-        gender = (gender_index != -1 )?  allGenders[gender_index] : null;
+        gender_index = fromGenderEnumToGenderIndex(p.getGender(), SettingsInfoEditActivity.this);
+        gender = (gender_index != -1) ? allGenders[gender_index] : null;
 
         bio = p.getDescription();
-        religion_index= fromReligionToReligionIndex(p.getReligion());
-        religion= allReligions[religion_index];
+        religion_index = fromReligionToReligionIndex(p.getReligion());
+        religion = allReligions[religion_index];
     }
 
     private void setUpFieldValues() {
-        if(getIntent().getStringExtra("code") == null)
-        Database.getInstance().getdb().collection("users").document(Database.getInstance().getLoggedInUserID()).get()
-                        .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                            @Override
-                            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                              currentPerson = task.getResult().toObject(Person.class);
-                              updateFieldsAccordingToPerson(currentPerson);
-                            }
-                        });
+        if (getIntent().getStringExtra("code") == null)
+            Database.getInstance().getdb().collection("users").document(Database.getInstance().getLoggedInUserID()).get()
+                    .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                        @Override
+                        public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                            currentPerson = task.getResult().toObject(Person.class);
+                            updateFieldsAccordingToPerson(currentPerson);
+                        }
+                    });
     }
 
     private void setUpDoneButton() {
@@ -143,7 +143,7 @@ public class SettingsInfoEditActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if (getIntent().getStringExtra("code") != null) {
-                    if(checkAllFilled()) {
+                    if (checkAllFilled()) {
                         // we need to preform register
                         calendar.set(year, month, dayOfMonth);
                         register(getIntent().getStringExtra("code"), givenName, calendar, gender,
@@ -152,7 +152,7 @@ public class SettingsInfoEditActivity extends AppCompatActivity {
                 } else {
                     calendar.set(year, month, dayOfMonth);
                     updateDBWithUserInfo(givenName, calendar, gender,
-                            religion, selectedLanguages.toArray(new String[] {}), bio);
+                            religion, selectedLanguages.toArray(new String[]{}), bio);
                     onBackPressed();
                 }
             }
@@ -163,7 +163,7 @@ public class SettingsInfoEditActivity extends AppCompatActivity {
 
     private void updateDBWithUserInfo(String givenName, Calendar calendar, String gender, String religion, String[] langs, String bio) {
         currentPerson.setBirthDate(calendar.getTimeInMillis()).setDescription(bio).setRealName(givenName).setGender(fromStringToGenderEnum(gender, SettingsInfoEditActivity.this, false))
-                .setReligion(fromStringToReligion(religion,false)).setSpokenLanguages(languagesStringToLanguageEnum(langs));
+                .setReligion(fromStringToReligion(religion, false)).setSpokenLanguages(languagesStringToLanguageEnum(langs));
         Database.getInstance().addUserPerson(currentPerson);
     }
 
@@ -186,11 +186,11 @@ public class SettingsInfoEditActivity extends AppCompatActivity {
                         progressDialog.dismiss();
                         long date = c.getTimeInMillis();
                         Person.Religion mReligion = fromStringToReligion(religion, false);
-                        for (String lang : languages){
+                        for (String lang : languages) {
                             Log.d("REGISTER_LANG", lang);
                         }
 
-                        for (boolean flag : languagesAll_BooleanSelection){
+                        for (boolean flag : languagesAll_BooleanSelection) {
                             Log.d("REGISTER_LANG_CHECKED", String.valueOf(flag));
                         }
 
@@ -201,7 +201,7 @@ public class SettingsInfoEditActivity extends AppCompatActivity {
                         Person p = new Person(name, FictitiousIdentityGenerator.getAnonymousIdentity(
                                 fromStringToGenderEnum(gender, SettingsInfoEditActivity.this, false)),
                                 date, fromStringToGenderEnum(gender, SettingsInfoEditActivity.this, false), mReligion, spokenLanguages,
-                                Person.Kind.PAST_PATIENT, Database.getInstance().getLoggedInUserID(), bio, new ArrayList<Integer>());
+                                Person.Kind.PAST_PATIENT, Database.getInstance().getLoggedInUserID(), bio, false, new ArrayList<Integer>());
                         if (task.isSuccessful()) {
                             Database.getInstance().addUserPerson(p);
                             setResult(RESULT_OK);
@@ -434,28 +434,27 @@ public class SettingsInfoEditActivity extends AppCompatActivity {
         });
     }
 
-    private boolean checkAllFilled(){
+    private boolean checkAllFilled() {
         String error = "";
-        if(selectedLanguages.size() == 0)
+        if (selectedLanguages.size() == 0)
             error = "אנא בחר לפחות שפה אחת";
 
-        if(givenName == null || givenName.equals(""))
-            error="אנא מלא את שמך";
+        if (givenName == null || givenName.equals(""))
+            error = "אנא מלא את שמך";
 
-        if(gender == null || gender.equals(""))
-            error="אנא בחר מגדר";
+        if (gender == null || gender.equals(""))
+            error = "אנא בחר מגדר";
 
-        if(religion == null || religion.equals(""))
-            error="אנא בחר דת";
+        if (religion == null || religion.equals(""))
+            error = "אנא בחר דת";
 
-        if(bio == null || bio.equals(""))
-            error="אנא מלא משפט קצר אודותיך";
+        if (bio == null || bio.equals(""))
+            error = "אנא מלא משפט קצר אודותיך";
 
-        if(!error.equals("")){
-            Toast.makeText(SettingsInfoEditActivity.this,error,Toast.LENGTH_SHORT).show();
+        if (!error.equals("")) {
+            Toast.makeText(SettingsInfoEditActivity.this, error, Toast.LENGTH_SHORT).show();
             return false;
-        }
-        else
+        } else
             return true;
     }
 }

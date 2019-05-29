@@ -42,11 +42,11 @@ public final class Database {
     }
 
     public void sendControlMessage(String message, String fromUser, String toUser) {
-        sendMessageInner(message, fromUser,toUser, false);
+        sendMessageInner(message, fromUser, toUser, false);
     }
 
     public void sendMessage(String message, String fromUser, String toUser) {
-        sendMessageInner(message, fromUser,toUser, true);
+        sendMessageInner(message, fromUser, toUser, true);
     }
 
     public void sendMessageInner(String message, String fromUser, String toUser, boolean shown) {
@@ -66,7 +66,7 @@ public final class Database {
                 });
     }
 
-    public void addUserPerson(final Person p){
+    public void addUserPerson(final Person p) {
         Log.d("PERSON PRINTING !", p.getRealName());
         //Log.d("PERSON PRINTING !", p.getCalendarBirthDate().toString());
         //p.getCalendarBirthDate().set
@@ -85,8 +85,8 @@ public final class Database {
                 });
     }
 
-    public void addUser(final String username, String personalCode,String userID) {
-        db.collection(USERS).document(username).set(new User(username, personalCode,userID)).
+    public void addUser(final String username, String personalCode, String userID) {
+        db.collection(USERS).document(username).set(new User(username, personalCode, userID)).
                 addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {
@@ -101,15 +101,10 @@ public final class Database {
                 });
     }
 
-    public void queryUsers(Person.Kind kindPref,
-                           Person.Gender genderPref,
-                           Person.Religion religionPref,
-                           EnumSet<Person.Language> languagesPref,
-                           Integer lower_bound,
-                           Integer upper_bound,
-                           final ArrayList<Person> matches_list,
-                           final MatchesListAdapter adapter) {
-
+    public void queryUsers(Person.Kind kindPref, Person.Gender genderPref, Person.Religion religionPref,
+                           EnumSet<Person.Language> languagesPref, Integer lower_bound, Integer upper_bound,
+                           final ArrayList<Person> matches_list, final MatchesListAdapter adapter) {
+        //TODO: add filter by availability
         List<Task<QuerySnapshot>> langQueryResults = new ArrayList<>();
         // note the different fields
         if (languagesPref.isEmpty()) {
@@ -120,7 +115,7 @@ public final class Database {
             langQueryResults.add(queryBuilder.build().get());
         } else {
             for (Person.Language language : languagesPref) {
-                Log.d("PEOPLE FOUND","Looking for language: "+language.toString());
+                Log.d("PEOPLE FOUND", "Looking for language: " + language.toString());
                 QueryBuilder queryBuilder = new QueryBuilder(db.collection(USERS));
                 queryBuilder.addWhereEquals("gender", genderPref)
                         .addWhereEquals("religion", religionPref)
@@ -151,8 +146,8 @@ public final class Database {
                     if (task.getResult() != null) {
                         for (DocumentSnapshot documentSnapshot : task.getResult()) {
                             Person p = documentSnapshot.toObject(Person.class);
-                            if(!p.getUserID().equals(getInstance().getLoggedInUserID()) &&
-                            !matches_list.contains(p))
+                            if (!p.getUserID().equals(getInstance().getLoggedInUserID()) &&
+                                    !matches_list.contains(p))
                                 matches_list.add(p);
                         }
                         adapter.notifyDataSetChanged();
@@ -168,7 +163,7 @@ public final class Database {
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
                         if (task.getResult() != null) {
                             for (DocumentSnapshot documentSnapshot : task.getResult()) {
-                                Log.d("PEOPLE FOUND","NOT DELETING PEOPLE");
+                                Log.d("PEOPLE FOUND", "NOT DELETING PEOPLE");
                                 Person currPerson = documentSnapshot.toObject(Person.class);
                                 if (!matches_list.contains(currPerson))
                                     matches_list.remove(currPerson);
@@ -189,11 +184,15 @@ public final class Database {
         return auth.getUid();
     }
 
+    public void updateAvailability(Boolean newAvail) {
+
+    }
+
     public void disconnectUser() {
         auth.signOut();
     }
 
-    public FirebaseFirestore getdb(){
+    public FirebaseFirestore getdb() {
         return db;
     }
 

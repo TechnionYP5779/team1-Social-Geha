@@ -24,7 +24,7 @@ public class Person {
     }
 
     public enum Religion {
-        RELIGIOUS, TRADITIONAL, SECULAR, ARABIC,UNDISCLOSED
+        RELIGIOUS, TRADITIONAL, SECULAR, ARABIC, UNDISCLOSED
     }
 
     public enum Kind {
@@ -41,6 +41,7 @@ public class Person {
     private Kind kind;
     private String userID;
     private String description;
+    private Boolean availability;
     //List of personIDs to whom this person is willing to expose details to
     private List<Integer> whiteList;
     // Immutable - Given at initialization
@@ -57,7 +58,7 @@ public class Person {
     public Person(String realName, AnonymousIdentity anonymousIdentity,
                   long birthDate, Gender gender, Religion religion,
                   List<Language> spokenLanguages, Kind kind, String userID,
-                  String description, List<Integer> whiteList) {
+                  String description, Boolean availability, List<Integer> whiteList) {
         this.realName = realName;
         this.anonymousIdentity = anonymousIdentity;
         this.birthDate = birthDate;
@@ -67,6 +68,7 @@ public class Person {
         this.kind = kind;
         this.userID = userID;
         this.description = description;
+        this.availability = availability;
         this.whiteList = whiteList;
     }
 
@@ -111,6 +113,10 @@ public class Person {
 
     public long getBirthDate() {
         return birthDate;
+    }
+
+    public Boolean getAvailability() {
+        return availability;
     }
 
 
@@ -240,10 +246,13 @@ public class Person {
 
     public static int fromGenderEnumToGenderIndex(Gender gender, Context mContext) {
         String[] allGenders = mContext.getResources().getStringArray(R.array.gender_preferences);
-        switch (gender){
-            case UNDISCLOSED: return 0;
-            case MALE: return 1;
-            case FEMALE: return 2;
+        switch (gender) {
+            case UNDISCLOSED:
+                return 0;
+            case MALE:
+                return 1;
+            case FEMALE:
+                return 2;
         }
         return -1;
     }

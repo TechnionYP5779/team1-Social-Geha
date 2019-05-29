@@ -305,6 +305,20 @@ public class AllChatsActivity extends AppCompatActivity {
                                     KeyFileHandler keyFileHandler = new KeyFileHandler(AllChatsActivity.this, contactUID);
                                     keyFileHandler.writeKey(AES.stringToKey(text.substring("AES".length())));
                                     Log.d("AES_READ", "received key from " + contactUID + " and the key is " + text.substring("AES".length()));
+                                } else if (text.substring(0, "NAME_CHANGE".length()).equals("NAME_CHANGE")) {
+                                    //TODO: change name using update name (Shai's function)
+                                    String realName = "";
+                                    for (int i = 0; i < conversationList.size(); i++) {
+                                        if (conversationList.get(i).getUserID().equals(contactUID)) {
+                                            conversationList.get(i).setRealName(realName);
+                                        }
+                                    }
+
+                                    for (int i = 0; i < allList.size(); i++) {
+                                        if (allList.get(i).getUserID().equals(contactUID)) {
+                                            allList.get(i).setRealName(realName);
+                                        }
+                                    }
                                 }
 
                             }
@@ -322,31 +336,30 @@ public class AllChatsActivity extends AppCompatActivity {
         Map<String, ContactListFileHandler.Contact> contactMap = new ContactListFileHandler(this).getContacts();
         final String dummyName = "CONTACT DUMMY";
 
-        for(Map.Entry<String, ContactListFileHandler.Contact> contact : contactMap.entrySet()){
-            chatEntryMap.put(contact.getKey(), new ChatEntry(contact.getValue(),null,0));
+        for (Map.Entry<String, ContactListFileHandler.Contact> contact : contactMap.entrySet()) {
+            chatEntryMap.put(contact.getKey(), new ChatEntry(contact.getValue(), null, 0));
         }
 
         for (Message msg : mFileHandler.getMessages()) {
             if (!msg.getShown()) continue; //ensures that the last SHOWN message is in the map
             ChatEntry chatEntry;
 
-            if (loggedInUserID.equals(msg.getFromPersonID())){
-                if(!chatEntryMap.containsKey(msg.getToPersonID())){
-                    ContactListFileHandler.Contact dummy = new ContactListFileHandler.Contact(msg.getToPersonID(),dummyName,"",null, new Date(Long.MIN_VALUE));
-                    chatEntryMap.put(msg.getToPersonID(),new ChatEntry(dummy,null,0));
+            if (loggedInUserID.equals(msg.getFromPersonID())) {
+                if (!chatEntryMap.containsKey(msg.getToPersonID())) {
+                    ContactListFileHandler.Contact dummy = new ContactListFileHandler.Contact(msg.getToPersonID(), dummyName, "", null, new Date(Long.MIN_VALUE));
+                    chatEntryMap.put(msg.getToPersonID(), new ChatEntry(dummy, null, 0));
                 }
                 chatEntry = chatEntryMap.get(msg.getToPersonID());
-            }
-            else{
-                if(!chatEntryMap.containsKey(msg.getFromPersonID())){
-                    ContactListFileHandler.Contact dummy = new ContactListFileHandler.Contact(msg.getFromPersonID(),dummyName,"",null, new Date(Long.MIN_VALUE));
-                    chatEntryMap.put(msg.getFromPersonID(),new ChatEntry(dummy,null,0));
+            } else {
+                if (!chatEntryMap.containsKey(msg.getFromPersonID())) {
+                    ContactListFileHandler.Contact dummy = new ContactListFileHandler.Contact(msg.getFromPersonID(), dummyName, "", null, new Date(Long.MIN_VALUE));
+                    chatEntryMap.put(msg.getFromPersonID(), new ChatEntry(dummy, null, 0));
                 }
                 chatEntry = chatEntryMap.get(msg.getFromPersonID());
             }
 
             chatEntry.setMessage(msg);
-            if(msg.getMessageDate().after(chatEntry.getLastChatReadDate())){
+            if (msg.getMessageDate().after(chatEntry.getLastChatReadDate())) {
                 chatEntry.setUnreadCount(chatEntry.getUnreadCount() + 1);
             }
         }
@@ -385,7 +398,7 @@ public class AllChatsActivity extends AppCompatActivity {
                             Log.d("COOLTEST", "got user: " + myPerson.getDescription());
                             ContactListFileHandler.Contact myContact = new ContactListFileHandler.Contact(myPerson.getUserID(), ContactListFileHandler.Contact.UNKNOWN_NAME,
                                     myPerson.getDescription(), myPerson.getAnonymousIdentity(), new Date(Long.MIN_VALUE));
-                            ChatEntry chatEntry = new ChatEntry(myContact, entry.getValue().getMessage(),entry.getValue().getUnreadCount()); //contact & message might have been updated
+                            ChatEntry chatEntry = new ChatEntry(myContact, entry.getValue().getMessage(), entry.getValue().getUnreadCount()); //contact & message might have been updated
 
                             int j = listContains(conversationList, chatEntry.getUserID());
                             if (j != -1) {
