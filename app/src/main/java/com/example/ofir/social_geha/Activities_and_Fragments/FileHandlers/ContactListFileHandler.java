@@ -65,6 +65,11 @@ public class ContactListFileHandler {
         return contacts;
     }
 
+    public Contact getContact(String uid){
+        HashMap<String, Contact> contacts = getContacts();
+        return contacts.get(uid);
+    }
+
 
     public HashMap<String, Contact> getContacts() {
         HashMap<String, Contact> contacts;

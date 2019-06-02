@@ -29,6 +29,7 @@ import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
+import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -67,6 +68,7 @@ public class ChatActivity extends AppCompatActivity {
 
         // Display user image as profile pic
         int default_image = this.getResources().getIdentifier("@drawable/image_fail", null, this.getPackageName());
+        ImageLoader.getInstance().init(ImageLoaderConfiguration.createDefault(ChatActivity.this));
         ImageLoader image_loader = ImageLoader.getInstance();
         DisplayImageOptions options = new DisplayImageOptions.Builder().cacheInMemory(true)
                 .cacheOnDisc(true).resetViewBeforeLoading(true)
@@ -86,7 +88,6 @@ public class ChatActivity extends AppCompatActivity {
         name_holder.setText(mAnonymousOtherName);
         image_loader.displayImage(mAnonymousOtherPhotoUrl, image_holder, options); //displays the no_bg image
         image_holder.setCircleBackgroundColor(Color.parseColor(mAnonymousOtherPhotoColor));
-
 
         //make sure the profile picture clicks and zooms
         final View viewStart = image_holder;
@@ -123,6 +124,9 @@ public class ChatActivity extends AppCompatActivity {
             Log.d("AES_ENCRYPT", "Reading key from file");
             Log.d("AES_ENCRYPT_RESULT", AES.keyToString(key));
             aes = new AES(key);
+        } else {
+            Log.d("WOO AH!", "YES YOAV WOO AH CAUSE WOO F-ING AH!");
+            Log.d("WOO AH!", "key was null :(");
         }
 
         Log.d("POPO", "onCreate: " + mOtherPersonId);
@@ -131,14 +135,13 @@ public class ChatActivity extends AppCompatActivity {
         mMessageRecycler.setHasFixedSize(true);
         mMessageRecycler.setLayoutManager(new LinearLayoutManager(this));
         mMessageRecycler.setAdapter(mMessageListAdapter);
-
         mFirestore = FirebaseFirestore.getInstance();
 
-        setMessageListners();
+        setMessageListeners();
     }
 
 
-    private void setMessageListners() {
+    private void setMessageListeners() {
         mFirestore.collection(MESSAGES).whereEqualTo("toPersonID", mLoggedInPersonId)
                 .whereEqualTo("fromPersonID", mOtherPersonId)
                 .addSnapshotListener(new EventListener<QuerySnapshot>() {
@@ -149,14 +152,23 @@ public class ChatActivity extends AppCompatActivity {
                             return;
                         }
 
-                        if (aes == null)
-                            throw new AssertionError("AES should not be null");
                         for (DocumentChange doc : queryDocumentSnapshots.getDocumentChanges()) {
                             if (doc.getType() == DocumentChange.Type.ADDED) {
                                 String message_text = doc.getDocument().getString("message");
+
+                                if(message_text == null || message_text.equals("CHAT REQUEST$") || message_text.equals("CHAT ACCEPT$") || message_text.equals("CHAT REJECT$")) {
+                                    Log.d("NONONONO", "IM DELETING");
+                                    mFirestore.collection(MESSAGES).document(doc.getDocument().getId()).delete();
+                                    continue;
+                                }
+
                                 Log.d("COOLTEST", "Content: " + message_text);
                                 Log.d("POPO", "onEvent: DOES THIS");
                                 Message message = doc.getDocument().toObject(Message.class);
+
+                                //we're actually decrypting this message => must be not null
+                                if (aes == null)
+                                    throw new AssertionError("AES should not be null");
                                 message.setMessage(aes.decrypt(message.getMessage()));
                                 mFirestore.collection(MESSAGES).document(doc.getDocument().getId()).delete();
                                 if (message.getShown())
@@ -179,15 +191,17 @@ public class ChatActivity extends AppCompatActivity {
             }
         }
         mMessageListAdapter.notifyDataSetChanged();
+        mMessageRecycler.scrollToPosition(mMessageListAdapter.getItemCount() - 1);
     }
 
     @Override
-    public void onPause(){
+    public void onPause() {
         super.onPause();
         new ContactListFileHandler(this).changeLastChatViewDate(mOtherPersonId, new Date());
     }
 
     public void onSendButtonClick(View v) {
+        //only tackles shown message
         String message = mMessageEdit.getText().toString();
         if (aes == null && isInitiator) {
             Log.d("AES_ENCRYPT_INIT", "Starting Convo with " + mOtherPersonId);

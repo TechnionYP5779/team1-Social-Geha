@@ -13,6 +13,8 @@ import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.TaskStackBuilder;
 import android.util.Log;
 
+import com.example.ofir.social_geha.Activities_and_Fragments.ChatActivity;
+import com.example.ofir.social_geha.Activities_and_Fragments.FileHandlers.ContactListFileHandler;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -85,20 +87,30 @@ public class GehaMessagingService extends FirebaseMessagingService {
     }
 
     private void handleIntent(NotificationCompat.Builder notificationBuilder, String clickAction, RemoteMessage remoteMessage){
-        Intent resultIntent = new Intent(clickAction);
+        Intent resultIntent = new Intent(this, ChatActivity.class);
         String fromPersonID = remoteMessage.getData().get(FROM_PERSON_ID);
         Log.d(TAG, "handleIntent: the message was from: "+fromPersonID);
         if(fromPersonID != null){
-            resultIntent.putExtra(FROM_PERSON_ID, fromPersonID);
+            resultIntent.putExtra("EXTRA_PERSON_ID", fromPersonID);
+            ContactListFileHandler contactHandler = new ContactListFileHandler(this);
+            ContactListFileHandler.Contact contact = contactHandler.getContact(fromPersonID);
+            String realName = contact.getRealName();
+            if(!realName.equals(ContactListFileHandler.Contact.UNKNOWN_NAME)){
+                resultIntent.putExtra("EXTRA_NAME", realName);
+            } else {
+                resultIntent.putExtra("EXTRA_NAME", contact.getAnonID().getName());
+            }
+            resultIntent.putExtra("EXTRA_PHOTO_URL", contact.getAnonID().getImageName());
+            resultIntent.putExtra("EXTRA_PHOTO_COLOR", contact.getAnonID().getImageColor());
         }
         // Create an Intent for the activity you want to start
         // Create the TaskStackBuilder and add the intent, which inflates the back stack
         TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
         stackBuilder.addNextIntentWithParentStack(resultIntent);
+
         // Get the PendingIntent containing the entire back stack
         PendingIntent resultPendingIntent =
                 stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
-
         notificationBuilder.setContentIntent(resultPendingIntent);
         notificationBuilder.setAutoCancel(true);
     }

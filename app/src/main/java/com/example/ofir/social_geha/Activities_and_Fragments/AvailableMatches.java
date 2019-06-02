@@ -3,39 +3,44 @@ package com.example.ofir.social_geha.Activities_and_Fragments;
 import android.content.Intent;
 import android.graphics.PorterDuff;
 import android.os.Bundle;
-import android.os.SystemClock;
+import android.os.Looper;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.Filter;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.Toast;
-import android.widget.Toolbar;
 
-import com.example.ofir.social_geha.AnonymousIdentity;
-import com.example.ofir.social_geha.FictitiousIdentityGenerator;
 import com.example.ofir.social_geha.FilterParameters;
 import com.example.ofir.social_geha.Firebase.Database;
+import com.example.ofir.social_geha.Firebase.Message;
 import com.example.ofir.social_geha.Person;
 import com.example.ofir.social_geha.R;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.DocumentChange;
+import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.auth.User;
+import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Calendar;
-import java.util.EnumSet;
-import java.util.Objects;
-import java.util.Set;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class AvailableMatches extends AppCompatActivity {
 
     ListView listView;
-    ArrayList<Person> matches_list;
+    ArrayList<Person> approved_matches_list;
     ProgressBar progressBar;
     MatchesListAdapter adapter;
+    private FirebaseFirestore mFirestore;
+    private static final String MESSAGES = "messages";
+    private boolean someApproved = false;
 
 
     @Override
@@ -43,7 +48,7 @@ public class AvailableMatches extends AppCompatActivity {
         super.onCreate(savedInstances);
         setContentView(R.layout.activity_available_matches);
 
-        FilterParameters filterParms = (FilterParameters) getIntent().getSerializableExtra("filterObject");
+        FilterParameters filterParams = (FilterParameters) getIntent().getSerializableExtra("filterObject");
 
         progressBar = findViewById(R.id.progressBar);
         listView = findViewById(R.id.available_matches);
@@ -63,11 +68,63 @@ public class AvailableMatches extends AppCompatActivity {
             }
         });
 
+        mFirestore = FirebaseFirestore.getInstance();
+        //set listener to listen to accepts and add these people to matchesList
+        mFirestore.collection(MESSAGES).whereEqualTo("toPersonID", Database.getInstance().getLoggedInUserID())
+                .addSnapshotListener(new EventListener<QuerySnapshot>() {
+                    @Override
+                    public void onEvent(@javax.annotation.Nullable QuerySnapshot queryDocumentSnapshots, @javax.annotation.Nullable FirebaseFirestoreException e) {
+                        if (e != null) {
+                            return;
+                        }
+
+                        for (DocumentChange doc : queryDocumentSnapshots.getDocumentChanges()) {
+                            if (doc.getType() == DocumentChange.Type.ADDED) {
+                                Message message = doc.getDocument().toObject(Message.class); //added message
+                                mFirestore.collection(MESSAGES).document(doc.getDocument().getId()).delete();
+                                // decrypt regular messages
+                                String contactUID = message.getFromPersonID();
+                                if (message.getShown()) {
+                                    continue;
+                                }
+
+                                /* self message*/
+                                if (contactUID.equals(Database.getInstance().getLoggedInUserID()))
+                                    continue;
+
+                                String text = message.getMessage();
+                                String senderUID = message.getFromPersonID();
+                                if (text.substring(0, "CHAT ACCEPT$".length()).equals("CHAT ACCEPT$")) {
+                                    //got new accepted chat message from p
+                                    Database.getInstance().getdb().collection("users").whereEqualTo("userID", senderUID).get()
+                                            .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                                                @Override
+                                                public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                                    if (task.isSuccessful()) {
+                                                        for (QueryDocumentSnapshot doc : task.getResult()) {
+                                                            Person p = doc.toObject(Person.class);
+
+                                                            Log.d("WOO AH!", "added " + p.getRealName() + " to matchlist");
+                                                            approved_matches_list.add(p);
+                                                            adapter.notifyDataSetChanged();
+                                                            someApproved = true;
+                                                        }
+                                                    }
+                                                }
+                                    });
+                                }
+                            }
+                        }
+                    }
+
+                });
+
+
         showItems(true);
         // ------ PROGRESS BAR START
         loadToolbar();
         loadList();
-        filterUsers(filterParms);
+        filterUsers(filterParams);
         // ------ END
         showItems(false);
 
@@ -94,15 +151,15 @@ public class AvailableMatches extends AppCompatActivity {
 
     private void loadList() {
         //Create the list of objects
-        matches_list = new ArrayList<>();
+        approved_matches_list = new ArrayList<>();
 
         //Attach to adapter
-        adapter = new MatchesListAdapter(this, R.layout.match_row_layout, matches_list);
+        adapter = new MatchesListAdapter(this, R.layout.match_row_layout, approved_matches_list);
         listView.setAdapter(adapter);
     }
 
     private void loadToolbar() {
-        android.support.v7.widget.Toolbar toolbar = (android.support.v7.widget.Toolbar) findViewById(R.id.toolbar_top);
+        android.support.v7.widget.Toolbar toolbar = findViewById(R.id.toolbar_top);
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle("");
 
@@ -127,7 +184,29 @@ public class AvailableMatches extends AppCompatActivity {
 
     private void filterUsers(FilterParameters f) {
         // query users
-        Database.getInstance().queryUsers(f.getKind(), f.getGender(), f.getReligion(),
-                f.getLanguages(), f.getLower_bound(), f.getUpper_bound(), matches_list, adapter);
+        Database.getInstance()
+                .sendRequestsToMatches(f.getKind(), f.getGender(), f.getReligion(), f.getLanguages()
+                        , f.getLower_bound(), f.getUpper_bound() /*, possibles_list, adapter*/);
+
+//        for (Person p : possibles_list) {
+//            //send chat request
+//            Database.getInstance().sendControlMessage("CHAT REQUEST$", Database.getInstance().getLoggedInUserID(), p.getUserID());
+//        }
+
+        //sent messages to all - now we wait for response
+        new Timer().schedule(new AbortSearch(), 20000); //abort the search in 5 seconds
     }
+
+    class AbortSearch extends TimerTask {
+        public void run() {
+            runOnUiThread(new Runnable() {
+                public void run() {
+                    if(someApproved) return;
+                    Toast.makeText(AvailableMatches.this, "אני מצטער, לא מצאנו לך אנשים לשוחח עימם.", Toast.LENGTH_LONG).show();
+                    onBackPressed();
+                }
+            });
+        }
+    }
+
 }
