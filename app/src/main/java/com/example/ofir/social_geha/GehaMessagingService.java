@@ -1,10 +1,12 @@
 package com.example.ofir.social_geha;
 
+import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.BitmapFactory;
 import android.media.RingtoneManager;
 import android.os.Build;
 import android.support.v4.app.NotificationCompat;
@@ -24,6 +26,9 @@ public class GehaMessagingService extends FirebaseMessagingService {
     private static String TAG = "CEMService";
     private String NOTIFICATION_CHANNEL_ID = "my_channel_id_01";
     private static String FROM_PERSON_ID = "fromPersonID";
+    private static String CHAT_REQUEST = "com.example.ofir.social_geha.REQUEST_HELP";
+    private static int YES_REQUEST_CODE = 1;
+    private static int NO_REQUEST_CODE = 2;
     private FirebaseAuth auth;
     FirebaseFirestore database;
     public GehaMessagingService() {
@@ -34,23 +39,49 @@ public class GehaMessagingService extends FirebaseMessagingService {
     @Override
     public void onMessageReceived(RemoteMessage remoteMessage) {
         super.onMessageReceived(remoteMessage);
-        Log.d(TAG, "Got notification "+remoteMessage.getNotification().getTitle());
+        Log.d(TAG, "Got notification ");
         showNotification(remoteMessage);
     }
 
     private void showNotification(RemoteMessage remoteMessage){
         initChannels(this);
         long[] vPattern = {0, 1000};
+        Map<String, String> data = remoteMessage.getData();
+        String clickAction = data.get("click_action");
+        int unique_id = (int)System.currentTimeMillis();
         NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this, NOTIFICATION_CHANNEL_ID)
-                .setContentTitle(remoteMessage.getNotification().getTitle())
-                .setContentText(remoteMessage.getNotification().getBody())
+                .setContentTitle(data.get("title"))
+                .setContentText(data.get("body"))
                 .setSmallIcon(R.mipmap.ic_launcher)
+                .setLargeIcon(BitmapFactory.decodeResource(getApplicationContext().getResources(), R.mipmap.ic_launcher))
                 .setVibrate(vPattern)
-                .setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION));
-        String clickAction = remoteMessage.getNotification().getClickAction();
-        handleIntent(notificationBuilder, clickAction, remoteMessage);
+                .setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION))
+                .setWhen(0)
+                .setPriority(NotificationCompat.PRIORITY_MAX)
+                .setCategory(NotificationCompat.CATEGORY_MESSAGE);
+        if(clickAction.equals(CHAT_REQUEST)){
+            Log.d(TAG, "showNotification: CHAT REQUEST");
+            Intent yesAction = new Intent(this, NotificationActionReceiver.class);
+            yesAction.putExtra("fromPerson", data.get("fromPersonID"));
+            yesAction.putExtra("action", "YES");
+            yesAction.putExtra("not_id", unique_id);
+            PendingIntent pYesAction = PendingIntent.getBroadcast(this, YES_REQUEST_CODE, yesAction, PendingIntent.FLAG_UPDATE_CURRENT);
+
+            Intent noAction = new Intent(this, NotificationActionReceiver.class);
+            noAction.putExtra("fromPerson", data.get("fromPersonID"));
+            noAction.putExtra("action", "NO");
+            noAction.putExtra("not_id", unique_id);
+            PendingIntent pNoAction = PendingIntent.getBroadcast(this, NO_REQUEST_CODE, noAction, PendingIntent.FLAG_UPDATE_CURRENT);
+
+
+            notificationBuilder.addAction(R.drawable.ic_yes_option, "כן", pYesAction);
+            notificationBuilder.addAction(R.drawable.ic_no_option, "לא", pNoAction);
+        }
+        else {
+            handleIntent(notificationBuilder, clickAction, remoteMessage);
+        }
         NotificationManager notificationManager = (NotificationManager)getSystemService(Context.NOTIFICATION_SERVICE);
-        notificationManager.notify((int)System.currentTimeMillis(), notificationBuilder.build());
+        notificationManager.notify(unique_id, notificationBuilder.build());
     }
 
     private void handleIntent(NotificationCompat.Builder notificationBuilder, String clickAction, RemoteMessage remoteMessage){

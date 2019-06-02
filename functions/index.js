@@ -4,20 +4,31 @@ admin.initializeApp(functions.config().firebase);
 
 exports.onMessageSent = functions.firestore.document('messages/{message_id}').onCreate((snap, context) => {
     console.log("START");
-    const message = snap.data();
-    console.log("Started - this is the message from: ", message.fromPersonID);
-    console.log("to: ", message.toPersonID);
-    const payload = {
-        notification: {
+    const messageData = snap.data();
+    console.log("Started - this is the message from: ", messageData.fromPersonID);
+    console.log("to: ", messageData.toPersonID);
+    const payload_reg = {
+        data: {
+            fromPersonID: messageData.fromPersonID,
             title:  "קיבלת הודעה חדשה",
             body:   "לחץ כאן לראותה",
             click_action:   "com.example.ofir.social_geha.DISPLAY_MESSAGE"
-        },
-        data: {
-            fromPersonID: message.fromPersonID
         }
     }
-    return sendNotification(message.toPersonID, payload);
+    const payload_request = {
+        data: {
+            fromPersonID: messageData.fromPersonID,
+            title:  "משתמש מחפש את עזרתך",
+            body:   "האם אתה מעוניין לעזור?",
+            click_action:   "com.example.ofir.social_geha.REQUEST_HELP"
+        }
+    }
+    console.log("The message is: ", messageData.message)
+    if (messageData.message == "CHAT REQUEST$" || messageData.message == "8BC9ED90825A196EB43D647BB9B321B9"){
+        console.log("BRANCH");
+        return sendNotification(messageData.toPersonID, payload_request)
+    }
+    return sendNotification(messageData.toPersonID, payload_reg);
 });
 
 function sendNotification(toPersonID, payload){
