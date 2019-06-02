@@ -267,6 +267,9 @@ public class AllChatsActivity extends AppCompatActivity {
                                     AES aes = new AES(keyFileHandler.getKey());
                                     message.setMessage(aes.decrypt(message.getMessage()));
                                 }
+
+//                                if(message.getMessage() == null || message.getMessage().equals("CHAT REQUEST$")
+//                                        || message.getMessage().equals("CHAT ACCEPT$") || message.getMessage().equals("CHAT REJECT$")) continue;
                                 mFileHandler.writeMessage(message); //non shown messages will be ignored anyway but may as well write them
 
                                 if (message.getShown()) {
