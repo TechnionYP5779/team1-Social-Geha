@@ -1,0 +1,84 @@
+[debug] [2019-06-01T16:28:18.100Z] ----------------------------------------------------------------------
+[debug] [2019-06-01T16:28:18.102Z] Command:       C:\Program Files\nodejs\node.exe C:\Users\Matan\AppData\Roaming\npm\node_modules\firebase-tools\lib\bin\firebase.js serve
+[debug] [2019-06-01T16:28:18.102Z] CLI Version:   6.10.0
+[debug] [2019-06-01T16:28:18.102Z] Platform:      win32
+[debug] [2019-06-01T16:28:18.102Z] Node Version:  v10.16.0
+[debug] [2019-06-01T16:28:18.104Z] Time:          Sat Jun 01 2019 19:28:18 GMT+0300 (Israel Daylight Time)
+[debug] [2019-06-01T16:28:18.104Z] ----------------------------------------------------------------------
+[debug] 
+[debug] [2019-06-01T16:28:18.114Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2019-06-01T16:28:18.114Z] > authorizing via signed-in user
+[debug] [2019-06-01T16:28:18.114Z] [iam] checking project team1-social-geha for permissions ["firebase.projects.get"]
+[debug] [2019-06-01T16:28:18.115Z] > refreshing access token with scopes: ["email","https://www.googleapis.com/auth/cloud-platform","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","openid"]
+[debug] [2019-06-01T16:28:18.115Z] >>> HTTP REQUEST POST https://www.googleapis.com/oauth2/v3/token  
+ <request body omitted>
+[debug] [2019-06-01T16:28:18.490Z] <<< HTTP RESPONSE 200
+[debug] [2019-06-01T16:28:18.525Z] >>> HTTP REQUEST POST https://cloudresourcemanager.googleapis.com/v1/projects/team1-social-geha:testIamPermissions  
+
+[debug] [2019-06-01T16:28:19.563Z] <<< HTTP RESPONSE 200
+[debug] [2019-06-01T16:28:19.566Z] >>> HTTP REQUEST GET https://cloudresourcemanager.googleapis.com/v1/projects/team1-social-geha  
+ 
+[debug] [2019-06-01T16:28:20.452Z] <<< HTTP RESPONSE 200
+[info] 
+[info] === Serving from 'C:\Users\Matan\team1-Social-Geha'...
+[info] 
+[warn] !  Your requested "node" version "8" doesn't match your global version "10"
+[debug] [2019-06-01T16:28:20.504Z] >>> HTTP REQUEST GET https://mobilesdk-pa.googleapis.com/v1/projects/813662253318:getServerAppConfig  
+ 
+[debug] [2019-06-01T16:28:21.072Z] <<< HTTP RESPONSE 200
+[info] +  functions: Emulator started at http://localhost:5000
+[info] i  functions: Watching "C:\Users\Matan\team1-Social-Geha\functions" for Cloud Functions...
+[debug] [2019-06-01T16:28:21.646Z] Functions runtime initialized.
+[debug] [2019-06-01T16:28:21.646Z] Disabled runtime features: {"functions_config_helper":true,"network_filtering":true,"timeout":true,"memory_limiting":true,"protect_env":true,"admin_stubs":true}
+[warn] !  Error: Cannot find module 'package.json'
+    at Function.Module._resolveFilename (internal/modules/cjs/loader.js:636:15)
+    at Function.Module._load (internal/modules/cjs/loader.js:562:25)
+    at Module.require (internal/modules/cjs/loader.js:690:17)
+    at require (internal/modules/cjs/helpers.js:25:18)
+    at verifyDeveloperNodeModules (C:\Users\Matan\AppData\Roaming\npm\node_modules\firebase-tools\lib\emulator\functionsEmulatorRuntime.js:120:32)
+    at C:\Users\Matan\AppData\Roaming\npm\node_modules\firebase-tools\lib\emulator\functionsEmulatorRuntime.js:435:26
+    at Generator.next (<anonymous>)
+    at C:\Users\Matan\AppData\Roaming\npm\node_modules\firebase-tools\lib\emulator\functionsEmulatorRuntime.js:7:71
+    at new Promise (<anonymous>)
+    at __awaiter (C:\Users\Matan\AppData\Roaming\npm\node_modules\firebase-tools\lib\emulator\functionsEmulatorRuntime.js:3:12)
+[warn] !  Your function was killed because it raised an unhandled error.
+[debug] [2019-06-01T16:28:45.680Z] ----------------------------------------------------------------------
+[debug] [2019-06-01T16:28:45.683Z] Command:       C:\Program Files\nodejs\node.exe C:\Users\Matan\AppData\Roaming\npm\node_modules\firebase-tools\lib\bin\firebase.js serve
+[debug] [2019-06-01T16:28:45.683Z] CLI Version:   6.10.0
+[debug] [2019-06-01T16:28:45.683Z] Platform:      win32
+[debug] [2019-06-01T16:28:45.683Z] Node Version:  v10.16.0
+[debug] [2019-06-01T16:28:45.684Z] Time:          Sat Jun 01 2019 19:28:45 GMT+0300 (Israel Daylight Time)
+[debug] [2019-06-01T16:28:45.685Z] ----------------------------------------------------------------------
+[debug] 
+[debug] [2019-06-01T16:28:45.694Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2019-06-01T16:28:45.694Z] > authorizing via signed-in user
+[debug] [2019-06-01T16:28:45.694Z] [iam] checking project team1-social-geha for permissions ["firebase.projects.get"]
+[debug] [2019-06-01T16:28:45.696Z] >>> HTTP REQUEST POST https://cloudresourcemanager.googleapis.com/v1/projects/team1-social-geha:testIamPermissions  
+
+[debug] [2019-06-01T16:28:46.662Z] <<< HTTP RESPONSE 200
+[debug] [2019-06-01T16:28:46.664Z] >>> HTTP REQUEST GET https://cloudresourcemanager.googleapis.com/v1/projects/team1-social-geha  
+ 
+[debug] [2019-06-01T16:28:47.522Z] <<< HTTP RESPONSE 200
+[info] 
+[info] === Serving from 'C:\Users\Matan\team1-Social-Geha'...
+[info] 
+[warn] !  Your requested "node" version "8" doesn't match your global version "10"
+[debug] [2019-06-01T16:28:47.542Z] >>> HTTP REQUEST GET https://mobilesdk-pa.googleapis.com/v1/projects/813662253318:getServerAppConfig  
+ 
+[debug] [2019-06-01T16:28:47.989Z] <<< HTTP RESPONSE 200
+[info] +  functions: Emulator started at http://localhost:5000
+[info] i  functions: Watching "C:\Users\Matan\team1-Social-Geha\functions" for Cloud Functions...
+[debug] [2019-06-01T16:28:48.563Z] Functions runtime initialized.
+[debug] [2019-06-01T16:28:48.564Z] Disabled runtime features: {"functions_config_helper":true,"network_filtering":true,"timeout":true,"memory_limiting":true,"protect_env":true,"admin_stubs":true}
+[warn] !  Error: Cannot find module 'package.json'
+    at Function.Module._resolveFilename (internal/modules/cjs/loader.js:636:15)
+    at Function.Module._load (internal/modules/cjs/loader.js:562:25)
+    at Module.require (internal/modules/cjs/loader.js:690:17)
+    at require (internal/modules/cjs/helpers.js:25:18)
+    at verifyDeveloperNodeModules (C:\Users\Matan\AppData\Roaming\npm\node_modules\firebase-tools\lib\emulator\functionsEmulatorRuntime.js:120:32)
+    at C:\Users\Matan\AppData\Roaming\npm\node_modules\firebase-tools\lib\emulator\functionsEmulatorRuntime.js:435:26
+    at Generator.next (<anonymous>)
+    at C:\Users\Matan\AppData\Roaming\npm\node_modules\firebase-tools\lib\emulator\functionsEmulatorRuntime.js:7:71
+    at new Promise (<anonymous>)
+    at __awaiter (C:\Users\Matan\AppData\Roaming\npm\node_modules\firebase-tools\lib\emulator\functionsEmulatorRuntime.js:3:12)
+[warn] !  Your function was killed because it raised an unhandled error.

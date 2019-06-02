@@ -1,5 +1,6 @@
 {
   "projects": {
-    "default": "buddiz-admin"
+    "default": "buddiz-admin",
+    "staging": "team1-social-geha"
   }
 }

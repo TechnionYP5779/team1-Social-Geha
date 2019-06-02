@@ -25,7 +25,7 @@
   </head>
   <body>
 	  <div id="add-user-form" title="Add a User" class="add-user">		 
-		  <form>
+		  <form onsubmit="alert('submit!');return false">
 			<fieldset>
 			  <label for="name" class="form-label">Name</label>
 			  <input type="text" name="name" id="name" value="" class="text ui-widget-content ui-corner-all">
@@ -92,6 +92,14 @@
 		</div>
 	</div>
     <p id="load">Firebase SDK Loading&hellip;</p>
+	<!-- Insert these scripts at the bottom of the HTML, but before you use any Firebase services -->
+
+	<!-- Firebase App (the core Firebase SDK) is always required and must be listed first -->
+	<script src="/__/firebase/6.1.0/firebase-app.js"></script>
+
+	<!-- Add Firebase products that you want to use -->
+	<script src="/__/firebase/6.1.0/firebase-auth.js"></script>
+	<script src="/__/firebase/6.1.0/firebase-firestore.js"></script>
     <script>
       document.addEventListener('DOMContentLoaded', function() {
         // // 🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥
