@@ -66,10 +66,12 @@ $( function() {
     }
  
     function addUser() {
-		var docRef = db.collection('adminAddedUsers').doc('alovelace');
+		var name = document.forms["AddUser"]["name"].value;
 
+		var docRef = db.collection('adminAddedUsers').doc('alovelace');
+	
 		var setAda = docRef.set({
-		  first: 'Ada',
+		  first: name,
 		  last: 'Lovelace',
 		  born: 1815
 		});
