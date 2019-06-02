@@ -29,6 +29,7 @@ import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
+import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -67,6 +68,7 @@ public class ChatActivity extends AppCompatActivity {
 
         // Display user image as profile pic
         int default_image = this.getResources().getIdentifier("@drawable/image_fail", null, this.getPackageName());
+        ImageLoader.getInstance().init(ImageLoaderConfiguration.createDefault(ChatActivity.this));
         ImageLoader image_loader = ImageLoader.getInstance();
         DisplayImageOptions options = new DisplayImageOptions.Builder().cacheInMemory(true)
                 .cacheOnDisc(true).resetViewBeforeLoading(true)
@@ -131,7 +133,6 @@ public class ChatActivity extends AppCompatActivity {
         mMessageRecycler.setHasFixedSize(true);
         mMessageRecycler.setLayoutManager(new LinearLayoutManager(this));
         mMessageRecycler.setAdapter(mMessageListAdapter);
-
         mFirestore = FirebaseFirestore.getInstance();
 
         setMessageListners();
@@ -179,6 +180,7 @@ public class ChatActivity extends AppCompatActivity {
             }
         }
         mMessageListAdapter.notifyDataSetChanged();
+        mMessageRecycler.scrollToPosition(mMessageListAdapter.getItemCount() - 1);
     }
 
     @Override
