@@ -1,4 +1,31 @@
 $( function() {
+	var firebaseConfig = {
+	  apiKey: "AIzaSyBADn-vc_h9jP5njsQkPRiKmPu6uYwXk3Q",
+	  authDomain: "team1-social-geha.firebaseapp.com",
+	  databaseURL: "https://team1-social-geha.firebaseio.com",
+	  projectId: "team1-social-geha",
+	  storageBucket: "team1-social-geha.appspot.com",
+	  messagingSenderId: "813662253318",
+	  appId: "1:813662253318:web:b0186efd3138b553"
+	};
+	
+	firebase.initializeApp(firebaseConfig);
+	 
+	const db = firebase.firestore();
+	// const firebase = require("firebase");
+		// Required for side-effects
+	// require("firebase/firestore");
+	
+		// try {
+	// firebase.initializeApp(firebaseConfig)
+	// } catch (err) {
+		// we skip the "already exists" message which is
+		// not an actual error when we're hot-reloading
+		// if (!/already exists/.test(err.message)) {
+			// console.error('Firebase initialization error', err.stack)
+		// }
+	// }
+
     var dialog_add, dialog_search, dialog_delete, form_add, form_search, form_delete,
       emailRegex = /^[a-zA-Z0-9.!#$%&'*+\/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/,
       name = $( "#name" ),
@@ -6,9 +33,7 @@ $( function() {
 	  phoneNumber = "",
         kind = "",
         department = "",
-	  userCode = "",
-     database = firebase.database();
-    ;
+	  userCode = "";
 
     function updateTips( t ) {
       tips
@@ -41,10 +66,17 @@ $( function() {
     }
  
     function addUser() {
-        firebase.database().ref('adminAddedUsers/' + 55555).set({
-            companyName: "hello",
-            contact: "hello",
-        })
+		var docRef = db.collection('adminAddedUsers').doc('alovelace');
+
+		var setAda = docRef.set({
+		  first: 'Ada',
+		  last: 'Lovelace',
+		  born: 1815
+		});
+        // firebase.database().ref('adminAddedUsers/' + 55555).set({
+            // companyName: "hello",
+            // contact: "hello",
+        // })
       // var valid = true;
       // allFields.removeClass( "ui-state-error" );
       //
