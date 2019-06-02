@@ -359,7 +359,7 @@ public class AllChatsActivity extends AppCompatActivity {
             }
 
             chatEntry.setMessage(msg);
-            if (msg.getMessageDate().after(chatEntry.getLastChatReadDate())) {
+            if (!loggedInUserID.equals(msg.getFromPersonID()) && msg.getMessageDate().after(chatEntry.getLastChatReadDate())) {
                 chatEntry.setUnreadCount(chatEntry.getUnreadCount() + 1);
             }
         }
