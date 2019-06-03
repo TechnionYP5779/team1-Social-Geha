@@ -121,7 +121,7 @@
         <item>נובמבר</item>
         <item>דצמבר</item>
     </string-array>
-    <string name="headline_about"><b><i>המטרה שלנו</i></b></string>
+    <string name="headline_about">המטרה שלנו</string>
     <string name="info_our_purpose">לספק תמיכה לשוהי המרכז הרפואי גהה ומשפחותיהם על ידי מטופלי עבר ומשפחותיהם.\nאפליקציה זו מאפשרת לשוחח באנונימיות מוחלטת עם מטופלי עבר בגהה ועם קרובי משפחה של מטופלי עבר.\nשימוש באפליקציה מותנה באישור של גהה.</string>
     <string name="terms_of_use_headline">תנאי שימוש</string>
     <string name="terms_of_use">נא להתבטא בצורה הולמת בשיחות עם אנשים אחרים.\nנא להשתמש באפליקציה אך ורק למטרתה המיועדת.\nשימוש באפליקציה מותנה באישור מכון בריאות הנפש גהה</string>
@@ -146,4 +146,12 @@
     <string name="strings_reg_ex">בעיה בהרשמה:</string>
     <string name="strings_error">אירעה שגיאה, נסה שוב מאוחר יותר.</string>
     <string name="share_info_header">שיתוף מידע</string>
+
+    <string name="navigation_drawer_open">פתח תפריט</string>
+    <string name="navigation_drawer_close">סגור תפריט</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="new_conversation">התחל\n שיחה\n חדשה</string>
+    <string name="Menu">תפריט</string>
 </resources>

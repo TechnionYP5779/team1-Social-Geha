@@ -11,12 +11,10 @@
         app:actionViewClass="android.support.v7.widget.SearchView"
         app:showAsAction="ifRoom|collapseActionView" />
 
-    <item
-        android:id="@+id/personal_info"
-        android:icon="@drawable/ic_person_black_24dp"
-        android:title="@string/profile"
-        app:showAsAction="ifRoom|collapseActionView"
-        />
-
+    <!--<item-->
+        <!--android:id="@+id/drawer_icon"-->
+        <!--android:icon="@drawable/ic_dehaze_white_24dp"-->
+        <!--app:showAsAction="always"-->
+        <!--android:title="@string/Menu"/>-->
 
 </menu>
