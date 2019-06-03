@@ -34,6 +34,7 @@ import com.google.firebase.firestore.DocumentChange;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.ListenerRegistration;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
@@ -57,6 +58,7 @@ public class AllChatsActivity extends AppCompatActivity {
     private Person p;
 
     private static final int LOGIN_RETURN_CODE = 1;
+    private ListenerRegistration mListener;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -226,7 +228,6 @@ public class AllChatsActivity extends AppCompatActivity {
         //Create the list of objects
         conversationList = new ArrayList<>();
         allList = new ArrayList<>();
-        populateConversationsList();
 
         //Attach to adapter
         mAdapter = new ChatListAdapter(this, R.layout.match_row_layout, conversationList);
@@ -245,10 +246,10 @@ public class AllChatsActivity extends AppCompatActivity {
         }
     }
 
-    private void populateConversationsList() {
+    private void setMessageListeners() {
         Log.d("SHAI", "IN POPULATE CONV LIST");
 
-        mFirestore.collection(MESSAGES).whereEqualTo("toPersonID", Database.getInstance().getLoggedInUserID())
+        mListener = mFirestore.collection(MESSAGES).whereEqualTo("toPersonID", Database.getInstance().getLoggedInUserID())
                 .addSnapshotListener(new EventListener<QuerySnapshot>() {
                     @Override
                     public void onEvent(@javax.annotation.Nullable QuerySnapshot queryDocumentSnapshots, @javax.annotation.Nullable FirebaseFirestoreException e) {
@@ -427,8 +428,15 @@ public class AllChatsActivity extends AppCompatActivity {
     }
 
     @Override
-    protected void onResume() {
+    public void onPause() {
+        super.onPause();
+        mListener.remove();
+    }
+
+    @Override
+    public void onResume(){
         super.onResume();
+        setMessageListeners();
         updateList();
     }
 
