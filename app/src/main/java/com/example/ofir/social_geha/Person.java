@@ -323,4 +323,9 @@ public class Person {
         this.whiteList = whiteList;
         return this;
     }
+
+    public Person setAvailability(Boolean newAvail) {
+        availability = newAvail;
+        return this;
+    }
 }

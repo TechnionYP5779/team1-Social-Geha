@@ -23,6 +23,7 @@ import android.widget.Toast;
 import com.example.ofir.social_geha.Activities_and_Fragments.FileHandlers.ContactListFileHandler;
 import com.example.ofir.social_geha.Activities_and_Fragments.FileHandlers.KeyFileHandler;
 import com.example.ofir.social_geha.Activities_and_Fragments.FileHandlers.MessageFileHandler;
+import com.example.ofir.social_geha.Activities_and_Fragments.FileHandlers.SharingsFileHandler;
 import com.example.ofir.social_geha.Encryption.AES;
 import com.example.ofir.social_geha.Firebase.Database;
 import com.example.ofir.social_geha.Firebase.Message;
@@ -48,6 +49,7 @@ public class AllChatsActivity extends AppCompatActivity {
     Toolbar mToolbar;
     ChatListAdapter mAdapter;
     private MessageFileHandler mFileHandler;
+    private SharingsFileHandler sharingsFileHandler;
     ListView mListView;
     TextView mEmptyView;
     ArrayList<ChatEntry> conversationList;
@@ -70,6 +72,7 @@ public class AllChatsActivity extends AppCompatActivity {
         }
 
         mFileHandler = new MessageFileHandler(this);
+        sharingsFileHandler = new SharingsFileHandler(this);
         mFirestore = FirebaseFirestore.getInstance();
         FloatingActionButton fab = findViewById(R.id.new_conversation_fb);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -162,6 +165,7 @@ public class AllChatsActivity extends AppCompatActivity {
                         Log.d("SHAI", "going to send reveal message:" + content);
                         Database.getInstance().sendControlMessage(content, Database.getInstance().getLoggedInUserID(), conversationList.get(pos).getUserID());
                         Toast.makeText(AllChatsActivity.this, "שותף בהצלחה", Toast.LENGTH_SHORT).show();
+                        sharingsFileHandler.addUID(conversationList.get(pos).getUserID());
                         dialog.dismiss();
                     }
                 });
@@ -300,8 +304,7 @@ public class AllChatsActivity extends AppCompatActivity {
                                     keyFileHandler.writeKey(AES.stringToKey(text.substring("AES".length())));
                                     Log.d("AES_READ", "received key from " + contactUID + " and the key is " + text.substring("AES".length()));
                                 } else if (text.substring(0, "NAME_CHANGE".length()).equals("NAME_CHANGE")) {
-                                    //TODO: change name using update name (Shai's function)
-                                    String realName = "";
+                                    String realName = text.substring(text.indexOf('#') + 1);
                                     for (int i = 0; i < conversationList.size(); i++) {
                                         if (conversationList.get(i).getUserID().equals(contactUID)) {
                                             conversationList.get(i).setRealName(realName);
@@ -424,7 +427,7 @@ public class AllChatsActivity extends AppCompatActivity {
     }
 
     @Override
-    public void onResume(){
+    public void onResume() {
         super.onResume();
         setMessageListeners();
         updateList();

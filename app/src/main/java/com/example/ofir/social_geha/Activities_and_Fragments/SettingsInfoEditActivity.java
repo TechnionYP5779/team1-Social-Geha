@@ -8,6 +8,7 @@ import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
+import com.example.ofir.social_geha.Activities_and_Fragments.FileHandlers.SharingsFileHandler;
 import com.example.ofir.social_geha.FictitiousIdentityGenerator;
 import com.example.ofir.social_geha.Firebase.Database;
 import com.example.ofir.social_geha.Person;
@@ -78,6 +79,7 @@ public class SettingsInfoEditActivity extends AppCompatActivity {
 
     //Bio related Fields
     String bio;
+    String initialName = "";
     private Person currentPerson;
 
 
@@ -109,7 +111,7 @@ public class SettingsInfoEditActivity extends AppCompatActivity {
                 }
             }
         }
-        givenName = p.getRealName();
+        initialName = givenName = p.getRealName();
 
         Calendar cal = Calendar.getInstance();
         cal.setTime(new Date(p.getBirthDate()));
@@ -153,6 +155,12 @@ public class SettingsInfoEditActivity extends AppCompatActivity {
                     calendar.set(year, month, dayOfMonth);
                     updateDBWithUserInfo(givenName, calendar, gender,
                             religion, selectedLanguages.toArray(new String[]{}), bio);
+                    if (!givenName.equals(initialName)) {
+                        // send control messages
+                        for (SharingsFileHandler.UID uid : new SharingsFileHandler(SettingsInfoEditActivity.this).getUIDs())
+                            Database.getInstance().sendControlMessage("NAME_CHANGE#" + givenName,
+                                    currentPerson.getUserID(), uid.getUID());
+                    }
                     onBackPressed();
                 }
             }
