@@ -1,11 +1,11 @@
 package com.example.ofir.social_geha;
 
 public class FictitiousIdentityGenerator {
-    private static String[] male_adjectives = {"שמח", "פרוותי", "חלקלק", "כתום", "עגלגל", "זורח", "קופץ", "מבעבע", "ירוק" , "אמיץ" , "פילוסופי", "רציונלי", "שנון" , "מדעי" , "נדיב" , "חייכן"};
+    private static String[] male_adjectives = {"שמח", "פרוותי", "חלקלק", "מעופף", "עגלגל", "זורח", "קופץ", "מבעבע", "מנוקד" , "אמיץ" , "פילוסופי", "רציונלי", "שנון" , "מדעי" , "נדיב" , "חייכן", "מהודר", "מרשים"};
     private static String[] male_animals ={"דוב", "נשר", "סרטן נזיר", "סוס", "תמנון", "ינשוף", "אבו נפחא", "כלב ים", "חסילון", "דיונון", "תרנגול הודו"};
     private static String[] male_animals_eng = {"bear", "eagle", "hermitcrab", "horse", "octopus", "owl", "pufferfish", "seal", "shrimp", "squid", "turkey"};
 
-    private static String[] female_adjectives = {"שמחה", "פרוותית", "חלקלקה", "כתומה", "עגלגלה", "זורחת", "קופצת", "מבעבעת", "ירוקה" , "אמיצה" , "פילוסופית", "רציונלית", "שנונה" , "מדעית" , "נדיבה" , "חייכנית"};
+    private static String[] female_adjectives = {"שמחה", "פרוותית", "חלקלקה", "מעופפת", "עגלגלה", "זורחת", "קופצת", "מבעבעת", "מנוקדת" , "אמיצה" , "פילוסופית", "רציונלית", "שנונה" , "מדעית" , "נדיבה" , "חייכנית", "מהודרת", "מרשימה"};
     private static String[] female_animals = {"דובה", "פרה", "סרטנית", "סוסה", "מדוזה", "ינשופית", "חסילונית", "דיונונית", "תרנגולת הודו"};
     private static String[] female_animals_eng = {"bear", "cow", "crab", "horse", "jellyfish", "owl", "shrimp", "squid", "turkey"};
 
