@@ -2,11 +2,22 @@ package com.example.ofir.social_geha.Activities_and_Fragments;
 
 import android.app.DatePickerDialog;
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
-import android.provider.ContactsContract;
-import android.support.annotation.NonNull;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.design.widget.NavigationView;
+import android.support.v4.app.Fragment;
+import android.support.v7.app.AlertDialog;
+import android.text.InputType;
+import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.DatePicker;
+import android.widget.EditText;
+import android.widget.Toast;
 
 import com.example.ofir.social_geha.FictitiousIdentityGenerator;
 import com.example.ofir.social_geha.Firebase.Database;
@@ -18,22 +29,13 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentSnapshot;
 
-import android.content.DialogInterface;
-import android.support.v7.app.AlertDialog;
-import android.text.InputType;
-import android.util.Log;
-import android.view.View;
-import android.widget.Button;
-import android.widget.DatePicker;
-import android.widget.EditText;
-import android.widget.Toast;
-
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 
+import static android.app.Activity.RESULT_OK;
 import static com.example.ofir.social_geha.Person.fromGenderEnumToGenderIndex;
 import static com.example.ofir.social_geha.Person.fromReligionToReligionIndex;
 import static com.example.ofir.social_geha.Person.fromStringToGenderEnum;
@@ -42,7 +44,7 @@ import static com.example.ofir.social_geha.Person.languagesEnumToLanguageString;
 import static com.example.ofir.social_geha.Person.languagesStringToLanguageEnum;
 
 
-public class SettingsInfoEditActivity extends AppCompatActivity {
+public class EditInfoFragment extends Fragment {
     Button nameButton;
     Button langButton;
     Button bdayButton;
@@ -80,21 +82,32 @@ public class SettingsInfoEditActivity extends AppCompatActivity {
     String bio;
     private Person currentPerson;
 
+    public EditInfoFragment() {
+        // Required empty public constructor
+    }
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_settings_info_edit);
-
-        setUpNameButton();
-        setBdayButton();
-        setUpLangButton();
-        setUpGenderButton();
-        setUpReligionButton();
-        setUpBioButton();
-        setUpDoneButton();
-        setUpFieldValues();
     }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        ((activity_main_drawer)getActivity()).setActionBarTitle("עריכת מידע");
+        // Inflate the layout for this fragment
+        View v = inflater.inflate(R.layout.fragment_edit_info, container, false);
+        setUpNameButton(v);
+        setBdayButton(v);
+        setUpLangButton(v);
+        setUpGenderButton(v);
+        setUpReligionButton(v);
+        setUpBioButton(v);
+        setUpDoneButton(v);
+        setUpFieldValues();
+        return v;
+    }
+
 
     private void updateFieldsAccordingToPerson(Person p) {
         selectedLanguages = languagesEnumToLanguageString(p.getSpokenLanguages());
@@ -102,9 +115,8 @@ public class SettingsInfoEditActivity extends AppCompatActivity {
             languagesAll_BooleanSelection[i] = false;
         }
         for (int i = 0; i < languagesAll.length; i++) {
-            Iterator iterator = selectedLanguages.iterator();
-            while (iterator.hasNext()) {
-                if (iterator.next().equals(languagesAll[i])) {
+            for (String selectedLanguage : selectedLanguages) {
+                if (selectedLanguage.equals(languagesAll[i])) {
                     languagesAll_BooleanSelection[i] = true;
                 }
             }
@@ -116,7 +128,7 @@ public class SettingsInfoEditActivity extends AppCompatActivity {
         year = cal.get(Calendar.YEAR);
         month = cal.get(Calendar.MONTH);
         dayOfMonth = cal.get(Calendar.DAY_OF_MONTH);
-        gender_index = fromGenderEnumToGenderIndex(p.getGender(), SettingsInfoEditActivity.this);
+        gender_index = fromGenderEnumToGenderIndex(p.getGender(), getActivity());
         gender = (gender_index != -1) ? allGenders[gender_index] : null;
 
         bio = p.getDescription();
@@ -125,108 +137,50 @@ public class SettingsInfoEditActivity extends AppCompatActivity {
     }
 
     private void setUpFieldValues() {
-        if (getIntent().getStringExtra("code") == null)
-            Database.getInstance().getdb().collection("users").document(Database.getInstance().getLoggedInUserID()).get()
-                    .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                        @Override
-                        public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                            currentPerson = task.getResult().toObject(Person.class);
-                            updateFieldsAccordingToPerson(currentPerson);
-                        }
-                    });
+    Database.getInstance().getdb().collection("users").document(Database.getInstance().getLoggedInUserID()).get()
+            .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                @Override
+                public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                    currentPerson = task.getResult().toObject(Person.class);
+                    updateFieldsAccordingToPerson(currentPerson);
+                }
+            });
     }
 
-    private void setUpDoneButton() {
-        doneButton = findViewById(R.id.done_button);
+    private void setUpDoneButton(View v_parent) {
+        doneButton = v_parent.findViewById(R.id.done_button);
         doneButton.setOnClickListener(new View.OnClickListener() {
-
             @Override
             public void onClick(View v) {
-                if (getIntent().getStringExtra("code") != null) {
-                    if (checkAllFilled()) {
-                        // we need to preform register
-                        calendar.set(year, month, dayOfMonth);
-                        register(getIntent().getStringExtra("code"), givenName, calendar, gender,
-                                religion, selectedLanguages.toArray(new String[]{}), bio);
-                    }
-                } else {
-                    calendar.set(year, month, dayOfMonth);
-                    updateDBWithUserInfo(givenName, calendar, gender,
-                            religion, selectedLanguages.toArray(new String[]{}), bio);
-                    onBackPressed();
-                }
+                calendar.set(year, month, dayOfMonth);
+                updateDBWithUserInfo(givenName, calendar, gender,
+                        religion, selectedLanguages.toArray(new String[]{}), bio);
+                android.support.v4.app.FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
+                ft.replace(R.id.flMain,new HomeFragment(),"HOME_FRAGMENT");
+                Toast.makeText(getActivity(),"הפרטים עודכנו בהצלחה",Toast.LENGTH_SHORT).show();
+                ((activity_main_drawer)getActivity()).selectNavigationDrawer(R.id.nav_home);
+                ft.commit();
+
             }
-
-
         });
     }
 
     private void updateDBWithUserInfo(String givenName, Calendar calendar, String gender, String religion, String[] langs, String bio) {
-        currentPerson.setBirthDate(calendar.getTimeInMillis()).setDescription(bio).setRealName(givenName).setGender(fromStringToGenderEnum(gender, SettingsInfoEditActivity.this, false))
+        currentPerson.setBirthDate(calendar.getTimeInMillis()).setDescription(bio).setRealName(givenName).setGender(fromStringToGenderEnum(gender, getActivity(), false))
                 .setReligion(fromStringToReligion(religion, false)).setSpokenLanguages(languagesStringToLanguageEnum(langs));
         Database.getInstance().addUserPerson(currentPerson);
     }
 
-    public void register(final String code, final String name, final Calendar c, final String gender,
-                         final String religion, final String[] languages, final String bio) {
-        final ProgressDialog progressDialog = new ProgressDialog(SettingsInfoEditActivity.this);
-        progressDialog.setTitle(this.getString(R.string.strings_register));
-        progressDialog.setMessage(this.getString(R.string.strings_please_wait));
-        String email = code.concat("@geha-technion.temp.com");
-        progressDialog.show();
-        allGenders = getResources().getStringArray(R.array.gender_preferences);
-
-
-        FirebaseAuth auth = FirebaseAuth.getInstance();
-        progressDialog.show();
-        auth.createUserWithEmailAndPassword(email, "ABCDDD123456")
-                .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        progressDialog.dismiss();
-                        long date = c.getTimeInMillis();
-                        Person.Religion mReligion = fromStringToReligion(religion, false);
-                        for (String lang : languages) {
-                            Log.d("REGISTER_LANG", lang);
-                        }
-
-                        for (boolean flag : languagesAll_BooleanSelection) {
-                            Log.d("REGISTER_LANG_CHECKED", String.valueOf(flag));
-                        }
-
-                        Log.d("REGISTER_DATE", String.valueOf(date));
-
-
-                        List<Person.Language> spokenLanguages = languagesStringToLanguageEnum(languages);
-                        Person p = new Person(name, FictitiousIdentityGenerator.getAnonymousIdentity(
-                                fromStringToGenderEnum(gender, SettingsInfoEditActivity.this, false)),
-                                date, fromStringToGenderEnum(gender, SettingsInfoEditActivity.this, false), mReligion, spokenLanguages,
-                                Person.Kind.PAST_PATIENT, Database.getInstance().getLoggedInUserID(), bio, false, new ArrayList<Integer>());
-                        if (task.isSuccessful()) {
-                            Database.getInstance().addUserPerson(p);
-                            setResult(RESULT_OK);
-                            finish();
-                            Intent myIntent = new Intent(SettingsInfoEditActivity.this, activity_main_drawer.class);
-                            SettingsInfoEditActivity.this.startActivity(myIntent);
-                        } else {
-                            Toast.makeText(SettingsInfoEditActivity.this, SettingsInfoEditActivity.this.getString(R.string.strings_reg_ex) +
-                                    task.getException(), Toast.LENGTH_SHORT).show();
-//                            Toast.makeText(SettingsInfoEditActivity.this, "שם המשתמש כבר תפוס!", Toast.LENGTH_SHORT).show();
-                        }
-                    }
-                });
-    }
-
-    private void setUpBioButton() {
-        bioButton = findViewById(R.id.bio_button);
+    private void setUpBioButton(View v) {
+        bioButton = v.findViewById(R.id.bio_button);
         bioButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                AlertDialog.Builder mBuilder = new AlertDialog.Builder(SettingsInfoEditActivity.this, R.style.AlertDialogCustomWhite);
+                AlertDialog.Builder mBuilder = new AlertDialog.Builder(getActivity(), R.style.AlertDialogCustomWhite);
                 mBuilder.setTitle(R.string.additional_info);
 
                 // Set up the input
-                final EditText input = new EditText(SettingsInfoEditActivity.this);
+                final EditText input = new EditText(getActivity());
                 // Specify the type of input expected; this, for example, sets the input as a password, and will mask the text
                 input.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_LONG_MESSAGE);
                 input.setText(bio);
@@ -252,13 +206,13 @@ public class SettingsInfoEditActivity extends AppCompatActivity {
         });
     }
 
-    private void setUpReligionButton() {
+    private void setUpReligionButton(View v) {
         allReligions = getResources().getStringArray(R.array.religious_preferences);
-        religionButton = findViewById(R.id.religion_button);
+        religionButton = v.findViewById(R.id.religion_button);
         religionButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                AlertDialog.Builder mBuilder = new AlertDialog.Builder(SettingsInfoEditActivity.this, R.style.AlertDialogCustom);
+                AlertDialog.Builder mBuilder = new AlertDialog.Builder(getActivity(), R.style.AlertDialogCustom);
                 mBuilder.setTitle(R.string.religious);
                 mBuilder.setSingleChoiceItems(allReligions, religion_index, new DialogInterface.OnClickListener() {
                     @Override
@@ -282,13 +236,13 @@ public class SettingsInfoEditActivity extends AppCompatActivity {
 
     }
 
-    private void setUpGenderButton() {
+    private void setUpGenderButton(View v) {
         allGenders = getResources().getStringArray(R.array.gender_preferences);
-        genderButton = findViewById(R.id.gender_button);
+        genderButton = v.findViewById(R.id.gender_button);
         genderButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                AlertDialog.Builder mBuilder = new AlertDialog.Builder(SettingsInfoEditActivity.this, R.style.AlertDialogCustom);
+                AlertDialog.Builder mBuilder = new AlertDialog.Builder(getActivity(), R.style.AlertDialogCustom);
                 mBuilder.setTitle(R.string.gender);
                 mBuilder.setSingleChoiceItems(allGenders, gender_index, new DialogInterface.OnClickListener() {
                     @Override
@@ -312,15 +266,15 @@ public class SettingsInfoEditActivity extends AppCompatActivity {
 
     }
 
-    private void setBdayButton() {
-        bdayButton = (Button) findViewById(R.id.bday_button);
+    private void setBdayButton(View v) {
+        bdayButton = (Button) v.findViewById(R.id.bday_button);
 
         calendar = Calendar.getInstance();
         year = calendar.get(Calendar.YEAR);
         month = calendar.get(Calendar.MONTH);
         dayOfMonth = calendar.get(Calendar.DAY_OF_MONTH);
 
-        datePickerDialog = new DatePickerDialog(SettingsInfoEditActivity.this,
+        datePickerDialog = new DatePickerDialog(getActivity(),
                 new DatePickerDialog.OnDateSetListener() {
                     @Override
                     public void onDateSet(DatePicker datePicker, int y, int m, int d) {
@@ -338,17 +292,17 @@ public class SettingsInfoEditActivity extends AppCompatActivity {
         });
     }
 
-    private void setUpNameButton() {
-        nameButton = (Button) findViewById(R.id.name_button);
+    private void setUpNameButton(View v) {
+        nameButton = (Button) v.findViewById(R.id.name_button);
         nameButton.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View v) {
-                AlertDialog.Builder mBuilder = new AlertDialog.Builder(SettingsInfoEditActivity.this, R.style.AlertDialogCustomWhite);
+                AlertDialog.Builder mBuilder = new AlertDialog.Builder(getActivity(), R.style.AlertDialogCustomWhite);
                 mBuilder.setTitle(R.string.settings_info_edit_name_btn);
 
                 // Set up the input
-                final EditText input = new EditText(SettingsInfoEditActivity.this);
+                final EditText input = new EditText(getActivity());
                 // Specify the type of input expected; this, for example, sets the input as a password, and will mask the text
                 input.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PERSON_NAME);
                 input.setText(givenName);
@@ -374,15 +328,15 @@ public class SettingsInfoEditActivity extends AppCompatActivity {
         });
     }
 
-    private void setUpLangButton() {
-        langButton = (Button) findViewById(R.id.language_button);
+    private void setUpLangButton(View v) {
+        langButton = (Button) v.findViewById(R.id.language_button);
         languagesAll = getResources().getStringArray(R.array.languages);
         languagesAll_BooleanSelection = new boolean[languagesAll.length];
 
         langButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                AlertDialog.Builder mBuilder = new AlertDialog.Builder(SettingsInfoEditActivity.this, R.style.AlertDialogCustom);
+                AlertDialog.Builder mBuilder = new AlertDialog.Builder(getActivity(), R.style.AlertDialogCustom);
                 mBuilder.setMultiChoiceItems(languagesAll, languagesAll_BooleanSelection, new DialogInterface.OnMultiChoiceClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int position, boolean isChecked) {
@@ -452,7 +406,7 @@ public class SettingsInfoEditActivity extends AppCompatActivity {
             error = "אנא מלא משפט קצר אודותיך";
 
         if (!error.equals("")) {
-            Toast.makeText(SettingsInfoEditActivity.this, error, Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(), error, Toast.LENGTH_SHORT).show();
             return false;
         } else
             return true;

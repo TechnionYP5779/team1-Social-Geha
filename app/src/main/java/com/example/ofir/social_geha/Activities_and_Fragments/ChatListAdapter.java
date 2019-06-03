@@ -116,7 +116,13 @@ public class ChatListAdapter extends ArrayAdapter<ChatEntry> {
         holder.description.setText(description);
         holder.chat_message_layout.setVisibility(View.VISIBLE);
         holder.msg_time.setText(getHourStringFromDate(lastMessage.getMessageDate()));
-        holder.unread_msg_count.setText(String.valueOf(unreadCount));
+        if(!String.valueOf(unreadCount).equals("0")){
+            holder.unread_msg_count.setText(String.valueOf(unreadCount));
+            holder.unread_msg_count.setVisibility(View.VISIBLE);
+        }
+        else{
+            holder.unread_msg_count.setVisibility(View.INVISIBLE);
+        }
         holder.description.setText(lastMessage.getMessage());
         return convertView;
     }

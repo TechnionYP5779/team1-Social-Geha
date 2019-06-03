@@ -60,10 +60,10 @@ public class mainScreen extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_screen);
 
-        share_info = this.findViewById(R.id.share_info);
+//        share_info = this.findViewById(R.id.share_info);
         edit_info = this.findViewById(R.id.edit_info);
         delete_account = this.findViewById(R.id.delete_my_account);
-        about = this.findViewById(R.id.about);
+//        about = this.findViewById(R.id.about);
         profile_pic = this.findViewById(R.id.overlapImage);
         real_name = this.findViewById(R.id.user_name);
         anonymous_name = this.findViewById(R.id.anonymous_name);

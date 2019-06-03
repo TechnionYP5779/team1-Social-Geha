@@ -3,17 +3,12 @@ package com.example.ofir.social_geha.Activities_and_Fragments;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.design.widget.FloatingActionButton;
+import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.SearchView;
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListView;
@@ -34,7 +29,6 @@ import com.google.firebase.firestore.DocumentChange;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
-import com.google.firebase.firestore.ListenerRegistration;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
@@ -44,65 +38,41 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class AllChatsActivity extends AppCompatActivity {
-    Toolbar mToolbar;
-    ChatListAdapter mAdapter;
+
+public class AllChatsFragment extends Fragment {
     private MessageFileHandler mFileHandler;
     ListView mListView;
     TextView mEmptyView;
-    ArrayList<ChatEntry> conversationList;
-    ArrayList<ChatEntry> allList;
     private FirebaseFirestore mFirestore;
     private static final String MESSAGES = "messages";
     private static final String USERS = "users";
     private Person p;
 
-    private static final int LOGIN_RETURN_CODE = 1;
-    private ListenerRegistration mListener;
+    public AllChatsFragment() { }
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_all_chats);
-
-        if (!Database.getInstance().isLoggedIn()) {
-            promptLogin();
-        }
-
-        mFileHandler = new MessageFileHandler(this);
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        View v = inflater.inflate(R.layout.fragment_all_chats, container, false);
+        ((activity_main_drawer)getActivity()).setActionBarTitle("שיחות");
+        mFileHandler = new MessageFileHandler(getActivity());
         mFirestore = FirebaseFirestore.getInstance();
-        FloatingActionButton fab = findViewById(R.id.new_conversation_fb);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(AllChatsActivity.this, FilterMatchesActivity.class));
-            }
-        });
-
-        mToolbar = findViewById(R.id.toolbar);
-        setSupportActionBar(mToolbar);
-        mListView = findViewById(R.id.list);
-        mEmptyView = findViewById(R.id.emptyView);
+        mListView = v.findViewById(R.id.list);
+        mEmptyView = v.findViewById(R.id.emptyView);
 
         Database.getInstance().getdb().collection("users").whereEqualTo("userID", Database.getInstance().getLoggedInUserID()).get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        //Log.d("SHAI", "task complete!");
                         if (task.isSuccessful()) {
                             for (QueryDocumentSnapshot doc : task.getResult()) {
-                                AllChatsActivity.this.p = doc.toObject(Person.class);
+                                p = doc.toObject(Person.class);
                             }
                         }
 
                     }
                 });
 
-//        if(this.p == null) {
-//            Log.d("SHAI", "logged in person IS null");
-//        } else {
-//            Log.d("SHAI", "logged in person ISN'T null");
-//        }
 
         loadList();
 
@@ -111,14 +81,14 @@ public class AllChatsActivity extends AppCompatActivity {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Object o = mListView.getItemAtPosition(position);
                 ChatEntry chatEntry = (ChatEntry) o; //As you are using Default String Adapter
-                Intent myIntent = new Intent(AllChatsActivity.this, ChatActivity.class);
+                Intent myIntent = new Intent(getActivity(), ChatActivity.class);
 
                 myIntent.putExtra("EXTRA_PERSON_ID", chatEntry.getUserID());
                 myIntent.putExtra("EXTRA_NAME", chatEntry.getName());
                 myIntent.putExtra("EXTRA_PHOTO_URL", chatEntry.getImageName());
                 myIntent.putExtra("EXTRA_PHOTO_COLOR", chatEntry.getImageColor());
                 myIntent.putExtra("EXTRA_INITIATOR", false);
-                AllChatsActivity.this.startActivity(myIntent);
+                getActivity().startActivity(myIntent);
             }
         });
 
@@ -129,18 +99,18 @@ public class AllChatsActivity extends AppCompatActivity {
             public boolean onItemLongClick(AdapterView<?> arg0, View arg1,
                                            final int pos, long id) {
 
-                String uid = conversationList.get(pos).getUserID();
+                String uid = ((activity_main_drawer) getActivity()).conversationList.get(pos).getUserID();
                 //cannot click once it's been shared
-                Map<String, ContactListFileHandler.Contact> contactMap = new ContactListFileHandler(AllChatsActivity.this).getContacts();
+                Map<String, ContactListFileHandler.Contact> contactMap = new ContactListFileHandler(getActivity()).getContacts();
                 for (Map.Entry<String, ContactListFileHandler.Contact> c : contactMap.entrySet()) {
                     if (c.getValue().getUid().equals(uid) && !c.getValue().getRealName().equals(ContactListFileHandler.Contact.UNKNOWN_NAME)) {
                         String toastText = "לא ניתן לבטל את שיתוף המידע עם " + c.getValue().getRealName();
-                        Toast.makeText(AllChatsActivity.this, toastText, Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getActivity(), toastText, Toast.LENGTH_SHORT).show();
                         return true;
                     }
                 }
 
-                AlertDialog.Builder builder = new AlertDialog.Builder(AllChatsActivity.this);
+                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
                 LayoutInflater inflater = getLayoutInflater();
                 View dialogView = inflater.inflate(R.layout.alert_dialog_information_exposre, null);
                 builder.setView(dialogView);
@@ -150,7 +120,7 @@ public class AllChatsActivity extends AppCompatActivity {
                 one.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        Toast.makeText(AllChatsActivity.this, "בוטל", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getActivity(), "בוטל", Toast.LENGTH_SHORT).show();
                         dialog.dismiss();
                     }
                 });
@@ -158,15 +128,14 @@ public class AllChatsActivity extends AppCompatActivity {
                 three.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        String content = "IDENTITY$" + Database.getInstance().getLoggedInUserID() + "#" + AllChatsActivity.this.p.getRealName();
-                        Log.d("SHAI", "going to send reveal message:" + content);
-                        Database.getInstance().sendControlMessage(content, Database.getInstance().getLoggedInUserID(), conversationList.get(pos).getUserID());
-                        Toast.makeText(AllChatsActivity.this, "שותף בהצלחה", Toast.LENGTH_SHORT).show();
+                        String content = "IDENTITY$" + Database.getInstance().getLoggedInUserID() + "#" + p.getRealName();
+                        Database.getInstance().sendControlMessage(content, Database.getInstance().getLoggedInUserID(), ((activity_main_drawer) getActivity()).conversationList.get(pos).getUserID());
+                        Toast.makeText(getActivity(), "שותף בהצלחה", Toast.LENGTH_SHORT).show();
                         dialog.dismiss();
                     }
                 });
 
-                String are_you_sure_msg = "האם אתה בטוח שברצונך לשתף את זהותך עם " + conversationList.get(pos).getName() + "?";
+                String are_you_sure_msg = "האם אתה בטוח שברצונך לשתף את זהותך עם " + ((activity_main_drawer) getActivity()).conversationList.get(pos).getName() + "?";
                 TextView message = dialogView.findViewById(R.id.textView2);
                 message.setText(are_you_sure_msg);
                 dialog.show();
@@ -175,71 +144,28 @@ public class AllChatsActivity extends AppCompatActivity {
         });
 
         mListView.setEmptyView(mEmptyView);
+
+        // Inflate the layout for this fragment
+        return v;
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.toolbar_menu_search, menu);
-
-        MenuItem mSearch = menu.findItem(R.id.action_search);
-
-        SearchView mSearchView = (SearchView) mSearch.getActionView();
-        mSearchView.setQueryHint("חיפוש");
-
-        mSearchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-            @Override
-            public boolean onQueryTextSubmit(String query) {
-                return false;
-            }
-
-            @Override
-            public boolean onQueryTextChange(String newText) {
-                conversationList.clear();
-                for (ChatEntry chatEntry : allList) {
-                    Log.d("PEOPLE", chatEntry.getName());
-                    if (chatEntry.getName().trim().toLowerCase().contains(newText.trim().toLowerCase())) {
-                        conversationList.add(chatEntry);
-                    }
-                }
-                mAdapter.notifyDataSetChanged();
-                return true;
-            }
-        });
-
-        return super.onCreateOptionsMenu(menu);
-    }
-
-    public void promptLogin() {
-        Intent intent = new Intent(AllChatsActivity.this, Login.class);
-        startActivityForResult(intent, LOGIN_RETURN_CODE);
-    }
 
     private void loadList() {
         //Create the list of objects
-        conversationList = new ArrayList<>();
-        allList = new ArrayList<>();
+        ((activity_main_drawer) getActivity()).conversationList = new ArrayList<>();
+        ((activity_main_drawer) getActivity()).allList = new ArrayList<>();
+        populateConversationsList();
 
         //Attach to adapter
-        mAdapter = new ChatListAdapter(this, R.layout.match_row_layout, conversationList);
-        mListView.setAdapter(mAdapter);
+        ((activity_main_drawer) getActivity()).mAdapter = new ChatListAdapter(getActivity(), R.layout.match_row_layout, ((activity_main_drawer) getActivity()).conversationList);
+        mListView.setAdapter(((activity_main_drawer) getActivity()).mAdapter);
     }
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == LOGIN_RETURN_CODE) {
-            if (resultCode == RESULT_OK) {
-                Toast.makeText(this, getString(R.string.strings_succ_login), Toast.LENGTH_SHORT).show();
-            } else {
-                promptLogin();
-            }
-        }
-    }
 
-    private void setMessageListeners() {
+    private void populateConversationsList() {
         Log.d("SHAI", "IN POPULATE CONV LIST");
 
-        mListener = mFirestore.collection(MESSAGES).whereEqualTo("toPersonID", Database.getInstance().getLoggedInUserID())
+        mFirestore.collection(MESSAGES).whereEqualTo("toPersonID", Database.getInstance().getLoggedInUserID())
                 .addSnapshotListener(new EventListener<QuerySnapshot>() {
                     @Override
                     public void onEvent(@javax.annotation.Nullable QuerySnapshot queryDocumentSnapshots, @javax.annotation.Nullable FirebaseFirestoreException e) {
@@ -254,7 +180,7 @@ public class AllChatsActivity extends AppCompatActivity {
                                 // decrypt regular messages
                                 String contactUID = message.getFromPersonID();
                                 if (message.getShown()) {
-                                    KeyFileHandler keyFileHandler = new KeyFileHandler(AllChatsActivity.this, contactUID);
+                                    KeyFileHandler keyFileHandler = new KeyFileHandler(getActivity(), contactUID);
                                     AES aes = new AES(keyFileHandler.getKey());
                                     message.setMessage(aes.decrypt(message.getMessage()));
                                 }
@@ -279,38 +205,38 @@ public class AllChatsActivity extends AppCompatActivity {
                                     String realName = text.substring(text.indexOf('#') + 1);
                                     Log.d("SHAI", "got control message from " + message.getFromPersonID());
                                     Log.d("SHAI", "his/her realname is " + realName);
-                                    new ContactListFileHandler(AllChatsActivity.this).changeName(contactUID, realName);
+                                    new ContactListFileHandler(getActivity()).changeName(contactUID, realName);
 
                                     //for the full effect - swap the names in the lists
                                     //The contact must be in the list since a first message can not be an identity reveal one
-                                    for (int i = 0; i < conversationList.size(); i++) {
-                                        if (conversationList.get(i).getUserID().equals(contactUID)) {
-                                            conversationList.get(i).setRealName(realName);
+                                    for (int i = 0; i < ((activity_main_drawer) getActivity()).conversationList.size(); i++) {
+                                        if (((activity_main_drawer) getActivity()).conversationList.get(i).getUserID().equals(contactUID)) {
+                                            ((activity_main_drawer) getActivity()).conversationList.get(i).setRealName(realName);
                                         }
                                     }
 
-                                    for (int i = 0; i < allList.size(); i++) {
-                                        if (allList.get(i).getUserID().equals(contactUID)) {
-                                            allList.get(i).setRealName(realName);
+                                    for (int i = 0; i < ((activity_main_drawer) getActivity()).allList.size(); i++) {
+                                        if (((activity_main_drawer) getActivity()).allList.get(i).getUserID().equals(contactUID)) {
+                                            ((activity_main_drawer) getActivity()).allList.get(i).setRealName(realName);
                                         }
                                     }
                                     // a message we should ignore because it's not an identity reveal - to the next change
                                 } else if (text.substring(0, "AES".length()).equals("AES")) {
-                                    KeyFileHandler keyFileHandler = new KeyFileHandler(AllChatsActivity.this, contactUID);
+                                    KeyFileHandler keyFileHandler = new KeyFileHandler(getActivity(), contactUID);
                                     keyFileHandler.writeKey(AES.stringToKey(text.substring("AES".length())));
                                     Log.d("AES_READ", "received key from " + contactUID + " and the key is " + text.substring("AES".length()));
                                 } else if (text.substring(0, "NAME_CHANGE".length()).equals("NAME_CHANGE")) {
                                     //TODO: change name using update name (Shai's function)
                                     String realName = "";
-                                    for (int i = 0; i < conversationList.size(); i++) {
-                                        if (conversationList.get(i).getUserID().equals(contactUID)) {
-                                            conversationList.get(i).setRealName(realName);
+                                    for (int i = 0; i < ((activity_main_drawer) getActivity()).conversationList.size(); i++) {
+                                        if (((activity_main_drawer) getActivity()).conversationList.get(i).getUserID().equals(contactUID)) {
+                                            ((activity_main_drawer) getActivity()).conversationList.get(i).setRealName(realName);
                                         }
                                     }
 
-                                    for (int i = 0; i < allList.size(); i++) {
-                                        if (allList.get(i).getUserID().equals(contactUID)) {
-                                            allList.get(i).setRealName(realName);
+                                    for (int i = 0; i < ((activity_main_drawer) getActivity()).allList.size(); i++) {
+                                        if (((activity_main_drawer) getActivity()).allList.get(i).getUserID().equals(contactUID)) {
+                                            ((activity_main_drawer) getActivity()).allList.get(i).setRealName(realName);
                                         }
                                     }
                                 }
@@ -324,10 +250,9 @@ public class AllChatsActivity extends AppCompatActivity {
     }
 
     public void updateList() {
-        Log.d("SHAI", "IN UPDATE LIST");
         String loggedInUserID = Database.getInstance().getLoggedInUserID();
         Map<String, ChatEntry> chatEntryMap = new HashMap<>();
-        Map<String, ContactListFileHandler.Contact> contactMap = new ContactListFileHandler(this).getContacts();
+        Map<String, ContactListFileHandler.Contact> contactMap = new ContactListFileHandler(getActivity()).getContacts();
         final String dummyName = "CONTACT DUMMY";
 
         for (Map.Entry<String, ContactListFileHandler.Contact> contact : contactMap.entrySet()) {
@@ -362,31 +287,27 @@ public class AllChatsActivity extends AppCompatActivity {
 
         for (final Map.Entry<String, ChatEntry> entry : chatEntryMap.entrySet()) {
             if (!entry.getValue().getName().equals(dummyName)) {
-                Log.d("SHAI", "got shown message from known contact " + entry.getKey());
                 ChatEntry chatEntry = entry.getValue();
 
-                int j = listContains(conversationList, chatEntry.getUserID());
+                int j = listContains(((activity_main_drawer) getActivity()).conversationList, chatEntry.getUserID());
                 if (j != -1) {
-                    conversationList.remove(chatEntry);
-                    allList.remove(chatEntry);
+                    ((activity_main_drawer) getActivity()).conversationList.remove(chatEntry);
+                    ((activity_main_drawer) getActivity()).allList.remove(chatEntry);
 
-                    conversationList.set(j, chatEntry);
-                    allList.set(j, chatEntry);
+                    ((activity_main_drawer) getActivity()).conversationList.set(j, chatEntry);
+                    ((activity_main_drawer) getActivity()).allList.set(j, chatEntry);
                 } else {
-                    conversationList.add(chatEntry);
-                    allList.add(chatEntry);
+                    ((activity_main_drawer) getActivity()).conversationList.add(chatEntry);
+                    ((activity_main_drawer) getActivity()).allList.add(chatEntry);
                 }
-                mAdapter.notifyDataSetChanged();
+                ((activity_main_drawer) getActivity()).mAdapter.notifyDataSetChanged();
             } else {
-                Log.d("SHAI", "got shown message from unknown contact " + entry.getKey());
                 //new message from someone we do not know
                 Task<QuerySnapshot> personQueryTask = mFirestore.collection(USERS).whereEqualTo("userID", entry.getKey()).get();
                 personQueryTask.addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
                         QuerySnapshot person = task.getResult();
-                        Log.d("COOLTEST", "get user Complete");
-
                         if (!person.isEmpty()) {
                             Person myPerson = person.toObjects(Person.class).get(0);
                             Log.d("COOLTEST", "got user: " + myPerson.getDescription());
@@ -394,22 +315,22 @@ public class AllChatsActivity extends AppCompatActivity {
                                     myPerson.getDescription(), myPerson.getAnonymousIdentity(), new Date(Long.MIN_VALUE));
                             ChatEntry chatEntry = new ChatEntry(myContact, entry.getValue().getMessage(), entry.getValue().getUnreadCount()); //contact & message might have been updated
 
-                            int j = listContains(conversationList, chatEntry.getUserID());
+                            int j = listContains(((activity_main_drawer) getActivity()).conversationList, chatEntry.getUserID());
                             if (j != -1) {
-                                conversationList.remove(chatEntry);
-                                allList.remove(chatEntry);
+                                ((activity_main_drawer) getActivity()).conversationList.remove(chatEntry);
+                                ((activity_main_drawer) getActivity()).allList.remove(chatEntry);
 
-                                conversationList.set(j, chatEntry);
-                                allList.set(j, chatEntry);
+                                ((activity_main_drawer) getActivity()).conversationList.set(j, chatEntry);
+                                ((activity_main_drawer) getActivity()).allList.set(j, chatEntry);
                             } else {
-                                conversationList.add(chatEntry);
-                                allList.add(chatEntry);
+                                ((activity_main_drawer) getActivity()).conversationList.add(chatEntry);
+                                ((activity_main_drawer) getActivity()).allList.add(chatEntry);
                             }
-                            mAdapter.notifyDataSetChanged();
+                            ((activity_main_drawer) getActivity()).mAdapter.notifyDataSetChanged();
 
                             //since this person is not in the contactList we to update the file
                             Log.d("SHAI", "NEW CONTACT");
-                            new ContactListFileHandler(AllChatsActivity.this).addContact(myContact);
+                            new ContactListFileHandler(getActivity()).addContact(myContact);
                         }
                     }
                 });
@@ -418,15 +339,8 @@ public class AllChatsActivity extends AppCompatActivity {
     }
 
     @Override
-    public void onPause() {
-        super.onPause();
-        mListener.remove();
-    }
-
-    @Override
-    public void onResume(){
+    public void onResume() {
         super.onResume();
-        setMessageListeners();
         updateList();
     }
 
@@ -438,11 +352,4 @@ public class AllChatsActivity extends AppCompatActivity {
         return -1;
     }
 
-    int knowContact(ArrayList<ContactListFileHandler.Contact> contacts, String uid) {
-        for (int i = 0; i < contacts.size(); i++) {
-            ContactListFileHandler.Contact ce = contacts.get(i);
-            if (ce.getUid().equals(uid)) return i;
-        }
-        return -1;
-    }
 }

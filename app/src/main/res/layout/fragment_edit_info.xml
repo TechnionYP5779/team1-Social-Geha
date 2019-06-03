@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".Activities_and_Fragments.EditInfoFragment">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:layoutDirection="rtl"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/mini_save_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="20dp"
+            android:text="@string/you_may_return_and_edit"
+            android:textColor="@color/colorPrimary"
+            android:textSize="14sp" />
+
+        <Button
+            android:id="@+id/name_button"
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"
+            android:drawablePadding="2dip"
+            android:paddingStart="30dip"
+            android:paddingEnd="26dip"
+            android:drawableTint="@color/colorAccent"
+            android:drawableStart="@drawable/ic_person_outline_black_24dp"
+            android:layout_margin="10dp"
+            android:background="@drawable/button_bg"
+            android:text="@string/settings_info_edit_name_btn"
+            android:textColor="@color/colorPrimary"
+            android:elevation="2dp"
+            android:translationZ="2dp"
+            android:stateListAnimator="@null" />
+
+
+        <Button
+            android:drawableTint="@color/colorAccent"
+            android:id="@+id/bday_button"
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:background="@drawable/button_bg"
+            android:drawableStart="@drawable/ic_date_range_black_24dp"
+            android:drawablePadding="2dip"
+            android:paddingStart="30dip"
+            android:paddingEnd="26dip"
+            android:text="@string/birth_date"
+            android:textColor="@color/colorPrimary"
+            android:elevation="2dp"
+            android:translationZ="2dp"
+            android:stateListAnimator="@null"/>
+
+        <Button
+            android:drawableTint="@color/colorAccent"
+            android:id="@+id/gender_button"
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:background="@drawable/button_bg"
+            android:drawablePadding="2dip"
+            android:paddingStart="30dip"
+            android:paddingEnd="26dip"
+            android:drawableStart="@drawable/ic_wc_black_24dp"
+            android:text="@string/gender"
+            android:textColor="@color/colorPrimary"
+            android:elevation="2dp"
+            android:translationZ="2dp"
+            android:stateListAnimator="@null"/>
+
+        <Button
+            android:drawableTint="@color/colorAccent"
+            android:id="@+id/religion_button"
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:background="@drawable/button_bg"
+            android:drawableStart="@drawable/ic_business_black_24dp"
+            android:drawablePadding="2dip"
+            android:paddingStart="30dip"
+            android:paddingEnd="26dip"
+            android:text="@string/religious"
+            android:textColor="@color/colorPrimary"
+            android:elevation="2dp"
+            android:translationZ="2dp"
+            android:stateListAnimator="@null" />
+
+        <Button
+            android:drawableTint="@color/colorAccent"
+            android:id="@+id/language_button"
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:drawablePadding="2dip"
+            android:paddingStart="30dip"
+            android:paddingEnd="26dip"
+            android:background="@drawable/button_bg"
+            android:drawableStart="@drawable/ic_language_black_24dp"
+            android:text="@string/languages"
+            android:textColor="@color/colorPrimary"
+            android:elevation="2dp"
+            android:translationZ="2dp"
+            android:stateListAnimator="@null" />
+
+        <Button
+            android:drawableTint="@color/colorAccent"
+            android:id="@+id/bio_button"
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:background="@drawable/button_bg"
+            android:drawablePadding="2dip"
+            android:paddingStart="30dip"
+            android:paddingEnd="26dip"
+            android:text="@string/additional_info"
+            android:drawableStart="@drawable/ic_format_align_right_black_24dp"
+            android:textColor="@color/colorPrimary"
+            android:elevation="2dp"
+            android:translationZ="2dp"
+            android:stateListAnimator="@null" />
+
+        <Button
+            android:id="@+id/done_button"
+            android:layout_width="wrap_content"
+            android:layout_height="34dp"
+            android:layout_margin="10dp"
+            android:background="@drawable/button_bg"
+            android:backgroundTint="@color/colorPrimary"
+            android:drawablePadding="2dip"
+            android:paddingStart="30dip"
+            android:paddingEnd="26dip"
+            android:text="@string/done"
+            android:textColor="@color/white" />
+
+    </LinearLayout>
+
+</FrameLayout>

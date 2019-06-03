@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".Activities_and_Fragments.FragmentInfo">
+
+
+    <LinearLayout
+        android:id="@+id/headline1"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:layoutDirection="rtl"
+        tools:context=".Activities_and_Fragments.SettingsHelp">
+
+        <TextView
+            android:id="@+id/headline_about"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/headline_about"
+            android:textColor="@color/colorPrimaryDark"
+            android:textSize="35sp"
+            android:layout_gravity="start"
+            android:layout_marginTop="10dp"
+            android:layout_marginStart="5dp"/>
+
+        <TextView
+            android:id="@+id/textView2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/info_our_purpose"
+            android:textColor="@color/colorPrimary"
+            android:layout_marginTop="5dp"
+            android:layout_marginEnd="5dp"
+            android:layout_marginStart="5dp"
+            android:gravity="start"/>
+
+        <TextView
+            android:id="@+id/headline_usage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/terms_of_use_headline"
+            android:textColor="@color/colorPrimaryDark"
+            android:textSize="35sp"
+            android:layout_marginTop="10dp"
+            android:layout_gravity="start"
+            android:layout_marginStart="5dp"/>
+
+        <TextView
+            android:id="@+id/terms_of_use2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/terms_of_use"
+            android:textColor="@color/colorPrimary"
+            android:layout_gravity="start"
+            android:layout_marginEnd="5dp"
+            android:layout_marginStart="5dp"
+            android:layout_marginTop="5dp"/>
+
+        <TextView
+            android:id="@+id/headline_usage2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="תודות"
+            android:textColor="@color/colorPrimaryDark"
+            android:textSize="18sp"
+            android:layout_gravity="start"
+            android:layout_marginStart="5dp"
+            android:layout_marginTop="10dp"/>
+
+        <TextView
+            android:id="@+id/terms_of_use"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/vecteezy"
+            android:textColor="@color/colorPrimary"
+            android:layout_gravity="start"
+            android:layout_marginEnd="5dp"
+            android:layout_marginStart="5dp"/>
+
+
+    </LinearLayout>
+</FrameLayout>
