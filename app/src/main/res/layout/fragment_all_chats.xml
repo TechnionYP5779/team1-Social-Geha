@@ -7,11 +7,13 @@
     tools:context=".Activities_and_Fragments.AllChatsFragment">
 
     <RelativeLayout
+        android:layoutDirection="rtl"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:id="@+id/constraint">
 
         <ListView
+            android:layoutDirection="rtl"
             android:id="@+id/list"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
