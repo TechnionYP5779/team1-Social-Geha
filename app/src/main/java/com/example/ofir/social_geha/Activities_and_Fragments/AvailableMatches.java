@@ -194,7 +194,19 @@ public class AvailableMatches extends AppCompatActivity {
 //        }
 
         //sent messages to all - now we wait for response
-        new Timer().schedule(new AbortSearch(), 20000); //abort the search in 5 seconds
+        new Timer().schedule(new StaffSearch(), 20000); //send the staff a request in 5 seconds
+        new Timer().schedule(new AbortSearch(), 40000); //abort the search in 10 seconds
+    }
+
+    class StaffSearch extends TimerTask {
+        public void run() {
+            runOnUiThread(new Runnable() {
+                public void run() {
+                    if(someApproved) return;
+                    Database.getInstance().sendRequestsToStaff();
+                }
+            });
+        }
     }
 
     class AbortSearch extends TimerTask {
@@ -202,6 +214,7 @@ public class AvailableMatches extends AppCompatActivity {
             runOnUiThread(new Runnable() {
                 public void run() {
                     if(someApproved) return;
+
                     Toast.makeText(AvailableMatches.this, "אני מצטער, לא מצאנו לך אנשים לשוחח עימם.", Toast.LENGTH_LONG).show();
                     onBackPressed();
                 }

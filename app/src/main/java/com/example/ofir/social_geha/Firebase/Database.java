@@ -181,6 +181,11 @@ public final class Database {
 
     }
 
+    public void sendRequestsToStaff(){
+        Database.getInstance()
+                .sendRequestsToMatches(Person.Kind.STAFF, null, null,null,null,null);
+    }
+
     public void sendRequestsToMatches(Person.Kind kindPref, Person.Gender genderPref, Person.Religion religionPref,
                            EnumSet<Person.Language> languagesPref, Integer lower_bound, Integer upper_bound) {
 
