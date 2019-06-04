@@ -64,6 +64,24 @@ $( function() {
         return true;
       }
     }
+	
+	function hashCodeGenerator(string){
+	    var hash = 0;
+	    if (string.length == 0) return hash;
+	    for (i = 0; i < string.length; i++) {
+	        char = string.charCodeAt(i);
+	        hash = ((hash<<5)-hash)+char;
+	        hash = hash & hash; // Convert to 32bit integer
+	    }
+	    return hash;
+	}
+	
+	function generateCode(name, id, kind, salt) {
+		var encodedString = btoa(name.concat(salt, id, kind));
+		var code = btoa(hashCodeGenerator(encodedString));
+		code = code.substring(0, code.length - 1);
+		return code;
+	}
  
     function addUser() {
 		var name = document.forms["AddUser"]["name"].value;
@@ -96,12 +114,16 @@ $( function() {
 		  born: 1815
 		});
 		
+		userCode = generateCode(name, "7", idNum, kind);
+		
 		console.log(name);
 		console.log(idNum);
 		console.log(phone);
 		console.log(category);
 		console.log(kind);
 		console.log(departments);
+		console.log(userCode);
+		
 		
         // firebase.database().ref('adminAddedUsers/' + 55555).set({
             // companyName: "hello",
@@ -132,31 +154,11 @@ $( function() {
 	function findUser() {
 		var idNum = document.forms["FindUser"]["id_num"].value;
 		console.log(idNum);
-		/*var valid = true;
-		if ( valid ) {
-			$( "#users tbody" ).append( "<tr>" +
-			  "<td>" + name.val() + "</td>" +
-			  "<td>" + email.val() + "</td>" +
-			  "<td>" + password.val() + "</td>" +
-			"</tr>" );
-			dialog_search.dialog( "close" );
-		}
-		return valid;*/
 	}
 	
 	function deleteUser() {
 		var idNum = document.forms["DeleteUser"]["id_num"].value;
 		console.log(idNum);
-		/*var valid = true;
-		if ( valid ) {
-			$( "#users tbody" ).append( "<tr>" +
-			  "<td>" + name.val() + "</td>" +
-			  "<td>" + email.val() + "</td>" +
-			  "<td>" + password.val() + "</td>" +
-			"</tr>" );
-			dialog_delete.dialog( "close" );
-		}
-		return valid;*/
 	}
  
     dialog_add = $( "#add-user-form" ).dialog({
