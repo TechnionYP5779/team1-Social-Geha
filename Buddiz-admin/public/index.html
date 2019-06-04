@@ -69,10 +69,10 @@
 		  </form>
 	  </div>
 	  <div id="search-user-form" title="Search for a User" class="search-user">		 
-		  <form>
+		  <form name="FindUser" onsubmit="">
 			<fieldset>
-			  <label for="name" class="form-label">Name</label>
-			  <input type="text" name="search_name" id="search_name" value="" class="text ui-widget-content ui-corner-all">
+			  <label for="id_num" class="form-label">ID number</label>
+			  <input type="text" name="id_num" id="id_num" value="" class="text ui-widget-content ui-corner-all">
 			  
 			  <!-- Allow form submission with keyboard without duplicating the dialog button -->
 			  <input type="submit" tabindex="-1" style="position:absolute; top:-1000px">
@@ -80,10 +80,10 @@
 		  </form>
 	  </div>
 	  <div id="delete-user-form" title="Delete a User" class="selete-user">		 
-		  <form>
+		  <form name="DeleteUser" onsubmit="">
 			<fieldset>
-			  <label for="name" class="form-label">Name</label>
-			  <input type="text" name="delete_name" id="delete_name" value="" class="text ui-widget-content ui-corner-all">
+			  <label for="id_num" class="form-label">ID number</label>
+			  <input type="text" name="id_num" id="id_num" value="" class="text ui-widget-content ui-corner-all">
 			  
 			  <!-- Allow form submission with keyboard without duplicating the dialog button -->
 			  <input type="submit" tabindex="-1" style="position:absolute; top:-1000px">

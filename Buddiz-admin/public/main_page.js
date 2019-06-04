@@ -67,7 +67,27 @@ $( function() {
  
     function addUser() {
 		var name = document.forms["AddUser"]["name"].value;
-
+		var idNum = document.forms["AddUser"]["id_num"].value;
+		var phone = document.forms["AddUser"]["phone"].value;
+		var category = document.forms["AddUser"]["category"].value;
+		var kind = document.forms["AddUser"]["kind"].value;
+		var departments = [];
+		if (document.forms["AddUser"]["adults-day"].checked) {
+			departments.push("adults_day");
+		}
+		if (document.forms["AddUser"]["adults-open"].checked) {
+			departments.push("adults_open");
+		}
+		if (document.forms["AddUser"]["adults-closed"].checked) {
+			departments.push("adults_closed");
+		}
+		if (document.forms["AddUser"]["minor-day"].checked) {
+			departments.push("minor_day");
+		}
+		if (document.forms["AddUser"]["minor-closed"].checked) {
+			departments.push("minor_closed");
+		}
+		
 		var docRef = db.collection('adminAddedUsers').doc('alovelace');
 	
 		var setAda = docRef.set({
@@ -75,6 +95,14 @@ $( function() {
 		  last: 'Lovelace',
 		  born: 1815
 		});
+		
+		console.log(name);
+		console.log(idNum);
+		console.log(phone);
+		console.log(category);
+		console.log(kind);
+		console.log(departments);
+		
         // firebase.database().ref('adminAddedUsers/' + 55555).set({
             // companyName: "hello",
             // contact: "hello",
@@ -102,7 +130,9 @@ $( function() {
     }
 	
 	function findUser() {
-		var valid = true;
+		var idNum = document.forms["FindUser"]["id_num"].value;
+		console.log(idNum);
+		/*var valid = true;
 		if ( valid ) {
 			$( "#users tbody" ).append( "<tr>" +
 			  "<td>" + name.val() + "</td>" +
@@ -111,11 +141,13 @@ $( function() {
 			"</tr>" );
 			dialog_search.dialog( "close" );
 		}
-		return valid;
+		return valid;*/
 	}
 	
 	function deleteUser() {
-		var valid = true;
+		var idNum = document.forms["DeleteUser"]["id_num"].value;
+		console.log(idNum);
+		/*var valid = true;
 		if ( valid ) {
 			$( "#users tbody" ).append( "<tr>" +
 			  "<td>" + name.val() + "</td>" +
@@ -124,7 +156,7 @@ $( function() {
 			"</tr>" );
 			dialog_delete.dialog( "close" );
 		}
-		return valid;
+		return valid;*/
 	}
  
     dialog_add = $( "#add-user-form" ).dialog({
