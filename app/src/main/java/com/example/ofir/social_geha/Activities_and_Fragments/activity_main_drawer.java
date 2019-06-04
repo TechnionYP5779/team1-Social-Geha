@@ -24,11 +24,13 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.ofir.social_geha.AppStorageManipulation;
 import com.example.ofir.social_geha.Firebase.Database;
 import com.example.ofir.social_geha.Person;
 import com.example.ofir.social_geha.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
@@ -137,7 +139,10 @@ public class activity_main_drawer extends AppCompatActivity
                         ft.replace(R.id.flMain,new EditInfoFragment(),EDIT_INFO_TAG);
                         ft.commit();
                 } else if (id == R.id.nav_delete_account){
-                        Toast.makeText(this, "not implemented yet", Toast.LENGTH_SHORT).show();
+                        FirebaseFirestore.getInstance().collection("users").document(Database.getInstance().getLoggedInUserID()).delete();
+                        AppStorageManipulation.deleteAppData(getApplicationContext());
+                        Intent myIntent = new Intent(activity_main_drawer.this, Login.class);
+                        activity_main_drawer.this.startActivity(myIntent);
                 }
 
                 DrawerLayout drawer = findViewById(R.id.drawer_layout);
