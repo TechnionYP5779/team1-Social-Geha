@@ -103,7 +103,7 @@ $( function() {
 		  phone: phone,
           kind:kind,
           departments:departments,
-          user_Code:userCode                 
+          user_code:userCode                 
 		});
 		
 		console.log(name);
