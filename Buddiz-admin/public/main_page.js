@@ -12,19 +12,6 @@ $( function() {
 	firebase.initializeApp(firebaseConfig);
 	 
 	const db = firebase.firestore();
-	// const firebase = require("firebase");
-		// Required for side-effects
-	// require("firebase/firestore");
-	
-		// try {
-	// firebase.initializeApp(firebaseConfig)
-	// } catch (err) {
-		// we skip the "already exists" message which is
-		// not an actual error when we're hot-reloading
-		// if (!/already exists/.test(err.message)) {
-			// console.error('Firebase initialization error', err.stack)
-		// }
-	// }
 
     var dialog_add, dialog_search, dialog_delete, form_add, form_search, form_delete,
 		emailRegex = /^[a-zA-Z0-9.!#$%&'*+\/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/,
@@ -118,7 +105,7 @@ $( function() {
           category:category,
           kind:kind,
           departments:departments
-          userCode:userCode
+          user_Code:userCode
                                 
 		});
 		
