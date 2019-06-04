@@ -216,14 +216,14 @@ public final class Database {
         //TODO: add filter by availability
         List<Task<QuerySnapshot>> langQueryResults = new ArrayList<>();
         // note the different fields
-        if (languagesPref.isEmpty()) {
+        if (languagesPref == null || languagesPref.isEmpty()) {
             QueryBuilder queryBuilder = new QueryBuilder(db.collection(USERS));
             queryBuilder.addWhereEquals("gender", genderPref)
                     .addWhereEquals("religion", religionPref)
                     .addWhereEquals("kind", kindPref);
             langQueryResults.add(queryBuilder.build().get());
         } else {
-            for (Person.Language language : languagesPref) {
+            for (Person.Language language : languagesPref) { //not null && not empty
                 Log.d("PEOPLE FOUND", "Looking for language: " + language.toString());
                 QueryBuilder queryBuilder = new QueryBuilder(db.collection(USERS));
                 queryBuilder.addWhereEquals("gender", genderPref)

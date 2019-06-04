@@ -74,7 +74,6 @@ $( function() {
 		var name = document.forms["AddUser"]["name"].value;
 		var idNum = document.forms["AddUser"]["id_num"].value;
 		var phone = document.forms["AddUser"]["phone"].value;
-		var category = document.forms["AddUser"]["category"].value;
 		var kind = document.forms["AddUser"]["kind"].value;
 		var departments = [];
 		if (document.forms["AddUser"]["adults-day"].checked) {
@@ -102,17 +101,14 @@ $( function() {
 		  name: name,
 		  id: idNum,
 		  phone: phone,
-          category:category,
           kind:kind,
-          departments:departments
-          user_Code:userCode
-                                
+          departments:departments,
+          user_Code:userCode                 
 		});
 		
 		console.log(name);
 		console.log(idNum);
 		console.log(phone);
-		console.log(category);
 		console.log(kind);
 		console.log(departments);
 		console.log(userCode);

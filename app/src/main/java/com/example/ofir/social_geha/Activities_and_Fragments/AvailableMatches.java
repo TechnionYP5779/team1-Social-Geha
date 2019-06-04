@@ -201,8 +201,8 @@ public class AvailableMatches extends AppCompatActivity {
 //        }
 
         //sent messages to all - now we wait for response
-        new Timer().schedule(new StaffSearch(), 20000); //send the staff a request in 5 seconds
-        new Timer().schedule(new AbortSearch(), 40000); //abort the search in 10 seconds
+        new Timer().schedule(new StaffSearch(), 30000); //send the staff a request in 5 seconds
+        new Timer().schedule(new AbortSearch(), 60000); //abort the search in 10 seconds
     }
 
     class StaffSearch extends TimerTask {
