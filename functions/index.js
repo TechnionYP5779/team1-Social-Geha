@@ -24,11 +24,14 @@ exports.onMessageSent = functions.firestore.document('messages/{message_id}').on
         }
     }
     console.log("The message is: ", messageData.message)
-    if (messageData.message == "CHAT REQUEST$" || messageData.message == "8BC9ED90825A196EB43D647BB9B321B9"){
+   
+    if(messageData.shown) {
+        return sendNotification(messageData.toPersonID, payload_reg);
+    } else if (messageData.message == "CHAT REQUEST$" || messageData.message == "8BC9ED90825A196EB43D647BB9B321B9"){
         console.log("BRANCH");
-        return sendNotification(messageData.toPersonID, payload_request)
+        return sendNotification(messageData.toPersonID, payload_request);
     }
-    return sendNotification(messageData.toPersonID, payload_reg);
+    return;
 });
 
 function sendNotification(toPersonID, payload){

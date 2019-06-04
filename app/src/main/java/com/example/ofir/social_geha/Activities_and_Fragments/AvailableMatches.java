@@ -223,7 +223,10 @@ public class AvailableMatches extends AppCompatActivity {
                     if(someApproved) return;
 
                     Toast.makeText(AvailableMatches.this, "אני מצטער, לא מצאנו לך אנשים לשוחח עימם.", Toast.LENGTH_LONG).show();
-                    onBackPressed();
+                    progressBar.setVisibility(View.GONE);
+                    progressBarTitle.setVisibility(View.GONE);
+                    listView.setVisibility(View.GONE);
+                    //onBackPressed();
                 }
             });
         }
