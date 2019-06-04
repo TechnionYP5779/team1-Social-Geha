@@ -1,8 +1,10 @@
 package com.example.ofir.social_geha.Activities_and_Fragments;
 
 import android.content.Intent;
+import android.graphics.drawable.TransitionDrawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
@@ -24,6 +26,9 @@ import com.example.ofir.social_geha.Firebase.Database;
 import com.example.ofir.social_geha.Firebase.Message;
 import com.example.ofir.social_geha.Person;
 import com.example.ofir.social_geha.R;
+import com.github.angads25.toggle.interfaces.OnToggledListener;
+import com.github.angads25.toggle.model.ToggleableView;
+import com.github.angads25.toggle.widget.DayNightSwitch;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentChange;
@@ -82,6 +87,7 @@ public class AllChatsFragment extends Fragment {
                 });
 
 
+        setupToggle(v);
         loadList();
 
         mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -344,6 +350,7 @@ public class AllChatsFragment extends Fragment {
                 });
             }
         }
+
     }
 
     @Override
@@ -358,6 +365,28 @@ public class AllChatsFragment extends Fragment {
             if (ce.getUserID().equals(uid)) return i;
         }
         return -1;
+    }
+
+    private void setupToggle(View v){
+        DayNightSwitch dayNightSwitch = v.findViewById(R.id.toggle_availability);
+        TextView textView = v.findViewById(R.id.description_availability);
+        ConstraintLayout constraintLayout = v.findViewById(R.id.constraint_layout_availability);
+
+        dayNightSwitch.setOnToggledListener(new OnToggledListener() {
+            @Override
+            public void onSwitched(ToggleableView toggleableView, boolean isOn) {
+                TransitionDrawable transition = (TransitionDrawable) constraintLayout.getBackground();
+                if(isOn){
+                    textView.setText(R.string.available);
+                    transition.reverseTransition(300);
+                }
+                else{
+                    textView.setText(R.string.not_available);
+                    transition.startTransition(300);
+                }
+            }
+        });
+
     }
 
 }

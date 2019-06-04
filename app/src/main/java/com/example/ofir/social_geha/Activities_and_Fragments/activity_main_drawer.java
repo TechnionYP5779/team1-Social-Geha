@@ -212,7 +212,7 @@ public class activity_main_drawer extends AppCompatActivity
                 SearchView mSearchView = (SearchView) mSearch.getActionView();
                 mSearchView.setQueryHint("חיפוש");
 
-                mSearch.setVisible(false); // Because the first screen is home
+                mSearch.setVisible(true); // Because the first screen allchats
 
                 mSearchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
                         @Override

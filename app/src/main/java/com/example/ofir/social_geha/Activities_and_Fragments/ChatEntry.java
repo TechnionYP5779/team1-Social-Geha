@@ -13,6 +13,11 @@ public class ChatEntry {
     private ContactListFileHandler.Contact contact;
     private Message message;
 
+    ChatEntry(){
+        this.unreadCount = 0;
+        this.contact = null;
+        this.message = null;
+    }
 
     ChatEntry(ContactListFileHandler.Contact contact, Message message, int unreadCount) {
         this.contact = contact;

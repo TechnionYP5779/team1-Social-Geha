@@ -15,6 +15,7 @@ import android.widget.TextView;
 import com.example.ofir.social_geha.Firebase.Message;
 import com.example.ofir.social_geha.Person;
 import com.example.ofir.social_geha.R;
+import com.github.angads25.toggle.widget.DayNightSwitch;
 import com.nostra13.universalimageloader.cache.memory.impl.WeakMemoryCache;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
@@ -41,6 +42,7 @@ public class MatchesListAdapter extends ArrayAdapter<Person> {
         ImageView pick_arrow;
     }
 
+
     public MatchesListAdapter(Context ctxt, int resource, ArrayList<Person> objects){
         super(ctxt, resource, objects);
         this.mContext = ctxt;
@@ -60,7 +62,6 @@ public class MatchesListAdapter extends ArrayAdapter<Person> {
         Log.d("imageBug", imageUrl);
 
         // Create the view result for showing the animation
-        final View result;
         ViewHolder holder;
 
         if( convertView == null ){
@@ -73,12 +74,10 @@ public class MatchesListAdapter extends ArrayAdapter<Person> {
             holder.chat_message_layout = (RelativeLayout) convertView.findViewById(R.id.chat_message_layout);
             holder.pick_arrow = convertView.findViewById(R.id.pick_arrow);
 
-            result = convertView;
             convertView.setTag(holder);
         }
         else{
             holder = (ViewHolder) convertView.getTag();
-            result = convertView;
         }
 
 

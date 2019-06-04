@@ -155,4 +155,6 @@
     <string name="new_conversation">התחל שיחה חדשה</string>
     <string name="Menu">תפריט</string>
     <string name="looking_for_matches">מחפש התאמות אפשריות</string>
+    <string name="available">זמין לקבלת בקשות שיחה חדשות</string>
+    <string name="not_available">לא זמין לקבלת בקשות שיחה חדשות</string>
 </resources>

@@ -12,11 +12,50 @@
         android:layout_height="match_parent"
         android:id="@+id/constraint">
 
-        <ListView
-            android:layoutDirection="rtl"
-            android:id="@+id/list"
+
+        <TableLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layoutDirection="rtl"
+            android:layout_height="match_parent">
+
+            <android.support.constraint.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:background="@drawable/background_animation_to_blue"
+                android:id="@+id/constraint_layout_availability"
+                android:layoutDirection="rtl">
+
+                <com.github.angads25.toggle.widget.DayNightSwitch
+                    android:layout_marginTop="5dp"
+                    android:layout_marginStart="5dp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    android:id="@+id/toggle_availability"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:on="true"/>
+
+                <TextView
+                    android:id="@+id/description_availability"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="12sp"
+                    android:textColor="@color/white"
+                    android:layout_marginStart="7dp"
+                    android:text="@string/available"
+                    app:layout_constraintTop_toTopOf="@id/toggle_availability"
+                    app:layout_constraintBottom_toBottomOf="@id/toggle_availability"
+                    app:layout_constraintStart_toEndOf="@id/toggle_availability"/>
+
+            </android.support.constraint.ConstraintLayout>
+
+            <ListView
+                android:layoutDirection="rtl"
+                android:id="@+id/list"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+
+        </TableLayout>
 
         <TextView
             android:id="@+id/emptyView"
