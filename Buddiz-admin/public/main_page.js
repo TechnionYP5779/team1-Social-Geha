@@ -136,6 +136,8 @@ $( function() {
       //   dialog_add.dialog( "close" );
       // }
       // return valid;
+        dialog_add.dialog( "close" );
+		$('#overlay, #overlay-back').fadeOut(500);
     }
 	
 	function editUser() {
@@ -169,16 +171,22 @@ $( function() {
           kind:kind,
           departments:departments        
 		});
+		dialog_edit.dialog( "close" );
+		$('#overlay, #overlay-back').fadeOut(500);
     }
 	
 	function findUser() {
 		var idNum = document.forms["FindUser"]["id_num"].value;
 		console.log(idNum);
+		dialog_search.dialog( "close" );
+		$('#overlay, #overlay-back').fadeOut(500);
 	}
 	
 	function deleteUser() {
 		var idNum = document.forms["DeleteUser"]["id_num"].value;
 		console.log(idNum);
+		dialog_delete.dialog( "close" );
+		$('#overlay, #overlay-back').fadeOut(500);
 	}
  
     dialog_add = $( "#add-user-form" ).dialog({
