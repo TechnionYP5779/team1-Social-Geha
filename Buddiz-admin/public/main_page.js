@@ -88,12 +88,16 @@ $( function() {
 			departments.push("minor_closed");
 		}
 		
-		var docRef = db.collection('adminAddedUsers').doc('alovelace');
+		var docRef = db.collection('adminAddedUsers').doc(idNum);
 	
 		var setAda = docRef.set({
-		  first: name,
-		  last: 'Lovelace',
-		  born: 1815
+		  name: name,
+		  id: idNum,
+		  phone: phone,
+          category:category,
+          kind:kind,
+          departments:departments
+                                
 		});
 		
 		console.log(name);
@@ -102,7 +106,7 @@ $( function() {
 		console.log(category);
 		console.log(kind);
 		console.log(departments);
-		
+    
         // firebase.database().ref('adminAddedUsers/' + 55555).set({
             // companyName: "hello",
             // contact: "hello",
