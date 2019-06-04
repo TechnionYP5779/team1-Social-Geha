@@ -66,6 +66,38 @@
 			</fieldset>
 		  </form>
 	  </div>
+	  <div id="edit-user-form" title="Edit user's data" class="edit-user">		 
+		  <form name="EditUser" onsubmit="">
+			<fieldset>
+			  <p style="font-weight: bold">Fill only the ID number of the user, and fields you want to change.</p>
+			  <label for="name" class="form-label">Name</label>
+			  <input type="text" name="name" id="name" value="" class="text ui-widget-content ui-corner-all">
+			  
+			  <label for="id_num" class="form-label">ID number</label>
+			  <input type="text" name="id_num" id="id_num" value="" class="text ui-widget-content ui-corner-all">
+			  
+			  <label for="phone" class="form-label">Phone number</label>
+			  <input type="text" name="phone" id="phone" value="+972-5" class="text ui-widget-content ui-corner-all">
+
+			  <label for="kind" class="form-label">Kind</label><br/>
+			  <input type="radio" name="kind" id="former-patient" value="Former_patient" class="ui-widget-content ui-corner-all">Former patient<br/>
+			  <input type="radio" name="kind" id="current-patient" value="Current_patient" class="ui-widget-content ui-corner-all">Current patient<br/>
+			  <input type="radio" name="kind" id="former-family-member" value="Former_family_member" class="ui-widget-content ui-corner-all">Former family member<br/>
+			  <input type="radio" name="kind" id="current-family-member" value="Current_family_member" class="ui-widget-content ui-corner-all">Current family member<br/>
+			  <input type="radio" name="kind" id="staff" value="Staff_member" class="ui-widget-content ui-corner-all">Staff member<br/>
+			  <br/>
+			  <label for="kind" class="form-label">Department - fields</label><br/>
+			  <input type="checkbox" name="department" id="adults-day" value="Adults_day" class="ui-widget-content ui-corner-all">Adults - Day care<br/>
+			  <input type="checkbox" name="department" id="adults-open" value="Adults_open" class="ui-widget-content ui-corner-all">Adults - Open dep.<br/>
+			  <input type="checkbox" name="department" id="adults-closed" value="Adults_closed" class="ui-widget-content ui-corner-all">Adults - Closed dep.<br/>
+			  <input type="checkbox" name="department" id="minor-day" value="Minor_day" class="ui-widget-content ui-corner-all">Minor - Day care<br/>
+			  <input type="checkbox" name="department" id="minor-closed" value="Minor_closed" class="ui-widget-content ui-corner-all">Minor - Closed dep.<br/>
+			  <br/>
+			  <!-- Allow form submission with keyboard without duplicating the dialog button -->
+			  <input type="submit" tabindex="-1" style="position:absolute; top:-1000px">
+			</fieldset>
+		  </form>
+	  </div>
 	  <div id="search-user-form" title="Search for a User" class="search-user">		 
 		  <form name="FindUser" onsubmit="">
 			<fieldset>
@@ -77,7 +109,7 @@
 			</fieldset>
 		  </form>
 	  </div>
-	  <div id="delete-user-form" title="Delete a User" class="selete-user">		 
+	  <div id="delete-user-form" title="Delete a User" class="delete-user">		 
 		  <form name="DeleteUser" onsubmit="">
 			<fieldset>
 			  <label for="id_num" class="form-label">ID number</label>
@@ -97,9 +129,10 @@
 		    <h1>Welcome to BUDDIZ! <img src="AppLogo.PNG" width="50px" style="dir: rtl"></a></h1>
 		    <p>What do you want to do next?</p>
 		    <div class="btn-group" style="width:100%">
-			    <button style="width:33%" id="add-user"><i class="fa fa-plus"></i> Add a user</button>
-			    <button style="width:33%" id="find-user"><i class="fa fa-search"></i> Find a user</button>
-			    <button style="width:33%" id="delete-user"><i class="fa fa-trash"></i> Delete a user</button>
+			    <button style="width:25%" id="add-user"><i class="fa fa-plus"></i> Add a user</button>
+				<button style="width:25%" id="edit-user"><i class="fa fa-pencil"></i> Edit user's data</button>
+			    <button style="width:25%" id="find-user"><i class="fa fa-search"></i> Find a user</button>
+			    <button style="width:25%" id="delete-user"><i class="fa fa-trash"></i> Delete a user</button>
 			</div>
 		</div>
 	</div>

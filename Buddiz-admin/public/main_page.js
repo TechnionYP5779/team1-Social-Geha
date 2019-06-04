@@ -138,6 +138,39 @@ $( function() {
       // return valid;
     }
 	
+	function editUser() {
+		var name = document.forms["EditUser"]["name"].value;
+		var idNum = document.forms["EditUser"]["id_num"].value;
+		var phone = document.forms["EditUser"]["phone"].value;
+		var kind = document.forms["EditUser"]["kind"].value;
+		var departments = [];
+		if (document.forms["EditUser"]["adults-day"].checked) {
+			departments.push("adults_day");
+		}
+		if (document.forms["EditUser"]["adults-open"].checked) {
+			departments.push("adults_open");
+		}
+		if (document.forms["EditUser"]["adults-closed"].checked) {
+			departments.push("adults_closed");
+		}
+		if (document.forms["EditUser"]["minor-day"].checked) {
+			departments.push("minor_day");
+		}
+		if (document.forms["EditUser"]["minor-closed"].checked) {
+			departments.push("minor_closed");
+		}
+                        
+		var docRef = db.collection('adminAddedUsers').doc(idNum);
+	
+		var setAda = docRef.set({
+		  name: name,
+		  id: idNum,
+		  phone: phone,
+          kind:kind,
+          departments:departments        
+		});
+    }
+	
 	function findUser() {
 		var idNum = document.forms["FindUser"]["id_num"].value;
 		console.log(idNum);
@@ -157,6 +190,25 @@ $( function() {
         "Add this user": addUser,
         Cancel: function() {
           dialog_add.dialog( "close" );
+		  $('#overlay, #overlay-back').fadeOut(500);
+        }
+      },
+      close: function() {
+        form_add[ 0 ].reset();
+        allFields.removeClass( "ui-state-error" );
+		$('#overlay, #overlay-back').fadeOut(500);
+      }
+    });
+	
+	dialog_edit = $( "#edit-user-form" ).dialog({
+      autoOpen: false,
+      height: 400,
+      width: 350,
+      modal: true,
+      buttons: {
+        "Edit this user's data": editUser,
+        Cancel: function() {
+          dialog_edit.dialog( "close" );
 		  $('#overlay, #overlay-back').fadeOut(500);
         }
       },
@@ -210,6 +262,11 @@ $( function() {
       addUser();
     });
 	
+	form_edit = dialog_edit.find( "form" ).on( "submit", function( event ) {
+      event.preventDefault();
+      editUser();
+    });
+	
 	form_search = dialog_search.find( "form" ).on( "submit", function( event ) {
       event.preventDefault();
       findUser();
@@ -222,6 +279,11 @@ $( function() {
  
     $( "#add-user" ).button().on( "click", function() {
       dialog_add.dialog( "open" );
+	  $('#overlay, #overlay-back').fadeIn(500);
+    });
+	
+	$( "#edit-user" ).button().on( "click", function() {
+      dialog_edit.dialog( "open" );
 	  $('#overlay, #overlay-back').fadeIn(500);
     });
 	
