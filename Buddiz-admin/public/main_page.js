@@ -104,9 +104,8 @@ $( function() {
 		  phone: phone,
           category:category,
           kind:kind,
-          departments:departments
-          user_Code:userCode
-                                
+          departments:departments,
+          user_Code:userCode                 
 		});
 		
 		console.log(name);
