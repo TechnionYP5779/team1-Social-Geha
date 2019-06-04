@@ -4,11 +4,18 @@
 
     <application
         android:allowBackup="true"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@drawable/logo"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <activity android:name=".Activities_and_Fragments.activity_main_drawer">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
         <activity android:name=".Activities_and_Fragments.ZoomedPictureActivity" />
         <activity android:name=".Activities_and_Fragments.SettingsHelp" />
         <activity android:name=".Activities_and_Fragments.SettingsDeleteAccount" />
@@ -36,29 +43,29 @@
             android:noHistory="true"
             android:screenOrientation="portrait" />
         <activity android:name=".Activities_and_Fragments.AllChatsActivity">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
-        <activity android:name=".Activities_and_Fragments.ChatActivity"
-            android:parentActivityName=".Activities_and_Fragments.AllChatsActivity">
-        </activity>
+        <activity
+            android:name=".Activities_and_Fragments.ChatActivity"
+            android:parentActivityName=".Activities_and_Fragments.AllChatsActivity" />
         <activity
             android:name=".Activities_and_Fragments.SplashActivity"
             android:theme="@style/SplashTheme">
-            <!--<intent-filter>-->
-                <!--<action android:name="android.intent.action.MAIN" />-->
 
-                <!--<category android:name="android.intent.category.LAUNCHER" />-->
-            <!--</intent-filter>-->
+            <!-- <intent-filter> -->
+            <!-- <action android:name="android.intent.action.MAIN" /> -->
+
+
+            <!-- <category android:name="android.intent.category.LAUNCHER" /> -->
+            <!-- </intent-filter> -->
         </activity>
+
         <service android:name=".GehaMessagingService">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
         </service>
-        <receiver android:name=".NotificationActionReceiver"/>
+
+        <receiver android:name=".NotificationActionReceiver" />
     </application>
 
 </manifest>

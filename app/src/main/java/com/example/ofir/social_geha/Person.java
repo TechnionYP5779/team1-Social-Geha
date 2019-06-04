@@ -28,7 +28,7 @@ public class Person {
     }
 
     public enum Kind {
-        PATIENT, FAMILY_MEMBER, PAST_PATIENT, PAST_FAMILY_MEMBER
+        PATIENT, FAMILY_MEMBER, PAST_PATIENT, PAST_FAMILY_MEMBER, STAFF
     }
 
     private String personID;
@@ -321,6 +321,11 @@ public class Person {
 
     public Person setWhiteList(List<Integer> whiteList) {
         this.whiteList = whiteList;
+        return this;
+    }
+
+    public Person setAvailability(Boolean newAvail) {
+        availability = newAvail;
         return this;
     }
 }

@@ -29,6 +29,7 @@ public final class Database {
     private static String TAG = "DatabaseStatus";
     private static String MESSAGES = "messages";
     private static String USERS = "users";
+    private Person currentPerson;
     //private Person p;
 
     public FirebaseFirestore db = FirebaseFirestore.getInstance();
@@ -181,8 +182,13 @@ public final class Database {
 
     }
 
+    public void sendRequestsToStaff() {
+        Database.getInstance()
+                .sendRequestsToMatches(Person.Kind.STAFF, null, null, null, null, null);
+    }
+
     public void sendRequestsToMatches(Person.Kind kindPref, Person.Gender genderPref, Person.Religion religionPref,
-                           EnumSet<Person.Language> languagesPref, Integer lower_bound, Integer upper_bound) {
+                                      EnumSet<Person.Language> languagesPref, Integer lower_bound, Integer upper_bound) {
 
         final ArrayList<Person> matches_list = new ArrayList<>();
 
@@ -269,7 +275,15 @@ public final class Database {
     }
 
     public void updateAvailability(Boolean newAvail) {
-
+        Database.getInstance().getdb().collection("users").document(Database.getInstance().getLoggedInUserID()).get()
+                .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                        currentPerson = task.getResult().toObject(Person.class);
+                    }
+                });
+        currentPerson.setAvailability(newAvail);
+        Database.getInstance().addUserPerson(currentPerson);
     }
 
     public void disconnectUser() {

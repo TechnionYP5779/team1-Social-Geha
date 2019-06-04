@@ -26,6 +26,7 @@ import com.google.firebase.firestore.DocumentChange;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.ListenerRegistration;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
@@ -56,6 +57,7 @@ public class ChatActivity extends AppCompatActivity {
     private AES aes;
     private boolean isInitiator;
     private List<Message> messageList;
+    private ListenerRegistration mListener;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -136,13 +138,11 @@ public class ChatActivity extends AppCompatActivity {
         mMessageRecycler.setLayoutManager(new LinearLayoutManager(this));
         mMessageRecycler.setAdapter(mMessageListAdapter);
         mFirestore = FirebaseFirestore.getInstance();
-
-        setMessageListeners();
     }
 
 
     private void setMessageListeners() {
-        mFirestore.collection(MESSAGES).whereEqualTo("toPersonID", mLoggedInPersonId)
+        mListener = mFirestore.collection(MESSAGES).whereEqualTo("toPersonID", mLoggedInPersonId)
                 .whereEqualTo("fromPersonID", mOtherPersonId)
                 .addSnapshotListener(new EventListener<QuerySnapshot>() {
                     @Override
@@ -155,6 +155,7 @@ public class ChatActivity extends AppCompatActivity {
                         for (DocumentChange doc : queryDocumentSnapshots.getDocumentChanges()) {
                             if (doc.getType() == DocumentChange.Type.ADDED) {
                                 String message_text = doc.getDocument().getString("message");
+                                Log.d("COOLTEST1", "Chat got:" + message_text);
 
                                 if(message_text == null || message_text.equals("CHAT REQUEST$") || message_text.equals("CHAT ACCEPT$") || message_text.equals("CHAT REJECT$")) {
                                     Log.d("NONONONO", "IM DELETING");
@@ -198,6 +199,13 @@ public class ChatActivity extends AppCompatActivity {
     public void onPause() {
         super.onPause();
         new ContactListFileHandler(this).changeLastChatViewDate(mOtherPersonId, new Date());
+        mListener.remove();
+    }
+
+    @Override
+    public void onResume(){
+        super.onResume();
+        setMessageListeners();
     }
 
     public void onSendButtonClick(View v) {
