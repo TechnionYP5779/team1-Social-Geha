@@ -205,6 +205,44 @@ $( function() {
 	function findUser() {
 		var idNum = document.forms["FindUser"]["id_num"].value;
 		console.log(idNum);
+        var docRef = db.collection("adminAddedUsers").doc(idNum);
+        var deparments,name,id,phone,kind,departments,user_code;
+        docRef.get().then(function(doc) {
+          if (doc.exists) {
+              console.log("Document data:", doc.data());
+               deparments = doc.data().departments;
+               name = doc.data().name;
+                          console.log(name);
+
+               id = doc.data().idNum;
+               phone = doc.data().phone;
+               kind = doc.data().kind;
+               departments = doc.data().departments;
+               user_code = doc.data().userCode;
+
+                          
+                // SAIFUN ENTER YOUR CODE HERE
+                          
+                          
+                          
+                          
+                          
+                          // S
+                          // A
+                          // I
+                          // F
+                          // U
+                          // N
+          } else {
+              // doc.data() will be undefined in this case
+              console.log("No such user!");
+              return true;
+              dialog_edit.dialog( "close" );
+              $('#overlay, #overlay-back').fadeOut(500);
+          }
+                          }).catch(function(error) {
+                                   console.log("Error getting document:", error);
+                                   });
 		dialog_search.dialog( "close" );
 		$('#overlay, #overlay-back').fadeOut(500);
 	}
