@@ -42,7 +42,11 @@ import de.hdodenhof.circleimageview.CircleImageView;
 public class activity_main_drawer extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
-        private static final int LOGIN_RETURN_CODE = 1;
+        // FRAGMENT TAGS
+        public static String ALL_CHATS_TAG = "ALL_CHATS_FRAGMENT";
+        public static String EDIT_INFO_TAG = "EDIT_INFO_FRAGMENT";
+        public static String ABOUT_TAG = "INFO_FRAGMENT";
+
         Person p;
         TextView anonymousName;
         TextView readlName;
@@ -60,10 +64,6 @@ public class activity_main_drawer extends AppCompatActivity
         protected void onCreate(Bundle savedInstanceState) {
                 super.onCreate(savedInstanceState);
                 setContentView(R.layout.activity_main_drawer);
-
-                if (!Database.getInstance().isLoggedIn()) {
-                        promptLogin();
-                }
 
                 mToolbar = findViewById(R.id.toolbar);
                 setSupportActionBar(mToolbar);
@@ -87,10 +87,10 @@ public class activity_main_drawer extends AppCompatActivity
 
                 //default fragment for home
                 android.support.v4.app.FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-                ft.replace(R.id.flMain,new HomeFragment(), "HOME_FRAGMENT");
+                ft.replace(R.id.flMain,new AllChatsFragment(), ALL_CHATS_TAG);
                 ft.commit();
 
-                navigationView.setCheckedItem(R.id.nav_home);
+                navigationView.setCheckedItem(R.id.nav_inbox);
         }
 
         public void setActionBarTitle(String title) {
@@ -124,22 +124,17 @@ public class activity_main_drawer extends AppCompatActivity
                 if (id == R.id.nav_about) {
                         mSearch.setVisible(false);
                         android.support.v4.app.FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-                        ft.replace(R.id.flMain,new FragmentInfo(),"INFO_FRAGMENT");
-                        ft.commit();
-                } else if (id == R.id.nav_home){
-                        mSearch.setVisible(false);
-                        android.support.v4.app.FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-                        ft.replace(R.id.flMain,new HomeFragment(),"HOME_FRAGMENT");
+                        ft.replace(R.id.flMain,new FragmentInfo(),ABOUT_TAG);
                         ft.commit();
                 } else if (id == R.id.nav_inbox) {
                         mSearch.setVisible(true);
                         android.support.v4.app.FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-                        ft.replace(R.id.flMain,new AllChatsFragment(),"ALL_CHATS_FRAGMENT");
+                        ft.replace(R.id.flMain,new AllChatsFragment(),ALL_CHATS_TAG);
                         ft.commit();
                 } else if (id == R.id.edit_information){
                         mSearch.setVisible(false);
                         android.support.v4.app.FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-                        ft.replace(R.id.flMain,new EditInfoFragment(),"EDIT_INFO_FRAGMENT");
+                        ft.replace(R.id.flMain,new EditInfoFragment(),EDIT_INFO_TAG);
                         ft.commit();
                 } else if (id == R.id.nav_delete_account){
                         Toast.makeText(this, "not implemented yet", Toast.LENGTH_SHORT).show();
@@ -207,23 +202,6 @@ public class activity_main_drawer extends AppCompatActivity
                                         }
                                 }
                         });
-        }
-
-        public void promptLogin() {
-                Intent intent = new Intent(activity_main_drawer.this, Login.class);
-                startActivityForResult(intent, LOGIN_RETURN_CODE);
-        }
-
-        @Override
-        protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-                super.onActivityResult(requestCode, resultCode, data);
-                if (requestCode == LOGIN_RETURN_CODE) {
-                        if (resultCode == RESULT_OK) {
-                                Toast.makeText(this, getString(R.string.strings_succ_login), Toast.LENGTH_SHORT).show();
-                        } else {
-                                promptLogin();
-                        }
-                }
         }
 
         @Override

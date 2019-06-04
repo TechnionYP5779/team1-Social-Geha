@@ -3,6 +3,7 @@ package com.example.ofir.social_geha.Activities_and_Fragments;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
@@ -59,6 +60,13 @@ public class AllChatsFragment extends Fragment {
         mFirestore = FirebaseFirestore.getInstance();
         mListView = v.findViewById(R.id.list);
         mEmptyView = v.findViewById(R.id.emptyView);
+        FloatingActionButton fab = v.findViewById(R.id.new_conversation_fab);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(getActivity() , FilterMatchesActivity.class));
+            }
+        });
 
         Database.getInstance().getdb().collection("users").whereEqualTo("userID", Database.getInstance().getLoggedInUserID()).get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {

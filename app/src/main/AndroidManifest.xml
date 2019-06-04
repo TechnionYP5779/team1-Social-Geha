@@ -9,13 +9,15 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".Activities_and_Fragments.activity_main_drawer">
+        <activity android:name=".SplashActivity"
+            android:theme="@style/Theme.AppCompat.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".Activities_and_Fragments.activity_main_drawer"/>
         <activity android:name=".Activities_and_Fragments.ZoomedPictureActivity" />
         <activity android:name=".Activities_and_Fragments.SettingsHelp" />
         <activity android:name=".Activities_and_Fragments.SettingsDeleteAccount" />
@@ -42,8 +44,7 @@
             android:name=".Activities_and_Fragments.FilterMatchesActivity"
             android:noHistory="true"
             android:screenOrientation="portrait" />
-        <activity android:name=".Activities_and_Fragments.AllChatsActivity">
-        </activity>
+        <activity android:name=".Activities_and_Fragments.AllChatsActivity"></activity>
         <activity
             android:name=".Activities_and_Fragments.ChatActivity"
             android:parentActivityName=".Activities_and_Fragments.AllChatsActivity" />

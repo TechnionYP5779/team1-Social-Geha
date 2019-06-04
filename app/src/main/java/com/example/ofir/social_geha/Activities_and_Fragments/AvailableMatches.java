@@ -12,6 +12,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.ofir.social_geha.FilterParameters;
@@ -38,6 +39,7 @@ public class AvailableMatches extends AppCompatActivity {
     ArrayList<Person> approved_matches_list;
     ProgressBar progressBar;
     MatchesListAdapter adapter;
+    TextView progressBarTitle;
     private FirebaseFirestore mFirestore;
     private static final String MESSAGES = "messages";
     private boolean someApproved = false;
@@ -51,6 +53,7 @@ public class AvailableMatches extends AppCompatActivity {
         FilterParameters filterParams = (FilterParameters) getIntent().getSerializableExtra("filterObject");
 
         progressBar = findViewById(R.id.progressBar);
+        progressBarTitle = findViewById(R.id.progressBar_title);
         listView = findViewById(R.id.available_matches);
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
@@ -67,6 +70,9 @@ public class AvailableMatches extends AppCompatActivity {
                 //Toast.makeText(getBaseContext(),person.getPersonID(),Toast.LENGTH_SHORT).show();
             }
         });
+
+        showItems(true);
+        // ------ PROGRESS BAR START
 
         mFirestore = FirebaseFirestore.getInstance();
         //set listener to listen to accepts and add these people to matchesList
@@ -107,6 +113,9 @@ public class AvailableMatches extends AppCompatActivity {
                                                             Log.d("WOO AH!", "added " + p.getRealName() + " to matchlist");
                                                             approved_matches_list.add(p);
                                                             adapter.notifyDataSetChanged();
+                                                            if(!someApproved){ // First match so show list
+                                                                showItems(false);
+                                                            }
                                                             someApproved = true;
                                                         }
                                                     }
@@ -120,13 +129,9 @@ public class AvailableMatches extends AppCompatActivity {
                 });
 
 
-        showItems(true);
-        // ------ PROGRESS BAR START
         loadToolbar();
         loadList();
         filterUsers(filterParams);
-        // ------ END
-        showItems(false);
 
     }
 
@@ -175,10 +180,12 @@ public class AvailableMatches extends AppCompatActivity {
     private void showItems(boolean progress_bar_shown) {
         if (progress_bar_shown) {
             progressBar.setVisibility(View.VISIBLE);
+            progressBarTitle.setVisibility(View.VISIBLE);
             listView.setVisibility(View.GONE);
         } else {
             listView.setVisibility(View.VISIBLE);
             progressBar.setVisibility(View.GONE);
+            progressBarTitle.setVisibility(View.GONE);
         }
     }
 

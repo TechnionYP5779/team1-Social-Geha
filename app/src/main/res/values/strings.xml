@@ -16,7 +16,7 @@
     <string name="verify_password">אימות סיסמה</string>
     <string name="verify">אישור</string>
     <string name="missing_fields_err_msg">אנא הזן קוד אישי</string>
-    <string name="matches">התאמות שנמצאו</string>
+    <string name="matches">התאמות אפשריות</string>
     <string name="skip">דלג</string>
     <string name="whats_this"><u>מה זה?</u></string>
     <string name="whats_this_msg">"הקוד הראשוני שהתקבל מגהה"</string>
@@ -154,4 +154,5 @@
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="new_conversation">התחל שיחה חדשה</string>
     <string name="Menu">תפריט</string>
+    <string name="looking_for_matches">מחפש התאמות אפשריות</string>
 </resources>
