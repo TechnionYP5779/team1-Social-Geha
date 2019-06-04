@@ -50,11 +50,6 @@ public class mainScreen extends AppCompatActivity {
     LinearLayout about;
     CircleImageView profile_pic;
     TextView real_name;
-    TextView anonymous_name;
-    Person p;
-
-    private static final int LOGIN_RETURN_CODE = 1;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -98,6 +93,11 @@ public class mainScreen extends AppCompatActivity {
                     });
         }
     }
+    TextView anonymous_name;
+
+    Person p;
+
+    private static final int LOGIN_RETURN_CODE = 1;
 
     // Stores into p the loaded user
     private void loadUserData() {
