@@ -160,7 +160,7 @@ $( function() {
 			departments.push("minor_closed");
 		}
                         
-		var docRef = db.collection('adminAddedUsers').doc(idNum);
+		var docRef = db.collection('adminEditedUsers').doc(idNum);
 	
 		var setAda = docRef.set({
 		  name: name,
