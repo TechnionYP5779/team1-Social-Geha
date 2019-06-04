@@ -141,36 +141,63 @@ $( function() {
     }
 	
 	function editUser() {
-		var name = document.forms["EditUser"]["name"].value;
-		var idNum = document.forms["EditUser"]["id_num"].value;
-		var phone = document.forms["EditUser"]["phone"].value;
-		var kind = document.forms["EditUser"]["kind"].value;
-		var departments = [];
-		if (document.forms["EditUser"]["adults-day"].checked) {
-			departments.push("adults_day");
-		}
-		if (document.forms["EditUser"]["adults-open"].checked) {
-			departments.push("adults_open");
-		}
-		if (document.forms["EditUser"]["adults-closed"].checked) {
-			departments.push("adults_closed");
-		}
-		if (document.forms["EditUser"]["minor-day"].checked) {
-			departments.push("minor_day");
-		}
-		if (document.forms["EditUser"]["minor-closed"].checked) {
-			departments.push("minor_closed");
-		}
                         
-		var docRef = db.collection('adminEditedUsers').doc(idNum);
-	
-		var setAda = docRef.set({
-		  name: name,
-		  id: idNum,
-		  phone: phone,
-          kind:kind,
-          departments:departments        
-		});
+      var idNum = document.forms["EditUser"]["id_num"].value;
+      var docRef = db.collection("adminAddedUsers").doc(idNum);
+        
+      docRef.get().then(function(doc) {
+      if (doc.exists) {
+            console.log("Document data:", doc.data());
+      } else {
+      // doc.data() will be undefined in this case
+            console.log("No such user!");
+            return true;
+            dialog_edit.dialog( "close" );
+            $('#overlay, #overlay-back').fadeOut(500);
+      }
+      }).catch(function(error) {
+               console.log("Error getting document:", error);
+      });
+        
+        var name = document.forms["EditUser"]["name"].value;
+                        if (name !== ''){
+                        docRef.update({
+                                   name: name
+                        })
+                        }
+        var phone = document.forms["EditUser"]["phone"].value;
+                        if (phone !== '' ){
+                        docRef.update({
+                                   phone: phone
+                                   })
+                        }
+        var kind = document.forms["EditUser"]["kind"].value;
+                        if (kind !== '' ){
+                        docRef.update({
+                                   kind: kind
+                                   })
+                        }
+        var departments = [];
+        if (document.forms["EditUser"]["adults-day"].checked) {
+            departments.push("adults_day");
+        }
+        if (document.forms["EditUser"]["adults-open"].checked) {
+            departments.push("adults_open");
+        }
+        if (document.forms["EditUser"]["adults-closed"].checked) {
+            departments.push("adults_closed");
+        }
+        if (document.forms["EditUser"]["minor-day"].checked) {
+            departments.push("minor_day");
+        }
+        if (document.forms["EditUser"]["minor-closed"].checked) {
+            departments.push("minor_closed");
+        }
+                        if (departments.length != 0 ){
+                        docRef.update({
+                                   departments: departments
+                                   })
+                        }
 		dialog_edit.dialog( "close" );
 		$('#overlay, #overlay-back').fadeOut(500);
     }
