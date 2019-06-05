@@ -19,6 +19,7 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.example.ofir.social_geha.Activities_and_Fragments.FileHandlers.SharingsFileHandler;
 import com.example.ofir.social_geha.FictitiousIdentityGenerator;
 import com.example.ofir.social_geha.Firebase.Database;
 import com.example.ofir.social_geha.Person;
@@ -81,6 +82,7 @@ public class EditInfoFragment extends Fragment {
     //Bio related Fields
     String bio;
     private Person currentPerson;
+    String initialName = "";
 
     public EditInfoFragment() {
         // Required empty public constructor
@@ -94,7 +96,7 @@ public class EditInfoFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        ((activity_main_drawer)getActivity()).setActionBarTitle("עריכת מידע");
+        ((activity_main_drawer) getActivity()).setActionBarTitle("עריכת מידע");
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_edit_info, container, false);
         setUpNameButton(v);
@@ -137,14 +139,16 @@ public class EditInfoFragment extends Fragment {
     }
 
     private void setUpFieldValues() {
-    Database.getInstance().getdb().collection("users").document(Database.getInstance().getLoggedInUserID()).get()
-            .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                @Override
-                public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                    currentPerson = task.getResult().toObject(Person.class);
-                    updateFieldsAccordingToPerson(currentPerson);
-                }
-            });
+        Database.getInstance().getdb().collection("users").document(Database.getInstance().getLoggedInUserID()).get()
+                .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                        currentPerson = task.getResult().toObject(Person.class);
+                        initialName = currentPerson.getRealName();
+                        Log.d("NAME_CHANGE_SANITY", "init name is " + initialName);
+                        updateFieldsAccordingToPerson(currentPerson);
+                    }
+                });
     }
 
     private void setUpDoneButton(View v_parent) {
@@ -155,10 +159,20 @@ public class EditInfoFragment extends Fragment {
                 calendar.set(year, month, dayOfMonth);
                 updateDBWithUserInfo(givenName, calendar, gender,
                         religion, selectedLanguages.toArray(new String[]{}), bio);
+                Log.d("NAME_CHANGE_SANITY", "the new name is " + givenName);
+                Log.d("NAME_CHANGE_SANITY", "the init name here is " + initialName);
+                if (!givenName.equals(initialName)) {
+                    // send control messages
+                    for (SharingsFileHandler.UID uid : new SharingsFileHandler(getActivity()).getUIDs()) {
+                        Log.d("NAME_CHANGE_SEND", "sending message to " + uid.getUID());
+                        Database.getInstance().sendControlMessage("NAME_CHANGE#" + givenName,
+                                currentPerson.getUserID(), uid.getUID());
+                    }
+                }
                 android.support.v4.app.FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
-                ft.replace(R.id.flMain,new HomeFragment(),((activity_main_drawer)getActivity()).ALL_CHATS_TAG);
-                Toast.makeText(getActivity(),"הפרטים עודכנו בהצלחה",Toast.LENGTH_SHORT).show();
-                ((activity_main_drawer)getActivity()).selectNavigationDrawer(R.id.nav_inbox);
+                ft.replace(R.id.flMain, new HomeFragment(), ((activity_main_drawer) getActivity()).ALL_CHATS_TAG);
+                Toast.makeText(getActivity(), "הפרטים עודכנו בהצלחה", Toast.LENGTH_SHORT).show();
+                ((activity_main_drawer) getActivity()).selectNavigationDrawer(R.id.nav_inbox);
                 ft.commit();
 
             }

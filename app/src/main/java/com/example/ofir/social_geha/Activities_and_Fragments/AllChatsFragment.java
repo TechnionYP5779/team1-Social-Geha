@@ -21,6 +21,7 @@ import android.widget.Toast;
 import com.example.ofir.social_geha.Activities_and_Fragments.FileHandlers.ContactListFileHandler;
 import com.example.ofir.social_geha.Activities_and_Fragments.FileHandlers.KeyFileHandler;
 import com.example.ofir.social_geha.Activities_and_Fragments.FileHandlers.MessageFileHandler;
+import com.example.ofir.social_geha.Activities_and_Fragments.FileHandlers.SharingsFileHandler;
 import com.example.ofir.social_geha.Encryption.AES;
 import com.example.ofir.social_geha.Firebase.Database;
 import com.example.ofir.social_geha.Firebase.Message;
@@ -143,6 +144,8 @@ public class AllChatsFragment extends Fragment {
                     @Override
                     public void onClick(View v) {
                         String content = "IDENTITY$" + Database.getInstance().getLoggedInUserID() + "#" + p.getRealName();
+                        SharingsFileHandler sharingsFileHandler = new SharingsFileHandler(getActivity());
+                        sharingsFileHandler.addUID(((activity_main_drawer) getActivity()).conversationList.get(pos).getUserID());
                         Database.getInstance().sendControlMessage(content, Database.getInstance().getLoggedInUserID(), ((activity_main_drawer) getActivity()).conversationList.get(pos).getUserID());
                         Toast.makeText(getActivity(), "שותף בהצלחה", Toast.LENGTH_SHORT).show();
                         dialog.dismiss();
@@ -240,8 +243,8 @@ public class AllChatsFragment extends Fragment {
                                     keyFileHandler.writeKey(AES.stringToKey(text.substring("AES".length())));
                                     Log.d("AES_READ", "received key from " + contactUID + " and the key is " + text.substring("AES".length()));
                                 } else if (text.substring(0, "NAME_CHANGE".length()).equals("NAME_CHANGE")) {
-                                    //TODO: change name using update name (Shai's function)
-                                    String realName = "";
+                                    String realName = text.substring(text.indexOf('#') + 1);
+                                    Log.d("NAME_CHANGE", "received a name change from " + contactUID + " to change name to " + realName);
                                     for (int i = 0; i < ((activity_main_drawer) getActivity()).conversationList.size(); i++) {
                                         if (((activity_main_drawer) getActivity()).conversationList.get(i).getUserID().equals(contactUID)) {
                                             ((activity_main_drawer) getActivity()).conversationList.get(i).setRealName(realName);
