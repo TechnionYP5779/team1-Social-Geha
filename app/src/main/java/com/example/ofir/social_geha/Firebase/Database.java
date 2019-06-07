@@ -220,7 +220,8 @@ public final class Database {
             QueryBuilder queryBuilder = new QueryBuilder(db.collection(USERS));
             queryBuilder.addWhereEquals("gender", genderPref)
                     .addWhereEquals("religion", religionPref)
-                    .addWhereEquals("kind", kindPref);
+                    .addWhereEquals("kind", kindPref)
+                    .addWhereEquals("availability", true);
             langQueryResults.add(queryBuilder.build().get());
         } else {
             for (Person.Language language : languagesPref) { //not null && not empty
@@ -228,7 +229,8 @@ public final class Database {
                 QueryBuilder queryBuilder = new QueryBuilder(db.collection(USERS));
                 queryBuilder.addWhereEquals("gender", genderPref)
                         .addWhereEquals("religion", religionPref)
-                        .addWhereEquals("kind", kindPref);
+                        .addWhereEquals("kind", kindPref)
+                        .addWhereEquals("availability", true);
                 langQueryResults.add(queryBuilder.build().whereArrayContains("spokenLanguages", language.toString()).get());
             }
         }
@@ -243,7 +245,8 @@ public final class Database {
                     .addWhereEquals("religion", religionPref)
                     .addWhereEquals("kind", kindPref)
                     .addLowerBound("birth_date", oldest.getTimeInMillis())
-                    .addUpperBound("birth_date", youngest.getTimeInMillis());
+                    .addUpperBound("birth_date", youngest.getTimeInMillis())
+                    .addWhereEquals("availability", true);
             ageQueryResults.add(queryBuilder.build().get());
         }
 
@@ -259,7 +262,7 @@ public final class Database {
                                     !matches_list.contains(p)) {
                                 matches_list.add(p);
                                 Database.getInstance().sendControlMessage("CHAT REQUEST$", Database.getInstance().getLoggedInUserID(), p.getUserID());
-                                Log.d("WOO AH!", "SENT REQUEST TO " + p.getRealName());
+                                Log.d("CHAT_REQ", "SENT REQUEST TO " + p.getRealName());
                             }
                         }
                     }
