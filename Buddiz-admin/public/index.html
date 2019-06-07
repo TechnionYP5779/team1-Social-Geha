@@ -88,11 +88,11 @@
 			  <input type="radio" name="kind" id="staff" value="Staff_member" class="ui-widget-content ui-corner-all">Staff member<br/>
 			  <br/>
 			  <label for="kind" class="form-label">Department - fields</label><br/>
-			  <input type="checkbox" name="department" id="adults-day" value="Adults_day" class="ui-widget-content ui-corner-all">Adults - Day care<br/>
-			  <input type="checkbox" name="department" id="adults-open" value="Adults_open" class="ui-widget-content ui-corner-all">Adults - Open dep.<br/>
-			  <input type="checkbox" name="department" id="adults-closed" value="Adults_closed" class="ui-widget-content ui-corner-all">Adults - Closed dep.<br/>
-			  <input type="checkbox" name="department" id="minor-day" value="Minor_day" class="ui-widget-content ui-corner-all">Minor - Day care<br/>
-			  <input type="checkbox" name="department" id="minor-closed" value="Minor_closed" class="ui-widget-content ui-corner-all">Minor - Closed dep.<br/>
+			  <input type="checkbox" name="department" id="adults-day" value="Adults_day_care" class="ui-widget-content ui-corner-all">Adults - Day care<br/>
+			  <input type="checkbox" name="department" id="adults-open" value="Adults_open_dep." class="ui-widget-content ui-corner-all">Adults - Open dep.<br/>
+			  <input type="checkbox" name="department" id="adults-closed" value="Adults_closed_dep." class="ui-widget-content ui-corner-all">Adults - Closed dep.<br/>
+			  <input type="checkbox" name="department" id="minor-day" value="Minor_day_care" class="ui-widget-content ui-corner-all">Minor - Day care<br/>
+			  <input type="checkbox" name="department" id="minor-closed" value="Minor_closed_dep." class="ui-widget-content ui-corner-all">Minor - Closed dep.<br/>
 			  <br/>
 			  <!-- Allow form submission with keyboard without duplicating the dialog button -->
 			  <input type="submit" tabindex="-1" style="position:absolute; top:-1000px">
@@ -104,6 +104,8 @@
 			<fieldset>
 			  <label for="id_num" class="form-label">ID number</label>
 			  <input type="text" name="id_num" id="id_num" value="" class="text ui-widget-content ui-corner-all">
+
+			  <p class="user_data_search"> </p>
 			  
 			  <!-- Allow form submission with keyboard without duplicating the dialog button -->
 			  <input type="submit" tabindex="-1" style="position:absolute; top:-1000px">
@@ -131,8 +133,8 @@
 		    <p>What do you want to do next?</p>
 		    <div class="btn-group" style="width:100%">
 			    <button style="width:25%" id="add-user"><i class="fa fa-plus"></i> Add a user</button>
-				<button style="width:25%" id="edit-user"><i class="fa fa-pencil"></i> Edit user's data</button>
 			    <button style="width:25%" id="find-user"><i class="fa fa-search"></i> Find a user</button>
+				<button style="width:25%" id="edit-user"><i class="fa fa-pencil"></i> Edit user's data</button>
 			    <button style="width:25%" id="delete-user"><i class="fa fa-trash"></i> Delete a user</button>
 			</div>
 		</div>

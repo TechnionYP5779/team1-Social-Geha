@@ -77,19 +77,19 @@ $( function() {
 		var kind = document.forms["AddUser"]["kind"].value;
 		var departments = [];
 		if (document.forms["AddUser"]["adults-day"].checked) {
-			departments.push("adults_day");
+			departments.push("adults_day_care");
 		}
 		if (document.forms["AddUser"]["adults-open"].checked) {
-			departments.push("adults_open");
+			departments.push("adults_open_dep.");
 		}
 		if (document.forms["AddUser"]["adults-closed"].checked) {
-			departments.push("adults_closed");
+			departments.push("adults_closed_dep.");
 		}
 		if (document.forms["AddUser"]["minor-day"].checked) {
-			departments.push("minor_day");
+			departments.push("minor_day_care");
 		}
 		if (document.forms["AddUser"]["minor-closed"].checked) {
-			departments.push("minor_closed");
+			departments.push("minor_closed_dep.");
 		}
 		
         
@@ -151,9 +151,9 @@ $( function() {
       } else {
       // doc.data() will be undefined in this case
             console.log("No such user!");
-            return true;
             dialog_edit.dialog( "close" );
             $('#overlay, #overlay-back').fadeOut(500);
+			return true;
       }
       }).catch(function(error) {
                console.log("Error getting document:", error);
@@ -209,42 +209,40 @@ $( function() {
         var deparments,name,id,phone,kind,departments,user_code;
         docRef.get().then(function(doc) {
           if (doc.exists) {
-              console.log("Document data:", doc.data());
-               deparments = doc.data().departments;
-               name = doc.data().name;
-                          console.log(name);
+            console.log("Document data:", doc.data());
+            deparments = doc.data().departments;
+		    name = doc.data().name;
+            console.log(name);
 
-               id = doc.data().idNum;
-               phone = doc.data().phone;
-               kind = doc.data().kind;
-               departments = doc.data().departments;
-               user_code = doc.data().userCode;
+            id = doc.data().idNum;
+            phone = doc.data().phone;
+            kind = doc.data().kind;
+            departments = doc.data().departments;
+            user_code = doc.data().user_code;
+			kind = kind.split('_').join(' ');
+			
+			var deps_string = "";
+			for (i = 0; i < departments.length - 1; i++) {
+				deps_string += deparments[i].split('_').join(' ');
+				deps_string += ", ";
+			}
+			deps_string += deparments[departments.length - 1].split('_').join(' ');
 
-                          
-                // SAIFUN ENTER YOUR CODE HERE
-                          
-                          
-                          
-                          
-                          
-                          // S
-                          // A
-                          // I
-                          // F
-                          // U
-                          // N
+			document.forms["FindUser"].getElementsByClassName("user_data_search")[0].innerHTML = name + "'s phone number is: " + "<b>" + phone + "</b>.<br/>"
+				+ "User code for Buddiz: " + "<b>" + user_code + "</b><br/>"
+				+ name + " is a " + "<b>" + kind + "</b>.<br/>"
+				+ name + " is able to help with " + "<b>" + deps_string + "</b><br/>";
+
           } else {
               // doc.data() will be undefined in this case
               console.log("No such user!");
-              return true;
               dialog_edit.dialog( "close" );
               $('#overlay, #overlay-back').fadeOut(500);
+			  return true;
           }
-                          }).catch(function(error) {
-                                   console.log("Error getting document:", error);
-                                   });
-		dialog_search.dialog( "close" );
-		$('#overlay, #overlay-back').fadeOut(500);
+	    }).catch(function(error) {
+			console.log("Error getting document:", error);
+		});
 	}
 	
 	function deleteUser() {
