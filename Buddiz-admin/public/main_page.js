@@ -286,7 +286,11 @@ $( function() {
 			document.forms["DeleteUser"].getElementsByClassName("delete_id_error")[0].innerHTML = "Please enter a valid ID";
 			return false;
 		}
-		console.log(idNum);
+		db.collection("adminAddedUsers").doc(idNum).delete().then(function() {
+			console.log("User successfully deleted!");
+		}).catch(function(error) {
+			console.error("Error removing user: ", error);
+		});
 		dialog_delete.dialog( "close" );
 		$('#overlay, #overlay-back').fadeOut(500);
 	}
