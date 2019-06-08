@@ -104,7 +104,6 @@ $( function() {
 	}
  
     function addUser() {
-		cleanErrorMessagesAdd();
 		var name = document.forms["AddUser"]["name"].value;
 		var idNum = document.forms["AddUser"]["id_num"].value;
 		var phone = document.forms["AddUser"]["phone"].value;
@@ -176,73 +175,68 @@ $( function() {
     }
 	
 	function editUser() {
-      document.forms["EditUser"].getElementsByClassName("edit_id_error")[0].innerHTML = "";
       var idNum = document.forms["EditUser"]["id_num"].value;
 	  if (idNum == "") {
 			document.forms["EditUser"].getElementsByClassName("edit_id_error")[0].innerHTML = "Please enter a valid ID";
 			return false;
 	  }
       var docRef = db.collection("adminAddedUsers").doc(idNum);
-        
       docRef.get().then(function(doc) {
       if (doc.exists) {
-            console.log("Document data:", doc.data());
+		console.log("Document data:", doc.data());
+		var name = document.forms["EditUser"]["name"].value;
+					if (name !== ''){
+					docRef.update({
+							   name: name
+					})
+					}
+		var phone = document.forms["EditUser"]["phone"].value;
+					if (phone !== '' ){
+					docRef.update({
+							   phone: phone
+							   })
+					}
+		var kind = document.forms["EditUser"]["kind"].value;
+					if (kind !== '' ){
+					docRef.update({
+							   kind: kind
+							   })
+					}
+		var departments = [];
+		if (document.forms["EditUser"]["adults-day"].checked) {
+			departments.push("adults_day");
+		}
+		if (document.forms["EditUser"]["adults-open"].checked) {
+			departments.push("adults_open");
+		}
+		if (document.forms["EditUser"]["adults-closed"].checked) {
+			departments.push("adults_closed");
+		}
+		if (document.forms["EditUser"]["minor-day"].checked) {
+			departments.push("minor_day");
+		}
+		if (document.forms["EditUser"]["minor-closed"].checked) {
+			departments.push("minor_closed");
+		}
+		if (departments.length != 0 ){
+		docRef.update({
+				   departments: departments
+				   })
+		}
+		dialog_edit.dialog( "close" );
+		$('#overlay, #overlay-back').fadeOut(500);
       } else {
       // doc.data() will be undefined in this case
-            console.log("No such user!");
-            dialog_edit.dialog( "close" );
-            $('#overlay, #overlay-back').fadeOut(500);
-			return true;
+            document.forms["EditUser"].getElementsByClassName("edit_id_error")[0].innerHTML = "This user does not exist!";
       }
       }).catch(function(error) {
                console.log("Error getting document:", error);
       });
-        
-        var name = document.forms["EditUser"]["name"].value;
-                        if (name !== ''){
-                        docRef.update({
-                                   name: name
-                        })
-                        }
-        var phone = document.forms["EditUser"]["phone"].value;
-                        if (phone !== '' ){
-                        docRef.update({
-                                   phone: phone
-                                   })
-                        }
-        var kind = document.forms["EditUser"]["kind"].value;
-                        if (kind !== '' ){
-                        docRef.update({
-                                   kind: kind
-                                   })
-                        }
-        var departments = [];
-        if (document.forms["EditUser"]["adults-day"].checked) {
-            departments.push("adults_day");
-        }
-        if (document.forms["EditUser"]["adults-open"].checked) {
-            departments.push("adults_open");
-        }
-        if (document.forms["EditUser"]["adults-closed"].checked) {
-            departments.push("adults_closed");
-        }
-        if (document.forms["EditUser"]["minor-day"].checked) {
-            departments.push("minor_day");
-        }
-        if (document.forms["EditUser"]["minor-closed"].checked) {
-            departments.push("minor_closed");
-        }
-                        if (departments.length != 0 ){
-                        docRef.update({
-                                   departments: departments
-                                   })
-                        }
-		dialog_edit.dialog( "close" );
-		$('#overlay, #overlay-back').fadeOut(500);
     }
 	
 	function findUser() {
 		var idNum = document.forms["FindUser"]["id_num"].value;
+		document.forms["FindUser"].getElementsByClassName("user_data_search")[0].innerHTML = "";
 		document.forms["FindUser"].getElementsByClassName("find_id_error")[0].innerHTML = "";
 		if (idNum == "") {
 			document.forms["FindUser"].getElementsByClassName("find_id_error")[0].innerHTML = "Please enter a valid ID";
@@ -288,7 +282,6 @@ $( function() {
 	
 	function deleteUser() {
 		var idNum = document.forms["DeleteUser"]["id_num"].value;
-		document.forms["DeleteUser"].getElementsByClassName("delete_id_error")[0].innerHTML = "";
 		if (idNum == "") {
 			document.forms["DeleteUser"].getElementsByClassName("delete_id_error")[0].innerHTML = "Please enter a valid ID";
 			return false;
@@ -347,7 +340,6 @@ $( function() {
         "Find this user": findUser,
         Cancel: function() {	
           form_search[ 0 ].reset();
-		  document.forms["FindUser"].getElementsByClassName("user_data_search")[0].innerHTML = "";
           dialog_search.dialog( "close" );
 		  $('#overlay, #overlay-back').fadeOut(500);
         }
@@ -401,26 +393,30 @@ $( function() {
     });
  
     $( "#add-user" ).button().on( "click", function() {
-	  form_add[ 0 ].reset();
-      dialog_add.dialog( "open" );
-	  $('#overlay, #overlay-back').fadeIn(500);
+		form_add[ 0 ].reset();
+		cleanErrorMessagesAdd();
+		dialog_add.dialog( "open" );
+		$('#overlay, #overlay-back').fadeIn(500);
     });
 	
 	$( "#edit-user" ).button().on( "click", function() {
-	  form_edit[ 0 ].reset();
-      dialog_edit.dialog( "open" );
-	  $('#overlay, #overlay-back').fadeIn(500);
+		form_edit[ 0 ].reset();
+		dialog_edit.dialog( "open" );
+		document.forms["EditUser"].getElementsByClassName("edit_id_error")[0].innerHTML = "";
+		$('#overlay, #overlay-back').fadeIn(500);
     });
 	
 	$( "#find-user" ).button().on( "click", function() {
-	  form_search[ 0 ].reset();
-      dialog_search.dialog( "open" );
-	  $('#overlay, #overlay-back').fadeIn(500);
+		form_search[ 0 ].reset();
+		document.forms["FindUser"].getElementsByClassName("user_data_search")[0].innerHTML = "";
+		dialog_search.dialog( "open" );
+		$('#overlay, #overlay-back').fadeIn(500);
     });
 	
 	$( "#delete-user" ).button().on( "click", function() {
-	  form_delete[ 0 ].reset();
-      dialog_delete.dialog( "open" );
-	  $('#overlay, #overlay-back').fadeIn(500);
+		form_delete[ 0 ].reset();
+		document.forms["DeleteUser"].getElementsByClassName("delete_id_error")[0].innerHTML = "";
+		dialog_delete.dialog( "open" );
+		$('#overlay, #overlay-back').fadeIn(500);
     });
   });
