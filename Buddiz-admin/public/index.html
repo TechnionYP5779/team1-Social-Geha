@@ -38,23 +38,28 @@
 	  <div id="add-user-form" title="Add a User" class="add-user">		 
 		  <form name="AddUser" onsubmit="">
 			<fieldset>
-			  <label for="name" class="form-label">Name</label>
+			  <label for="name" class="form-label">Name </label>
+			  <text class="add_name_error" style="color:red"></text>
 			  <input type="text" name="name" id="name" value="" class="text ui-widget-content ui-corner-all">
 			  
-			  <label for="id_num" class="form-label">ID number</label>
+			  <label for="id_num" class="form-label">ID number </label>
+			  <text class="add_id_error" style="color:red"></text>
 			  <input type="text" name="id_num" id="id_num" value="" class="text ui-widget-content ui-corner-all">
 			  
-			  <label for="phone" class="form-label">Phone number</label>
+			  <label for="phone" class="form-label">Phone number </label>
+			  <text class="add_phone_error" style="color:red"></text>
 			  <input type="text" name="phone" id="phone" value="+972-5" class="text ui-widget-content ui-corner-all">
 
-			  <label for="kind" class="form-label">Kind</label><br/>
+			  <label for="kind" class="form-label">Kind </label>
+			  <text class="add_kind_error" style="color:red"></text><br/>
 			  <input type="radio" name="kind" id="former-patient" value="Former_patient" class="ui-widget-content ui-corner-all">Former patient<br/>
 			  <input type="radio" name="kind" id="current-patient" value="Current_patient" class="ui-widget-content ui-corner-all">Current patient<br/>
 			  <input type="radio" name="kind" id="former-family-member" value="Former_family_member" class="ui-widget-content ui-corner-all">Former family member<br/>
 			  <input type="radio" name="kind" id="current-family-member" value="Current_family_member" class="ui-widget-content ui-corner-all">Current family member<br/>
 			  <input type="radio" name="kind" id="staff" value="Staff_member" class="ui-widget-content ui-corner-all">Staff member<br/>
 			  <br/>
-			  <label for="kind" class="form-label">Department - fields</label><br/>
+			  <label for="department" class="form-label">Department - fields </label>
+			  <text class="add_dep_error" style="color:red"></text><br/>
 			  <input type="checkbox" name="department" id="adults-day" value="Adults_day" class="ui-widget-content ui-corner-all">Adults - Day care<br/>
 			  <input type="checkbox" name="department" id="adults-open" value="Adults_open" class="ui-widget-content ui-corner-all">Adults - Open dep.<br/>
 			  <input type="checkbox" name="department" id="adults-closed" value="Adults_closed" class="ui-widget-content ui-corner-all">Adults - Closed dep.<br/>
@@ -71,6 +76,7 @@
 			<fieldset>
 			  <p style="font-weight: bold">Fill the ID number of the user you wish to edit:</p>
 			  <label for="id_num" class="form-label">ID number</label>
+			  <text class="edit_id_error" style="color:red"></text>
 			  <input type="text" name="id_num" id="id_num" value="" class="text ui-widget-content ui-corner-all">
 			  
 			  <p style="font-weight: bold">Fill only the fields you wish to change:</p>
@@ -87,7 +93,7 @@
 			  <input type="radio" name="kind" id="current-family-member" value="Current_family_member" class="ui-widget-content ui-corner-all">Current family member<br/>
 			  <input type="radio" name="kind" id="staff" value="Staff_member" class="ui-widget-content ui-corner-all">Staff member<br/>
 			  <br/>
-			  <label for="kind" class="form-label">Department - fields</label><br/>
+			  <label for="department" class="form-label">Department - fields</label><br/>
 			  <input type="checkbox" name="department" id="adults-day" value="Adults_day_care" class="ui-widget-content ui-corner-all">Adults - Day care<br/>
 			  <input type="checkbox" name="department" id="adults-open" value="Adults_open_dep." class="ui-widget-content ui-corner-all">Adults - Open dep.<br/>
 			  <input type="checkbox" name="department" id="adults-closed" value="Adults_closed_dep." class="ui-widget-content ui-corner-all">Adults - Closed dep.<br/>
@@ -103,6 +109,7 @@
 		  <form name="FindUser" onsubmit="">
 			<fieldset>
 			  <label for="id_num" class="form-label">ID number</label>
+			  <text class="find_id_error" style="color:red"></text>
 			  <input type="text" name="id_num" id="id_num" value="" class="text ui-widget-content ui-corner-all">
 
 			  <p class="user_data_search"></p>
@@ -116,6 +123,7 @@
 		  <form name="DeleteUser" onsubmit="">
 			<fieldset>
 			  <label for="id_num" class="form-label">ID number</label>
+			  <text class="delete_id_error" style="color:red"></text>
 			  <input type="text" name="id_num" id="id_num" value="" class="text ui-widget-content ui-corner-all">
 			  
 			  <!-- Allow form submission with keyboard without duplicating the dialog button -->

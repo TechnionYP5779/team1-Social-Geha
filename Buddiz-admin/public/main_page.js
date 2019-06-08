@@ -70,7 +70,41 @@ $( function() {
 		return code;
 	}
  
+	function checkFieldsCorrectness(name, idNum, phone, kind, deps) {
+		var res = true;
+		if (idNum == "") {
+			document.forms["AddUser"].getElementsByClassName("add_id_error")[0].innerHTML = "Please enter a valid ID";
+			res = false;
+		}
+		if (name == "") {
+			document.forms["AddUser"].getElementsByClassName("add_name_error")[0].innerHTML = "Please enter a valid name";
+			res = false;
+		}
+		if (phone == "") {
+			document.forms["AddUser"].getElementsByClassName("add_phone_error")[0].innerHTML = "Please enter a valid phone number";
+			res = false;
+		}
+		if (kind == "") {
+			document.forms["AddUser"].getElementsByClassName("add_kind_error")[0].innerHTML = "Please choose a kind";
+			res = false;
+		}
+		if (deps.length == 0) {
+			document.forms["AddUser"].getElementsByClassName("add_dep_error")[0].innerHTML = "Please choose at least one department";
+			res = false;
+		}
+		return res;
+	}
+	
+	function cleanErrorMessagesAdd() {
+		document.forms["AddUser"].getElementsByClassName("add_id_error")[0].innerHTML = "";
+		document.forms["AddUser"].getElementsByClassName("add_name_error")[0].innerHTML = "";
+		document.forms["AddUser"].getElementsByClassName("add_phone_error")[0].innerHTML = "";
+		document.forms["AddUser"].getElementsByClassName("add_kind_error")[0].innerHTML = "";
+		document.forms["AddUser"].getElementsByClassName("add_dep_error")[0].innerHTML = "";
+	}
+ 
     function addUser() {
+		cleanErrorMessagesAdd();
 		var name = document.forms["AddUser"]["name"].value;
 		var idNum = document.forms["AddUser"]["id_num"].value;
 		var phone = document.forms["AddUser"]["phone"].value;
@@ -92,6 +126,7 @@ $( function() {
 			departments.push("minor_closed_dep.");
 		}
 		
+		if (!checkFieldsCorrectness(name, idNum, phone, kind, departments)) return false;
         
         userCode = generateCode(name, "7", idNum, kind);
                         
@@ -141,8 +176,12 @@ $( function() {
     }
 	
 	function editUser() {
-                        
+      document.forms["EditUser"].getElementsByClassName("edit_id_error")[0].innerHTML = "";
       var idNum = document.forms["EditUser"]["id_num"].value;
+	  if (idNum == "") {
+			document.forms["EditUser"].getElementsByClassName("edit_id_error")[0].innerHTML = "Please enter a valid ID";
+			return false;
+	  }
       var docRef = db.collection("adminAddedUsers").doc(idNum);
         
       docRef.get().then(function(doc) {
@@ -204,7 +243,11 @@ $( function() {
 	
 	function findUser() {
 		var idNum = document.forms["FindUser"]["id_num"].value;
-		console.log(idNum);
+		document.forms["FindUser"].getElementsByClassName("find_id_error")[0].innerHTML = "";
+		if (idNum == "") {
+			document.forms["FindUser"].getElementsByClassName("find_id_error")[0].innerHTML = "Please enter a valid ID";
+			return false;
+		}
         var docRef = db.collection("adminAddedUsers").doc(idNum);
         var deparments,name,id,phone,kind,departments,user_code;
         docRef.get().then(function(doc) {
@@ -245,6 +288,11 @@ $( function() {
 	
 	function deleteUser() {
 		var idNum = document.forms["DeleteUser"]["id_num"].value;
+		document.forms["DeleteUser"].getElementsByClassName("delete_id_error")[0].innerHTML = "";
+		if (idNum == "") {
+			document.forms["DeleteUser"].getElementsByClassName("delete_id_error")[0].innerHTML = "Please enter a valid ID";
+			return false;
+		}
 		console.log(idNum);
 		dialog_delete.dialog( "close" );
 		$('#overlay, #overlay-back').fadeOut(500);
@@ -353,21 +401,25 @@ $( function() {
     });
  
     $( "#add-user" ).button().on( "click", function() {
+	  form_add[ 0 ].reset();
       dialog_add.dialog( "open" );
 	  $('#overlay, #overlay-back').fadeIn(500);
     });
 	
 	$( "#edit-user" ).button().on( "click", function() {
+	  form_edit[ 0 ].reset();
       dialog_edit.dialog( "open" );
 	  $('#overlay, #overlay-back').fadeIn(500);
     });
 	
 	$( "#find-user" ).button().on( "click", function() {
+	  form_search[ 0 ].reset();
       dialog_search.dialog( "open" );
 	  $('#overlay, #overlay-back').fadeIn(500);
     });
 	
 	$( "#delete-user" ).button().on( "click", function() {
+	  form_delete[ 0 ].reset();
       dialog_delete.dialog( "open" );
 	  $('#overlay, #overlay-back').fadeIn(500);
     });
