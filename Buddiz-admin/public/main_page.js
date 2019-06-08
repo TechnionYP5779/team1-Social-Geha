@@ -235,9 +235,7 @@ $( function() {
 
           } else {
               // doc.data() will be undefined in this case
-              console.log("No such user!");
-              dialog_edit.dialog( "close" );
-              $('#overlay, #overlay-back').fadeOut(500);
+              document.forms["FindUser"].getElementsByClassName("user_data_search")[0].innerHTML = "No such user!";
 			  return true;
           }
 	    }).catch(function(error) {
@@ -260,6 +258,7 @@ $( function() {
       buttons: {
         "Add this user": addUser,
         Cancel: function() {
+		  form_add[ 0 ].reset();
           dialog_add.dialog( "close" );
 		  $('#overlay, #overlay-back').fadeOut(500);
         }
@@ -279,12 +278,13 @@ $( function() {
       buttons: {
         "Edit this user's data": editUser,
         Cancel: function() {
+          form_edit[ 0 ].reset();
           dialog_edit.dialog( "close" );
 		  $('#overlay, #overlay-back').fadeOut(500);
         }
       },
       close: function() {
-        form_add[ 0 ].reset();
+        form_edit[ 0 ].reset();
         allFields.removeClass( "ui-state-error" );
 		$('#overlay, #overlay-back').fadeOut(500);
       }
@@ -297,13 +297,16 @@ $( function() {
       modal: true,
       buttons: {
         "Find this user": findUser,
-        Cancel: function() {
+        Cancel: function() {	
+          form_search[ 0 ].reset();
+		  document.forms["FindUser"].getElementsByClassName("user_data_search")[0].innerHTML = "";
           dialog_search.dialog( "close" );
 		  $('#overlay, #overlay-back').fadeOut(500);
         }
       },
       close: function() {
         form_search[ 0 ].reset();
+		document.forms["FindUser"].getElementsByClassName("user_data_search")[0].innerHTML = "";
         allFields.removeClass( "ui-state-error" );
 		$('#overlay, #overlay-back').fadeOut(500);
       }
@@ -317,6 +320,7 @@ $( function() {
       buttons: {
         "Delete this user": deleteUser,
         Cancel: function() {
+		  form_delete[ 0 ].reset();
           dialog_delete.dialog( "close" );
 		  $('#overlay, #overlay-back').fadeOut(500);
         }
