@@ -131,21 +131,30 @@ $( function() {
                         
 		var docRef = db.collection('adminAddedUsers').doc(idNum);
 	
-		var setAda = docRef.set({
-		  name: name,
-		  id: idNum,
-		  phone: phone,
-          kind:kind,
-          departments:departments,
-          user_code:userCode                 
-		});
+		docRef.get().then(function(doc) {
+			if (doc.exists) {
+				// DOCUMENT ALREADY EXISTS
+			}
+			else{
+				var setAda = docRef.set({
+					name: name,
+					id: idNum,
+					phone: phone,
+					kind:kind,
+					departments:departments,
+					user_code:userCode                 
+				});
+
+				console.log(name);
+				console.log(idNum);
+				console.log(phone);
+				console.log(kind);
+				console.log(departments);
+				console.log(userCode);
+			}
+		}
 		
-		console.log(name);
-		console.log(idNum);
-		console.log(phone);
-		console.log(kind);
-		console.log(departments);
-		console.log(userCode);
+
         // firebase.database().ref('adminAddedUsers/' + 55555).set({
             // companyName: "hello",
             // contact: "hello",
