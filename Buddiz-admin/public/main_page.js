@@ -134,7 +134,10 @@ $( function() {
 	
 		docRef.get().then(function(doc) {
 			if (doc.exists) {
-				document.forms["AddUser"].getElementsByClassName("add_id_error")[0].innerHTML = "This user already exists!";
+				document.getElementById("user_control_message").innerHTML = "A user with id " + idNum + " already exists!";
+				document.getElementById("user_control_message").style.color = "red";
+				dialog_add.dialog( "close" );
+				$('#overlay, #overlay-back').fadeOut(500);
 			}
 			else{
 				var setAda = docRef.set({
@@ -152,6 +155,8 @@ $( function() {
 				console.log(kind);
 				console.log(departments);
 				console.log(userCode);
+				document.getElementById("user_control_message").innerHTML = name + " was added successfully.<br/>" + name + "'s user code for Buddiz: " + userCode;
+				document.getElementById("user_control_message").style.color = "#4cc113";
 				dialog_add.dialog( "close" );
 				$('#overlay, #overlay-back').fadeOut(500);
 			}
@@ -193,55 +198,75 @@ $( function() {
       var docRef = db.collection("adminAddedUsers").doc(idNum);
       docRef.get().then(function(doc) {
       if (doc.exists) {
+		var nameBefore = doc.data().name;
 		console.log("Document data:", doc.data());
+		var changed = false;
 		var name = document.forms["EditUser"]["name"].value;
-					if (name !== ''){
-					docRef.update({
-							   name: name
-					})
-					}
+		if (name !== ''){
+			changed = true;
+			docRef.update({
+				name: name
+			})
+		}
 		var phone = document.forms["EditUser"]["phone"].value;
-					if (phone !== '' ){
-					docRef.update({
-							   phone: phone
-							   })
-					}
+		if (phone !== '' ){
+			changed = true;
+			docRef.update({
+				phone: phone
+			})
+		}
 		var kind = document.forms["EditUser"]["kind"].value;
-					if (kind !== '' ){
-					docRef.update({
-							   kind: kind
-							   })
-					}
+		if (kind !== '' ){
+			changed = true;
+			docRef.update({
+				kind: kind
+			})
+		}
 		var departments = [];
 		if (document.forms["EditUser"]["adults-day"].checked) {
-			departments.push("adults_day");
+			departments.push("adults_day_care");
 		}
 		if (document.forms["EditUser"]["adults-open"].checked) {
-			departments.push("adults_open");
+			departments.push("adults_open_dep.");
 		}
 		if (document.forms["EditUser"]["adults-closed"].checked) {
-			departments.push("adults_closed");
+			departments.push("adults_closed_dep.");
 		}
 		if (document.forms["EditUser"]["minor-day"].checked) {
-			departments.push("minor_day");
+			departments.push("minor_day_care");
 		}
 		if (document.forms["EditUser"]["minor-closed"].checked) {
-			departments.push("minor_closed");
+			departments.push("minor_closed_dep.");
 		}
 		if (departments.length != 0 ){
-		docRef.update({
-				   departments: departments
-				   })
+			changed = true;
+			docRef.update({
+				departments: departments
+			})
+		}
+		console.log("changes: " + changed);
+		if (!changed) {
+			document.getElementById("user_control_message").innerHTML = "You didn't make any changes";
+			document.getElementById("user_control_message").style.color = "blue";
+		}
+		else {
+			var currentName = name !== "" ? name : nameBefore;
+			document.getElementById("user_control_message").innerHTML = currentName  + " was edited successfully";
+			document.getElementById("user_control_message").style.color = "#4cc113";
 		}
 		dialog_edit.dialog( "close" );
 		$('#overlay, #overlay-back').fadeOut(500);
       } else {
       // doc.data() will be undefined in this case
-            document.forms["EditUser"].getElementsByClassName("edit_id_error")[0].innerHTML = "This user does not exist!";
+            document.getElementById("user_control_message").innerHTML = "A user with id " + idNum + " does not exist";
+			document.getElementById("user_control_message").style.color = "red";
+			dialog_edit.dialog( "close" );
+			$('#overlay, #overlay-back').fadeOut(500);
       }
-      }).catch(function(error) {
-               console.log("Error getting document:", error);
-      });
+      }//).catch(function(error) {
+         //      console.log("Error getting document:", error);
+      //}
+	  );
     }
 	
 	function findUser() {
@@ -296,11 +321,27 @@ $( function() {
 			document.forms["DeleteUser"].getElementsByClassName("delete_id_error")[0].innerHTML = "Please enter a valid ID";
 			return false;
 		}
-		db.collection("adminAddedUsers").doc(idNum).delete().then(function() {
-			console.log("User successfully deleted!");
-		}).catch(function(error) {
-			console.error("Error removing user: ", error);
+		
+		var docRef = db.collection('adminAddedUsers').doc(idNum);
+	
+		docRef.get().then(function(doc) {
+			if (doc.exists) {
+				name = doc.data().name;
+				db.collection("adminAddedUsers").doc(idNum).delete().then(function() {
+					document.getElementById("user_control_message").innerHTML = name  + " was deleted successfully!";
+					document.getElementById("user_control_message").style.color = "#4cc113";
+				}).catch(function(error) {
+					document.getElementById("user_control_message").innerHTML = "There was a problem while trying to delete " + name;
+					document.getElementById("user_control_message").style.color = "red";
+				});
+			}
+			else {
+				document.getElementById("user_control_message").innerHTML = "The user " + idNum + " does not exist";
+				document.getElementById("user_control_message").style.color = "red";
+			}
 		});
+		
+		
 		dialog_delete.dialog( "close" );
 		$('#overlay, #overlay-back').fadeOut(500);
 	}
@@ -409,12 +450,14 @@ $( function() {
     $( "#add-user" ).button().on( "click", function() {
 		form_add[ 0 ].reset();
 		cleanErrorMessagesAdd();
+		document.getElementById("user_control_message").innerHTML = "";
 		dialog_add.dialog( "open" );
 		$('#overlay, #overlay-back').fadeIn(500);
     });
 	
 	$( "#edit-user" ).button().on( "click", function() {
 		form_edit[ 0 ].reset();
+		document.getElementById("user_control_message").innerHTML = "";
 		dialog_edit.dialog( "open" );
 		document.forms["EditUser"].getElementsByClassName("edit_id_error")[0].innerHTML = "";
 		$('#overlay, #overlay-back').fadeIn(500);
@@ -422,6 +465,7 @@ $( function() {
 	
 	$( "#find-user" ).button().on( "click", function() {
 		form_search[ 0 ].reset();
+		document.getElementById("user_control_message").innerHTML = "";
 		document.forms["FindUser"].getElementsByClassName("user_data_search")[0].innerHTML = "";
 		dialog_search.dialog( "open" );
 		$('#overlay, #overlay-back').fadeIn(500);
@@ -429,6 +473,7 @@ $( function() {
 	
 	$( "#delete-user" ).button().on( "click", function() {
 		form_delete[ 0 ].reset();
+		document.getElementById("user_control_message").innerHTML = "";
 		document.forms["DeleteUser"].getElementsByClassName("delete_id_error")[0].innerHTML = "";
 		dialog_delete.dialog( "open" );
 		$('#overlay, #overlay-back').fadeIn(500);
