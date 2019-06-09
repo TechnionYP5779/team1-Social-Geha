@@ -104,6 +104,7 @@ $( function() {
 	}
  
     function addUser() {
+		cleanErrorMessagesAdd();
 		var name = document.forms["AddUser"]["name"].value;
 		var idNum = document.forms["AddUser"]["id_num"].value;
 		var phone = document.forms["AddUser"]["phone"].value;
@@ -133,7 +134,7 @@ $( function() {
 	
 		docRef.get().then(function(doc) {
 			if (doc.exists) {
-				// DOCUMENT ALREADY EXISTS
+				document.forms["AddUser"].getElementsByClassName("add_id_error")[0].innerHTML = "This user already exists!";
 			}
 			else{
 				var setAda = docRef.set({
@@ -151,8 +152,10 @@ $( function() {
 				console.log(kind);
 				console.log(departments);
 				console.log(userCode);
+				dialog_add.dialog( "close" );
+				$('#overlay, #overlay-back').fadeOut(500);
 			}
-		}
+		});
 		
 
         // firebase.database().ref('adminAddedUsers/' + 55555).set({
@@ -179,8 +182,6 @@ $( function() {
       //   dialog_add.dialog( "close" );
       // }
       // return valid;
-        dialog_add.dialog( "close" );
-		$('#overlay, #overlay-back').fadeOut(500);
     }
 	
 	function editUser() {
