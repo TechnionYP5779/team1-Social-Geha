@@ -33,6 +33,8 @@ import java.util.ArrayList;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import static com.example.ofir.social_geha.Activities_and_Fragments.activity_main_drawer.ALL_CHATS_TAG;
+
 public class AvailableMatches extends AppCompatActivity {
 
     ListView listView;
@@ -209,6 +211,8 @@ public class AvailableMatches extends AppCompatActivity {
         public void run() {
             runOnUiThread(new Runnable() {
                 public void run() {
+                    String toast_txt = "טרם נמצאו אנשים מתאימים"+"\n"+"פונה אל אנשי הצוות במקום";
+                    progressBarTitle.setText(toast_txt);
                     if(someApproved) return;
                     Database.getInstance().sendRequestsToStaff();
                 }
