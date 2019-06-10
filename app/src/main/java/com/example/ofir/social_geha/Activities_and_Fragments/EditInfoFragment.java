@@ -170,7 +170,7 @@ public class EditInfoFragment extends Fragment {
                     }
                 }
                 android.support.v4.app.FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
-                ft.replace(R.id.flMain, new HomeFragment(), ((activity_main_drawer) getActivity()).ALL_CHATS_TAG);
+                ft.replace(R.id.flMain, new AllChatsFragment(), ((activity_main_drawer) getActivity()).ALL_CHATS_TAG);
                 Toast.makeText(getActivity(), "הפרטים עודכנו בהצלחה", Toast.LENGTH_SHORT).show();
                 ((activity_main_drawer) getActivity()).selectNavigationDrawer(R.id.nav_inbox);
                 ft.commit();

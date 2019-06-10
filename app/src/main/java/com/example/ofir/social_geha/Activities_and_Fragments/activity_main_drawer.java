@@ -156,8 +156,8 @@ public class activity_main_drawer extends AppCompatActivity
                 }
                 else{
                         mSearch.setVisible(false);
-                        navigationView.setCheckedItem(position);
                 }
+                navigationView.setCheckedItem(position);
         }
 
         public void loadData() {
