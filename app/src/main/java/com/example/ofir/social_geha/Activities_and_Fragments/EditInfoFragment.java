@@ -163,10 +163,10 @@ public class EditInfoFragment extends Fragment {
                 Log.d("NAME_CHANGE_SANITY", "the init name here is " + initialName);
                 if (!givenName.equals(initialName)) {
                     // send control messages
-                    for (SharingsFileHandler.UID uid : new SharingsFileHandler(getActivity()).getUIDs()) {
-                        Log.d("NAME_CHANGE_SEND", "sending message to " + uid.getUID());
+                    for (String uid : new SharingsFileHandler(getActivity()).getUIDs()) {
+                        Log.d("NAME_CHANGE_SEND", "sending message to " + uid);
                         Database.getInstance().sendControlMessage("NAME_CHANGE#" + givenName,
-                                currentPerson.getUserID(), uid.getUID());
+                                currentPerson.getUserID(), uid);
                     }
                 }
                 android.support.v4.app.FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();

@@ -75,12 +75,7 @@ public class AllChatsActivity extends AppCompatActivity {
         sharingsFileHandler = new SharingsFileHandler(this);
         mFirestore = FirebaseFirestore.getInstance();
         FloatingActionButton fab = findViewById(R.id.new_conversation_fb);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(AllChatsActivity.this, FilterMatchesActivity.class));
-            }
-        });
+        fab.setOnClickListener(v -> startActivity(new Intent(AllChatsActivity.this, FilterMatchesActivity.class)));
 
         mToolbar = findViewById(R.id.toolbar);
         setSupportActionBar(mToolbar);
@@ -88,17 +83,14 @@ public class AllChatsActivity extends AppCompatActivity {
         mEmptyView = findViewById(R.id.emptyView);
 
         Database.getInstance().getdb().collection("users").whereEqualTo("userID", Database.getInstance().getLoggedInUserID()).get()
-                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        //Log.d("SHAI", "task complete!");
-                        if (task.isSuccessful()) {
-                            for (QueryDocumentSnapshot doc : task.getResult()) {
-                                AllChatsActivity.this.p = doc.toObject(Person.class);
-                            }
+                .addOnCompleteListener(task -> {
+                    //Log.d("SHAI", "task complete!");
+                    if (task.isSuccessful()) {
+                        for (QueryDocumentSnapshot doc : task.getResult()) {
+                            AllChatsActivity.this.p = doc.toObject(Person.class);
                         }
-
                     }
+
                 });
 
 //        if(this.p == null) {
@@ -109,73 +101,71 @@ public class AllChatsActivity extends AppCompatActivity {
 
         loadList();
 
-        mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        mListView.setOnItemClickListener((parent, view, position, id) -> {
+            Object o = mListView.getItemAtPosition(position);
+            ChatEntry chatEntry = (ChatEntry) o; //As you are using Default String Adapter
+            Intent myIntent = new Intent(AllChatsActivity.this, ChatActivity.class);
 
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Object o = mListView.getItemAtPosition(position);
-                ChatEntry chatEntry = (ChatEntry) o; //As you are using Default String Adapter
-                Intent myIntent = new Intent(AllChatsActivity.this, ChatActivity.class);
-
-                myIntent.putExtra("EXTRA_PERSON_ID", chatEntry.getUserID());
-                myIntent.putExtra("EXTRA_NAME", chatEntry.getName());
-                myIntent.putExtra("EXTRA_PHOTO_URL", chatEntry.getImageName());
-                myIntent.putExtra("EXTRA_PHOTO_COLOR", chatEntry.getImageColor());
-                myIntent.putExtra("EXTRA_INITIATOR", false);
-                AllChatsActivity.this.startActivity(myIntent);
-            }
+            myIntent.putExtra("EXTRA_PERSON_ID", chatEntry.getUserID());
+            myIntent.putExtra("EXTRA_NAME", chatEntry.getName());
+            myIntent.putExtra("EXTRA_PHOTO_URL", chatEntry.getImageName());
+            myIntent.putExtra("EXTRA_PHOTO_COLOR", chatEntry.getImageColor());
+            myIntent.putExtra("EXTRA_INITIATOR", false);
+            AllChatsActivity.this.startActivity(myIntent);
         });
 
         //Set long click listener
+        Log.d("CLICK", "SETTING UP THE LONG CLICK LISTENER");
         mListView.setLongClickable(true);
-        mListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
-            @Override
-            public boolean onItemLongClick(AdapterView<?> arg0, View arg1,
-                                           final int pos, long id) {
+        mListView.setOnItemLongClickListener((arg0, arg1, pos, id) -> {
 
-                String uid = conversationList.get(pos).getUserID();
-                //cannot click once it's been shared
-                Map<String, ContactListFileHandler.Contact> contactMap = new ContactListFileHandler(AllChatsActivity.this).getContacts();
-                for (Map.Entry<String, ContactListFileHandler.Contact> c : contactMap.entrySet()) {
-                    if (c.getValue().getUid().equals(uid) && !c.getValue().getRealName().equals(ContactListFileHandler.Contact.UNKNOWN_NAME)) {
-                        String toastText = "לא ניתן לבטל את שיתוף המידע עם " + c.getValue().getRealName();
-                        Toast.makeText(AllChatsActivity.this, toastText, Toast.LENGTH_SHORT).show();
-                        return true;
-                    }
+            String uid = conversationList.get(pos).getUserID();
+            Log.d("CLICK", "Clicked: " + uid);
+            //cannot click once it's been shared
+            for(String ID: sharingsFileHandler.getUIDs()){
+                Log.d("CLICK", "person I've shared with: " + ID);
+                if(uid.equals(ID)) {
+                    String toastText = "לא ניתן לבטל את שיתוף המידע עם " + conversationList.get(pos).getName();
+                    Toast.makeText(AllChatsActivity.this, toastText, Toast.LENGTH_SHORT).show();
+                    return true;
                 }
-
-                AlertDialog.Builder builder = new AlertDialog.Builder(AllChatsActivity.this);
-                LayoutInflater inflater = getLayoutInflater();
-                View dialogView = inflater.inflate(R.layout.alert_dialog_information_exposre, null);
-                builder.setView(dialogView);
-                Button one = dialogView.findViewById(R.id.button1);
-                Button three = dialogView.findViewById(R.id.button3);
-                final AlertDialog dialog = builder.create();
-                one.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        Toast.makeText(AllChatsActivity.this, "בוטל", Toast.LENGTH_SHORT).show();
-                        dialog.dismiss();
-                    }
-                });
-
-                three.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        String content = "IDENTITY$" + Database.getInstance().getLoggedInUserID() + "#" + AllChatsActivity.this.p.getRealName();
-                        Log.d("SHAI", "going to send reveal message:" + content);
-                        Database.getInstance().sendControlMessage(content, Database.getInstance().getLoggedInUserID(), conversationList.get(pos).getUserID());
-                        Toast.makeText(AllChatsActivity.this, "שותף בהצלחה", Toast.LENGTH_SHORT).show();
-                        sharingsFileHandler.addUID(conversationList.get(pos).getUserID());
-                        dialog.dismiss();
-                    }
-                });
-
-                String are_you_sure_msg = "האם אתה בטוח שברצונך לשתף את זהותך עם " + conversationList.get(pos).getName() + "?";
-                TextView message = dialogView.findViewById(R.id.textView2);
-                message.setText(are_you_sure_msg);
-                dialog.show();
-                return true;
             }
+
+//            Map<String, ContactListFileHandler.Contact> contactMap = new ContactListFileHandler(AllChatsActivity.this).getContacts();
+//            for (Map.Entry<String, ContactListFileHandler.Contact> c : contactMap.entrySet()) {
+//                if (c.getValue().getUid().equals(uid) && !c.getValue().getRealName().equals(ContactListFileHandler.Contact.UNKNOWN_NAME)) {
+//                    String toastText = "לא ניתן לבטל את שיתוף המידע עם " + c.getValue().getRealName();
+//                    Toast.makeText(AllChatsActivity.this, toastText, Toast.LENGTH_SHORT).show();
+//                    return true;
+//                }
+//            }
+
+            AlertDialog.Builder builder = new AlertDialog.Builder(AllChatsActivity.this);
+            LayoutInflater inflater = getLayoutInflater();
+            View dialogView = inflater.inflate(R.layout.alert_dialog_information_exposre, null);
+            builder.setView(dialogView);
+            Button one = dialogView.findViewById(R.id.button1);
+            Button three = dialogView.findViewById(R.id.button3);
+            final AlertDialog dialog = builder.create();
+            one.setOnClickListener(v -> {
+                Toast.makeText(AllChatsActivity.this, "בוטל", Toast.LENGTH_SHORT).show();
+                dialog.dismiss();
+            });
+
+            three.setOnClickListener(v -> {
+                String content = "IDENTITY$" + Database.getInstance().getLoggedInUserID() + "#" + AllChatsActivity.this.p.getRealName();
+                Log.d("SHAI", "going to send reveal message:" + content);
+                Database.getInstance().sendControlMessage(content, Database.getInstance().getLoggedInUserID(), conversationList.get(pos).getUserID());
+                Toast.makeText(AllChatsActivity.this, "שותף בהצלחה", Toast.LENGTH_SHORT).show();
+                sharingsFileHandler.addUID(conversationList.get(pos).getUserID());
+                dialog.dismiss();
+            });
+
+            String are_you_sure_msg = "האם אתה בטוח שברצונך לשתף את זהותך עם " + conversationList.get(pos).getName() + "?";
+            TextView message = dialogView.findViewById(R.id.textView2);
+            message.setText(are_you_sure_msg);
+            dialog.show();
+            return true;
         });
 
         mListView.setEmptyView(mEmptyView);

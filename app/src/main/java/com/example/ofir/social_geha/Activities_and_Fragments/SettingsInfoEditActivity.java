@@ -157,9 +157,9 @@ public class SettingsInfoEditActivity extends AppCompatActivity {
                             religion, selectedLanguages.toArray(new String[]{}), bio);
                     if (!givenName.equals(initialName)) {
                         // send control messages
-                        for (SharingsFileHandler.UID uid : new SharingsFileHandler(SettingsInfoEditActivity.this).getUIDs())
+                        for (String uid : new SharingsFileHandler(SettingsInfoEditActivity.this).getUIDs())
                             Database.getInstance().sendControlMessage("NAME_CHANGE#" + givenName,
-                                    currentPerson.getUserID(), uid.getUID());
+                                    currentPerson.getUserID(), uid);
                     }
                     onBackPressed();
                 }

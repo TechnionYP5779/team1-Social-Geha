@@ -11,10 +11,8 @@ import java.io.FileOutputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.Map;
 
 public class ContactListFileHandler {
     private static final String filename = "contactList";
@@ -49,7 +47,6 @@ public class ContactListFileHandler {
     //overwrites is uid is already found
     public HashMap<String, Contact> addContact(Contact c) {
         HashMap<String, Contact> contacts = getContacts();
-
         contacts.put(c.getUid(),c);
 
         try {
@@ -81,7 +78,7 @@ public class ContactListFileHandler {
             inputStream.close();
             return contacts;
         } catch (Exception e) {
-            return new HashMap<>();
+            throw new RuntimeException("contact file reading failed " + e.getMessage() + "\n");
         }
     }
 

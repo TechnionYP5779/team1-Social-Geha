@@ -48,6 +48,7 @@ import java.util.Map;
 
 public class AllChatsFragment extends Fragment {
     private MessageFileHandler mFileHandler;
+    private SharingsFileHandler sharingsFileHandler;
     ListView mListView;
     TextView mEmptyView;
     private FirebaseFirestore mFirestore;
@@ -55,109 +56,102 @@ public class AllChatsFragment extends Fragment {
     private static final String USERS = "users";
     private Person p;
 
-    public AllChatsFragment() { }
+    public AllChatsFragment() {
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_all_chats, container, false);
-        ((activity_main_drawer)getActivity()).setActionBarTitle("שיחות");
+        ((activity_main_drawer) getActivity()).setActionBarTitle("שיחות");
         mFileHandler = new MessageFileHandler(getActivity());
+        sharingsFileHandler = new SharingsFileHandler(getActivity());
         mFirestore = FirebaseFirestore.getInstance();
         mListView = v.findViewById(R.id.list);
         mEmptyView = v.findViewById(R.id.emptyView);
         FloatingActionButton fab = v.findViewById(R.id.new_conversation_fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(getActivity() , FilterMatchesActivity.class));
-            }
-        });
+        fab.setOnClickListener(v1 -> startActivity(new Intent(getActivity(), FilterMatchesActivity.class)));
 
         Database.getInstance().getdb().collection("users").whereEqualTo("userID", Database.getInstance().getLoggedInUserID()).get()
-                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        if (task.isSuccessful()) {
-                            for (QueryDocumentSnapshot doc : task.getResult()) {
-                                p = doc.toObject(Person.class);
-                            }
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        for (QueryDocumentSnapshot doc : task.getResult()) {
+                            p = doc.toObject(Person.class);
                         }
-
                     }
+
                 });
 
 
         setupToggle(v);
         loadList();
 
-        mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        mListView.setOnItemClickListener((parent, view, position, id) -> {
+            Object o = mListView.getItemAtPosition(position);
+            ChatEntry chatEntry = (ChatEntry) o; //As you are using Default String Adapter
+            Intent myIntent = new Intent(getActivity(), ChatActivity.class);
 
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Object o = mListView.getItemAtPosition(position);
-                ChatEntry chatEntry = (ChatEntry) o; //As you are using Default String Adapter
-                Intent myIntent = new Intent(getActivity(), ChatActivity.class);
-
-                myIntent.putExtra("EXTRA_PERSON_ID", chatEntry.getUserID());
-                myIntent.putExtra("EXTRA_NAME", chatEntry.getName());
-                myIntent.putExtra("EXTRA_PHOTO_URL", chatEntry.getImageName());
-                myIntent.putExtra("EXTRA_PHOTO_COLOR", chatEntry.getImageColor());
-                myIntent.putExtra("EXTRA_INITIATOR", false);
-                getActivity().startActivity(myIntent);
-            }
+            myIntent.putExtra("EXTRA_PERSON_ID", chatEntry.getUserID());
+            myIntent.putExtra("EXTRA_NAME", chatEntry.getName());
+            myIntent.putExtra("EXTRA_PHOTO_URL", chatEntry.getImageName());
+            myIntent.putExtra("EXTRA_PHOTO_COLOR", chatEntry.getImageColor());
+            myIntent.putExtra("EXTRA_INITIATOR", false);
+            getActivity().startActivity(myIntent);
         });
+
 
         //Set long click listener
         mListView.setLongClickable(true);
-        mListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
-            @Override
-            public boolean onItemLongClick(AdapterView<?> arg0, View arg1,
-                                           final int pos, long id) {
+        mListView.setOnItemLongClickListener((arg0, arg1, pos, id) -> {
 
-                String uid = ((activity_main_drawer) getActivity()).conversationList.get(pos).getUserID();
-                //cannot click once it's been shared
-                Map<String, ContactListFileHandler.Contact> contactMap = new ContactListFileHandler(getActivity()).getContacts();
-                for (Map.Entry<String, ContactListFileHandler.Contact> c : contactMap.entrySet()) {
-                    if (c.getValue().getUid().equals(uid) && !c.getValue().getRealName().equals(ContactListFileHandler.Contact.UNKNOWN_NAME)) {
-                        String toastText = "לא ניתן לבטל את שיתוף המידע עם " + c.getValue().getRealName();
-                        Toast.makeText(getActivity(), toastText, Toast.LENGTH_SHORT).show();
-                        return true;
-                    }
+            String uid = ((activity_main_drawer) getActivity()).conversationList.get(pos).getUserID();
+            //cannot click once it's been shared
+            //cannot click once it's been shared
+            Toast.makeText(getActivity(), sharingsFileHandler.getUIDs().toString(), Toast.LENGTH_LONG).show();
+            for (String ID : sharingsFileHandler.getUIDs()) {
+                if (uid.equals(ID)) {
+                    String toastText = "לא ניתן לבטל את שיתוף המידע עם " + ((activity_main_drawer) getActivity()).conversationList.get(pos).getName();
+                    Toast.makeText(getActivity(), toastText, Toast.LENGTH_SHORT).show();
+                    return true;
                 }
-
-                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-                LayoutInflater inflater = getLayoutInflater();
-                View dialogView = inflater.inflate(R.layout.alert_dialog_information_exposre, null);
-                builder.setView(dialogView);
-                Button one = dialogView.findViewById(R.id.button1);
-                Button three = dialogView.findViewById(R.id.button3);
-                final AlertDialog dialog = builder.create();
-                one.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        Toast.makeText(getActivity(), "בוטל", Toast.LENGTH_SHORT).show();
-                        dialog.dismiss();
-                    }
-                });
-
-                three.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        String content = "IDENTITY$" + Database.getInstance().getLoggedInUserID() + "#" + p.getRealName();
-                        SharingsFileHandler sharingsFileHandler = new SharingsFileHandler(getActivity());
-                        sharingsFileHandler.addUID(((activity_main_drawer) getActivity()).conversationList.get(pos).getUserID());
-                        Database.getInstance().sendControlMessage(content, Database.getInstance().getLoggedInUserID(), ((activity_main_drawer) getActivity()).conversationList.get(pos).getUserID());
-                        Toast.makeText(getActivity(), "שותף בהצלחה", Toast.LENGTH_SHORT).show();
-                        dialog.dismiss();
-                    }
-                });
-
-                String are_you_sure_msg = "האם אתה בטוח שברצונך לשתף את זהותך עם " + ((activity_main_drawer) getActivity()).conversationList.get(pos).getName() + "?";
-                TextView message = dialogView.findViewById(R.id.textView2);
-                message.setText(are_you_sure_msg);
-                dialog.show();
-                return true;
             }
+
+//            Map<String, ContactListFileHandler.Contact> contactMap = new ContactListFileHandler(getActivity()).getContacts();
+//            for (Map.Entry<String, ContactListFileHandler.Contact> c : contactMap.entrySet()) {
+//                if (c.getValue().getUid().equals(uid) && !c.getValue().getRealName().equals(ContactListFileHandler.Contact.UNKNOWN_NAME)) {
+//                    String toastText = "לא ניתן לבטל את שיתוף המידע עם " + c.getValue().getRealName();
+//                    Toast.makeText(getActivity(), toastText, Toast.LENGTH_SHORT).show();
+//                    return true;
+//                }
+//            }
+
+            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+            LayoutInflater inflater1 = getLayoutInflater();
+            View dialogView = inflater1.inflate(R.layout.alert_dialog_information_exposre, null);
+            builder.setView(dialogView);
+            Button one = dialogView.findViewById(R.id.button1);
+            Button three = dialogView.findViewById(R.id.button3);
+            final AlertDialog dialog = builder.create();
+            one.setOnClickListener(v12 -> {
+                Toast.makeText(getActivity(), "בוטל", Toast.LENGTH_SHORT).show();
+                dialog.dismiss();
+            });
+
+            three.setOnClickListener(v12 -> {
+                String content = "IDENTITY$" + Database.getInstance().getLoggedInUserID() + "#" + p.getRealName();
+                //SharingsFileHandler sharingsFileHandler = new SharingsFileHandler(getActivity());
+                sharingsFileHandler.addUID(((activity_main_drawer) getActivity()).conversationList.get(pos).getUserID());
+                Database.getInstance().sendControlMessage(content, Database.getInstance().getLoggedInUserID(), ((activity_main_drawer) getActivity()).conversationList.get(pos).getUserID());
+                Toast.makeText(getActivity(), "שותף בהצלחה", Toast.LENGTH_SHORT).show();
+                dialog.dismiss();
+                Toast.makeText(getActivity(), "sharings = " + sharingsFileHandler.getUIDs().toString(), Toast.LENGTH_LONG).show();
+            });
+
+            String are_you_sure_msg = "האם אתה בטוח שברצונך לשתף את זהותך עם " + ((activity_main_drawer) getActivity()).conversationList.get(pos).getName() + "?";
+            TextView message = dialogView.findViewById(R.id.textView2);
+            message.setText(are_you_sure_msg);
+            dialog.show();
+            return true;
         });
 
         mListView.setEmptyView(mEmptyView);
@@ -183,86 +177,85 @@ public class AllChatsFragment extends Fragment {
         Log.d("SHAI", "IN POPULATE CONV LIST");
 
         mFirestore.collection(MESSAGES).whereEqualTo("toPersonID", Database.getInstance().getLoggedInUserID())
-                .addSnapshotListener(new EventListener<QuerySnapshot>() {
-                    @Override
-                    public void onEvent(@javax.annotation.Nullable QuerySnapshot queryDocumentSnapshots, @javax.annotation.Nullable FirebaseFirestoreException e) {
-                        if (e != null) {
-                            return;
-                        }
+                .addSnapshotListener((queryDocumentSnapshots, e) -> {
+                    if (e != null) {
+                        return;
+                    }
 
-                        for (DocumentChange doc : queryDocumentSnapshots.getDocumentChanges()) {
-                            if (doc.getType() == DocumentChange.Type.ADDED) {
-                                Message message = doc.getDocument().toObject(Message.class); //added message
-                                mFirestore.collection(MESSAGES).document(doc.getDocument().getId()).delete();
-                                // decrypt regular messages
-                                String contactUID = message.getFromPersonID();
-                                if (message.getShown()) {
-                                    KeyFileHandler keyFileHandler = new KeyFileHandler(getActivity(), contactUID);
-                                    AES aes = new AES(keyFileHandler.getKey());
-                                    message.setMessage(aes.decrypt(message.getMessage()));
-                                }
+                    for (DocumentChange doc : queryDocumentSnapshots.getDocumentChanges()) {
+                        if (doc.getType() == DocumentChange.Type.ADDED) {
+                            Message message = doc.getDocument().toObject(Message.class); //added message
+                            mFirestore.collection(MESSAGES).document(doc.getDocument().getId()).delete();
+                            // decrypt regular messages
+                            String contactUID = message.getFromPersonID();
+                            if (message.getShown()) {
+                                KeyFileHandler keyFileHandler = new KeyFileHandler(getActivity(), contactUID);
+                                AES aes = new AES(keyFileHandler.getKey());
+                                message.setMessage(aes.decrypt(message.getMessage()));
+                            }
 
 //                                if(message.getMessage() == null || message.getMessage().equals("CHAT REQUEST$")
 //                                        || message.getMessage().equals("CHAT ACCEPT$") || message.getMessage().equals("CHAT REJECT$")) continue;
-                                mFileHandler.writeMessage(message); //non shown messages will be ignored anyway but may as well write them
+                            mFileHandler.writeMessage(message); //non shown messages will be ignored anyway but may as well write them
 
-                                if (message.getShown()) {
-                                    continue;
-                                }
+                            if (message.getShown()) {
+                                continue;
+                            }
 
-                                //it's a control message - our business
-                                String text = message.getMessage();
+                            //it's a control message - our business
+                            String text = message.getMessage();
 
-                                /* self message*/
-                                if (contactUID.equals(Database.getInstance().getLoggedInUserID()))
-                                    continue;
+                            /* self message*/
+                            if (contactUID.equals(Database.getInstance().getLoggedInUserID()))
+                                continue;
 
-                                /*a control message but not an identity reveal*/
-                                if (text.substring(0, "IDENTITY".length()).equals("IDENTITY")) {
-                                    String realName = text.substring(text.indexOf('#') + 1);
-                                    Log.d("SHAI", "got control message from " + message.getFromPersonID());
-                                    Log.d("SHAI", "his/her realname is " + realName);
-                                    new ContactListFileHandler(getActivity()).changeName(contactUID, realName);
+                            /*a control message but not an identity reveal*/
+                            if (text.substring(0, "IDENTITY".length()).equals("IDENTITY")) {
+                                String realName = text.substring(text.indexOf('#') + 1);
+                                Log.d("SHAI", "got control message from " + message.getFromPersonID());
+                                Log.d("SHAI", "his/her realname is " + realName);
+                                new ContactListFileHandler(getActivity()).changeName(contactUID, realName);
 
-                                    //for the full effect - swap the names in the lists
-                                    //The contact must be in the list since a first message can not be an identity reveal one
-                                    for (int i = 0; i < ((activity_main_drawer) getActivity()).conversationList.size(); i++) {
-                                        if (((activity_main_drawer) getActivity()).conversationList.get(i).getUserID().equals(contactUID)) {
-                                            ((activity_main_drawer) getActivity()).conversationList.get(i).setRealName(realName);
-                                        }
-                                    }
-
-                                    for (int i = 0; i < ((activity_main_drawer) getActivity()).allList.size(); i++) {
-                                        if (((activity_main_drawer) getActivity()).allList.get(i).getUserID().equals(contactUID)) {
-                                            ((activity_main_drawer) getActivity()).allList.get(i).setRealName(realName);
-                                        }
-                                    }
-                                    // a message we should ignore because it's not an identity reveal - to the next change
-                                } else if (text.substring(0, "AES".length()).equals("AES")) {
-                                    KeyFileHandler keyFileHandler = new KeyFileHandler(getActivity(), contactUID);
-                                    keyFileHandler.writeKey(AES.stringToKey(text.substring("AES".length())));
-                                    Log.d("AES_READ", "received key from " + contactUID + " and the key is " + text.substring("AES".length()));
-                                } else if (text.substring(0, "NAME_CHANGE".length()).equals("NAME_CHANGE")) {
-                                    String realName = text.substring(text.indexOf('#') + 1);
-                                    Log.d("NAME_CHANGE", "received a name change from " + contactUID + " to change name to " + realName);
-                                    for (int i = 0; i < ((activity_main_drawer) getActivity()).conversationList.size(); i++) {
-                                        if (((activity_main_drawer) getActivity()).conversationList.get(i).getUserID().equals(contactUID)) {
-                                            ((activity_main_drawer) getActivity()).conversationList.get(i).setRealName(realName);
-                                        }
-                                    }
-
-                                    for (int i = 0; i < ((activity_main_drawer) getActivity()).allList.size(); i++) {
-                                        if (((activity_main_drawer) getActivity()).allList.get(i).getUserID().equals(contactUID)) {
-                                            ((activity_main_drawer) getActivity()).allList.get(i).setRealName(realName);
-                                        }
+                                //for the full effect - swap the names in the lists
+                                //The contact must be in the list since a first message can not be an identity reveal one
+                                for (int i = 0; i < ((activity_main_drawer) getActivity()).conversationList.size(); i++) {
+                                    if (((activity_main_drawer) getActivity()).conversationList.get(i).getUserID().equals(contactUID)) {
+                                        ((activity_main_drawer) getActivity()).conversationList.get(i).setRealName(realName);
                                     }
                                 }
 
+                                for (int i = 0; i < ((activity_main_drawer) getActivity()).allList.size(); i++) {
+                                    if (((activity_main_drawer) getActivity()).allList.get(i).getUserID().equals(contactUID)) {
+                                        ((activity_main_drawer) getActivity()).allList.get(i).setRealName(realName);
+                                    }
+                                }
+                                // a message we should ignore because it's not an identity reveal - to the next change
+                            } else if (text.substring(0, "AES".length()).equals("AES")) {
+                                KeyFileHandler keyFileHandler = new KeyFileHandler(getActivity(), contactUID);
+                                keyFileHandler.writeKey(AES.stringToKey(text.substring("AES".length())));
+                                Log.d("AES_READ", "received key from " + contactUID + " and the key is " + text.substring("AES".length()));
+                            } else if (text.substring(0, "NAME_CHANGE".length()).equals("NAME_CHANGE")) {
+                                String realName = text.substring(text.indexOf('#') + 1);
+                                Log.d("NAME_CHANGE", "received a name change from " + contactUID + " to change name to " + realName);
+                                new ContactListFileHandler(getActivity()).changeName(contactUID, realName);
+
+                                for (int i = 0; i < ((activity_main_drawer) getActivity()).conversationList.size(); i++) {
+                                    if (((activity_main_drawer) getActivity()).conversationList.get(i).getUserID().equals(contactUID)) {
+                                        ((activity_main_drawer) getActivity()).conversationList.get(i).setRealName(realName);
+                                    }
+                                }
+
+                                for (int i = 0; i < ((activity_main_drawer) getActivity()).allList.size(); i++) {
+                                    if (((activity_main_drawer) getActivity()).allList.get(i).getUserID().equals(contactUID)) {
+                                        ((activity_main_drawer) getActivity()).allList.get(i).setRealName(realName);
+                                    }
+                                }
                             }
 
                         }
-                        updateList();
+
                     }
+                    updateList();
                 });
     }
 
@@ -303,6 +296,7 @@ public class AllChatsFragment extends Fragment {
         chatEntryMap.remove(loggedInUserID);
 
         for (final Map.Entry<String, ChatEntry> entry : chatEntryMap.entrySet()) {
+
             if (!entry.getValue().getName().equals(dummyName)) {
                 ChatEntry chatEntry = entry.getValue();
 
@@ -321,34 +315,31 @@ public class AllChatsFragment extends Fragment {
             } else {
                 //new message from someone we do not know
                 Task<QuerySnapshot> personQueryTask = mFirestore.collection(USERS).whereEqualTo("userID", entry.getKey()).get();
-                personQueryTask.addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        QuerySnapshot person = task.getResult();
-                        if (!person.isEmpty()) {
-                            Person myPerson = person.toObjects(Person.class).get(0);
-                            Log.d("COOLTEST", "got user: " + myPerson.getDescription());
-                            ContactListFileHandler.Contact myContact = new ContactListFileHandler.Contact(myPerson.getUserID(), ContactListFileHandler.Contact.UNKNOWN_NAME,
-                                    myPerson.getDescription(), myPerson.getAnonymousIdentity(), new Date(Long.MIN_VALUE));
-                            ChatEntry chatEntry = new ChatEntry(myContact, entry.getValue().getMessage(), entry.getValue().getUnreadCount()); //contact & message might have been updated
+                personQueryTask.addOnCompleteListener(task -> {
+                    QuerySnapshot person = task.getResult();
+                    if (!person.isEmpty()) {
+                        Person myPerson = person.toObjects(Person.class).get(0);
+                        Log.d("COOLTEST", "got user: " + myPerson.getDescription());
+                        ContactListFileHandler.Contact myContact = new ContactListFileHandler.Contact(myPerson.getUserID(), ContactListFileHandler.Contact.UNKNOWN_NAME,
+                                myPerson.getDescription(), myPerson.getAnonymousIdentity(), new Date(Long.MIN_VALUE));
+                        ChatEntry chatEntry = new ChatEntry(myContact, entry.getValue().getMessage(), entry.getValue().getUnreadCount()); //contact & message might have been updated
 
-                            int j = listContains(((activity_main_drawer) getActivity()).conversationList, chatEntry.getUserID());
-                            if (j != -1) {
-                                ((activity_main_drawer) getActivity()).conversationList.remove(chatEntry);
-                                ((activity_main_drawer) getActivity()).allList.remove(chatEntry);
+                        int j = listContains(((activity_main_drawer) getActivity()).conversationList, chatEntry.getUserID());
+                        if (j != -1) {
+                            ((activity_main_drawer) getActivity()).conversationList.remove(chatEntry);
+                            ((activity_main_drawer) getActivity()).allList.remove(chatEntry);
 
-                                ((activity_main_drawer) getActivity()).conversationList.set(j, chatEntry);
-                                ((activity_main_drawer) getActivity()).allList.set(j, chatEntry);
-                            } else {
-                                ((activity_main_drawer) getActivity()).conversationList.add(chatEntry);
-                                ((activity_main_drawer) getActivity()).allList.add(chatEntry);
-                            }
-                            ((activity_main_drawer) getActivity()).mAdapter.notifyDataSetChanged();
-
-                            //since this person is not in the contactList we to update the file
-                            Log.d("SHAI", "NEW CONTACT");
-                            new ContactListFileHandler(getActivity()).addContact(myContact);
+                            ((activity_main_drawer) getActivity()).conversationList.set(j, chatEntry);
+                            ((activity_main_drawer) getActivity()).allList.set(j, chatEntry);
+                        } else {
+                            ((activity_main_drawer) getActivity()).conversationList.add(chatEntry);
+                            ((activity_main_drawer) getActivity()).allList.add(chatEntry);
                         }
+                        ((activity_main_drawer) getActivity()).mAdapter.notifyDataSetChanged();
+
+                        //since this person is not in the contactList we to update the file
+                        Log.d("SHAI", "NEW CONTACT");
+                        new ContactListFileHandler(getActivity()).addContact(myContact);
                     }
                 });
             }
@@ -370,25 +361,21 @@ public class AllChatsFragment extends Fragment {
         return -1;
     }
 
-    private void setupToggle(View v){
+    private void setupToggle(View v) {
         DayNightSwitch dayNightSwitch = v.findViewById(R.id.toggle_availability);
         TextView textView = v.findViewById(R.id.description_availability);
         ConstraintLayout constraintLayout = v.findViewById(R.id.constraint_layout_availability);
 
-        dayNightSwitch.setOnToggledListener(new OnToggledListener() {
-            @Override
-            public void onSwitched(ToggleableView toggleableView, boolean isOn) {
-                TransitionDrawable transition = (TransitionDrawable) constraintLayout.getBackground();
-                if(isOn){
-                    Database.getInstance().updateAvailability(true);
-                    textView.setText(R.string.available);
-                    transition.reverseTransition(300);
-                }
-                else{
-                    Database.getInstance().updateAvailability(false);
-                    textView.setText(R.string.not_available);
-                    transition.startTransition(300);
-                }
+        dayNightSwitch.setOnToggledListener((toggleableView, isOn) -> {
+            TransitionDrawable transition = (TransitionDrawable) constraintLayout.getBackground();
+            if (isOn) {
+                Database.getInstance().updateAvailability(true);
+                textView.setText(R.string.available);
+                transition.reverseTransition(300);
+            } else {
+                Database.getInstance().updateAvailability(false);
+                textView.setText(R.string.not_available);
+                transition.startTransition(300);
             }
         });
 

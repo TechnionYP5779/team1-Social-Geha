@@ -3,44 +3,43 @@ package com.example.ofir.social_geha.Activities_and_Fragments.FileHandlers;
 import android.content.Context;
 import android.util.Log;
 
-import com.example.ofir.social_geha.Firebase.Message;
-import com.example.ofir.social_geha.Person;
-import com.google.firebase.firestore.ServerTimestamp;
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Date;
 
 public class SharingsFileHandler {
 
-    private String sharingsFile = "sharings";
+    private String filename = "sharings2";
     private File mFile;
     private Context context;
-    FileOutputStream outputStream;
-    FileInputStream inputStream;
 
 
     public SharingsFileHandler(Context context){
-        mFile = new File(context.getFilesDir(), sharingsFile);
+        mFile = new File(context.getFilesDir(), filename);
+        if (!mFile.exists()) {
+            try {
+                mFile.createNewFile();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
         this.context = context;
     }
 
-    public ArrayList<UID> addUID(String uid){
-        Log.d("POPO", "writeMessage: DOES THIS");
-        ArrayList<UID> uids = getUIDs();
-        uids.add(new UID(uid));
-        for(UID u : uids){
-            Log.d("POPO", "add UID: "+u.getUID());
-        }
+    public ArrayList<String> addUID(String uid){
+        ArrayList<String> uids = getUIDs();
+        uids.add(uid);
+
         try {
-            outputStream = context.openFileOutput(sharingsFile, Context.MODE_PRIVATE);
+            FileOutputStream outputStream = context.openFileOutput(filename, Context.MODE_PRIVATE);
             ObjectOutputStream oos = new ObjectOutputStream(outputStream);
             oos.writeObject(uids);
+            oos.flush();
             oos.close();
             outputStream.close();
         } catch (Exception e) {
@@ -49,41 +48,42 @@ public class SharingsFileHandler {
         return uids;
     }
 
-    public ArrayList<UID> getUIDs(){
-        ArrayList<UID> uids;
+    public ArrayList<String> getUIDs(){
+        ArrayList<String> uids;
         try {
-            inputStream = context.openFileInput(sharingsFile);
+            FileInputStream inputStream = context.openFileInput(filename);
             ObjectInputStream ois = new ObjectInputStream(inputStream);
-            uids = (ArrayList<UID>)ois.readObject();
+            uids = (ArrayList<String>)ois.readObject();
             ois.close();
             inputStream.close();
         } catch (Exception e) {
-            uids = new ArrayList<>();
+            //uids = new ArrayList<>();
+            //uids.add(e.getMessage());
+            throw new RuntimeException(e.getMessage());
         }
         return uids;
     }
 
-    public class UID implements Serializable {
-        private static final long serialVersionUID = 1L;
-        private String uid;
-
-        public UID(String u){
-            uid=u;
-
-        }
-
-
-        public String getUID() {
-            return uid;
-        }
-
-        public void setUID(String uid) {
-            this.uid = uid;
-        }
-
-        @Override
-        public String toString() {
-            return  "##"+ uid +"##";
-        }
-    }
+//    public static class UID implements Serializable {
+//        private static final long serialVersionUID = 1L;
+//        private String uid;
+//
+//        public UID(String u){
+//            uid = u;
+//        }
+//
+//
+//        public String getUID() {
+//            return uid;
+//        }
+//
+//        public void setUID(String uid) {
+//            this.uid = uid;
+//        }
+//
+//        @Override
+//        public String toString() {
+//            return  "##"+ uid +"##";
+//        }
+//    }
 }
