@@ -299,15 +299,18 @@ public final class Database {
     }
 
     public void updateAvailability(Boolean newAvail) {
-        Database.getInstance().getdb().collection("users").document(Database.getInstance().getLoggedInUserID()).get()
-                .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+        Database.getInstance().getdb().collection("users")
+                .document(Database.getInstance().getLoggedInUserID())
+                .update("availability", newAvail).addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void aVoid) {
+                Log.d(TAG, "DocumentSnapshot successfully updated!");
+            }
+        })
+                .addOnFailureListener(new OnFailureListener() {
                     @Override
-                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                        if(task.isSuccessful()){
-                            currentPerson = task.getResult().toObject(Person.class);
-                            currentPerson.setAvailability(newAvail);
-                            Database.getInstance().addUserPerson(currentPerson);
-                        }
+                    public void onFailure(@NonNull Exception e) {
+                        Log.w(TAG, "Error updating document", e);
                     }
                 });
     }
