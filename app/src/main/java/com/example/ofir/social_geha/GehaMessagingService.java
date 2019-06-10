@@ -13,6 +13,7 @@ import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.TaskStackBuilder;
 import android.util.Log;
 
+import com.example.ofir.social_geha.Activities_and_Fragments.AllChatsActivity;
 import com.example.ofir.social_geha.Activities_and_Fragments.ChatActivity;
 import com.example.ofir.social_geha.Activities_and_Fragments.FileHandlers.ContactListFileHandler;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -94,14 +95,19 @@ public class GehaMessagingService extends FirebaseMessagingService {
             resultIntent.putExtra("EXTRA_PERSON_ID", fromPersonID);
             ContactListFileHandler contactHandler = new ContactListFileHandler(this);
             ContactListFileHandler.Contact contact = contactHandler.getContact(fromPersonID);
-            String realName = contact.getRealName();
-            if(!realName.equals(ContactListFileHandler.Contact.UNKNOWN_NAME)){
-                resultIntent.putExtra("EXTRA_NAME", realName);
-            } else {
-                resultIntent.putExtra("EXTRA_NAME", contact.getAnonID().getName());
+            if(contact == null) {
+                resultIntent = new Intent(this, AllChatsActivity.class);
             }
-            resultIntent.putExtra("EXTRA_PHOTO_URL", contact.getAnonID().getImageName());
-            resultIntent.putExtra("EXTRA_PHOTO_COLOR", contact.getAnonID().getImageColor());
+            else {
+                String realName = contact.getRealName();
+                if (!realName.equals(ContactListFileHandler.Contact.UNKNOWN_NAME)) {
+                    resultIntent.putExtra("EXTRA_NAME", realName);
+                } else {
+                    resultIntent.putExtra("EXTRA_NAME", contact.getAnonID().getName());
+                }
+                resultIntent.putExtra("EXTRA_PHOTO_URL", contact.getAnonID().getImageName());
+                resultIntent.putExtra("EXTRA_PHOTO_COLOR", contact.getAnonID().getImageColor());
+            }
         }
         // Create an Intent for the activity you want to start
         // Create the TaskStackBuilder and add the intent, which inflates the back stack
