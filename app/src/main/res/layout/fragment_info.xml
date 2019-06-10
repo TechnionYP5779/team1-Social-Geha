@@ -23,7 +23,7 @@
             android:textSize="35sp"
             android:layout_gravity="start"
             android:layout_marginTop="10dp"
-            android:layout_marginStart="5dp"/>
+            android:layout_marginStart="8dp"/>
 
         <TextView
             android:id="@+id/textView2"
@@ -33,7 +33,7 @@
             android:textColor="@color/colorPrimary"
             android:layout_marginTop="5dp"
             android:layout_marginEnd="5dp"
-            android:layout_marginStart="5dp"
+            android:layout_marginStart="8dp"
             android:gravity="start"/>
 
         <TextView
@@ -45,7 +45,7 @@
             android:textSize="35sp"
             android:layout_marginTop="10dp"
             android:layout_gravity="start"
-            android:layout_marginStart="5dp"/>
+            android:layout_marginStart="8dp"/>
 
         <TextView
             android:id="@+id/terms_of_use2"
@@ -55,7 +55,7 @@
             android:textColor="@color/colorPrimary"
             android:layout_gravity="start"
             android:layout_marginEnd="5dp"
-            android:layout_marginStart="5dp"
+            android:layout_marginStart="8dp"
             android:layout_marginTop="5dp"/>
 
         <TextView
@@ -77,7 +77,7 @@
             android:textColor="@color/colorPrimary"
             android:layout_gravity="start"
             android:layout_marginEnd="5dp"
-            android:layout_marginStart="5dp"/>
+            android:layout_marginStart="8dp"/>
 
 
     </LinearLayout>
