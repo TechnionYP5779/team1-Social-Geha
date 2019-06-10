@@ -380,10 +380,12 @@ public class AllChatsFragment extends Fragment {
             public void onSwitched(ToggleableView toggleableView, boolean isOn) {
                 TransitionDrawable transition = (TransitionDrawable) constraintLayout.getBackground();
                 if(isOn){
+                    Database.getInstance().updateAvailability(true);
                     textView.setText(R.string.available);
                     transition.reverseTransition(300);
                 }
                 else{
+                    Database.getInstance().updateAvailability(false);
                     textView.setText(R.string.not_available);
                     transition.startTransition(300);
                 }
