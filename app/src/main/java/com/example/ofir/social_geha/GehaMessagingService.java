@@ -97,6 +97,8 @@ public class GehaMessagingService extends FirebaseMessagingService {
             ContactListFileHandler.Contact contact = contactHandler.getContact(fromPersonID);
             if(contact == null) {
                 resultIntent = new Intent(this, AllChatsActivity.class);
+                notificationBuilder.setContentTitle("משתמש חדש יצר איתך קשר")
+                        .setContentText("לראותו/ה לחץ כאן");
             }
             else {
                 String realName = contact.getRealName();

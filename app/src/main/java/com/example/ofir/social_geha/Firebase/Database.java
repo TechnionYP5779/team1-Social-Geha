@@ -303,11 +303,13 @@ public final class Database {
                 .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                        currentPerson = task.getResult().toObject(Person.class);
+                        if(task.isSuccessful()){
+                            currentPerson = task.getResult().toObject(Person.class);
+                            currentPerson.setAvailability(newAvail);
+                            Database.getInstance().addUserPerson(currentPerson);
+                        }
                     }
                 });
-        currentPerson.setAvailability(newAvail);
-        Database.getInstance().addUserPerson(currentPerson);
     }
 
     public void disconnectUser() {
