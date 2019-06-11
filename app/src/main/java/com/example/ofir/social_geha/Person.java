@@ -44,6 +44,10 @@ public class Person {
     private Boolean availability;
     //List of personIDs to whom this person is willing to expose details to
     private List<Integer> whiteList;
+
+    //FROM ADMIN-SIDE
+    private AdminGivenData adminGivenData;
+
     // Immutable - Given at initialization
     // Pair(imageName in drawable, fictitious name)
     // ==================================
@@ -70,6 +74,14 @@ public class Person {
         this.description = description;
         this.availability = availability;
         this.whiteList = whiteList;
+    }
+
+    public void setAdminGivenData(AdminGivenData adminGivenData) {
+        this.adminGivenData = adminGivenData;
+    }
+
+    public AdminGivenData getAdminGivenData() {
+        return adminGivenData;
     }
 
     public String getRealName() {

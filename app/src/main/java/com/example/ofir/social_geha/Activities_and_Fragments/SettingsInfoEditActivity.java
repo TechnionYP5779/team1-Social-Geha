@@ -9,6 +9,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
 import com.example.ofir.social_geha.Activities_and_Fragments.FileHandlers.SharingsFileHandler;
+import com.example.ofir.social_geha.AdminGivenData;
 import com.example.ofir.social_geha.FictitiousIdentityGenerator;
 import com.example.ofir.social_geha.Firebase.Database;
 import com.example.ofir.social_geha.Person;
@@ -210,6 +211,7 @@ public class SettingsInfoEditActivity extends AppCompatActivity {
                                 fromStringToGenderEnum(gender, SettingsInfoEditActivity.this, false)),
                                 date, fromStringToGenderEnum(gender, SettingsInfoEditActivity.this, false), mReligion, spokenLanguages,
                                 Person.Kind.PAST_PATIENT, Database.getInstance().getLoggedInUserID(), bio, false, new ArrayList<Integer>());
+                        p.setAdminGivenData((AdminGivenData)getIntent().getSerializableExtra("adminGivenData"));
                         if (task.isSuccessful()) {
                             Database.getInstance().addUserPerson(p);
                             setResult(RESULT_OK);
