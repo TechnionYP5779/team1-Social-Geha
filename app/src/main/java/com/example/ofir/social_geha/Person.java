@@ -171,6 +171,22 @@ public class Person {
         this.userID = id;
     }
 
+    public static Person.Kind kindStringToKindEnum(String kind) {
+        switch (kind) {
+            case "former_patient":
+                return Kind.PAST_PATIENT;
+            case "current_patient":
+                return Kind.PATIENT;
+            case "former_family_member":
+                return Kind.PAST_FAMILY_MEMBER;
+            case "current_family_member":
+                return Kind.FAMILY_MEMBER;
+            case "staff_member":
+                return Kind.STAFF;
+        }
+        return Kind.PAST_PATIENT;
+    }
+
     public static List<Person.Language> languagesStringToLanguageEnum(String[] languages) {
         List<Person.Language> mLanguages = new ArrayList<>();
         for (String l : languages) {

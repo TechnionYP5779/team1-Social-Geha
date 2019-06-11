@@ -8,6 +8,7 @@ public class AdminGivenData implements Serializable {
     private String name;
     private String phone;
     private String user_code;
+    private String kind;
     private List<String> departments;
 
     public List<String> getDepartments() {
@@ -16,6 +17,10 @@ public class AdminGivenData implements Serializable {
 
     public String getId() {
         return id;
+    }
+
+    public String getKind() {
+        return kind;
     }
 
     public String getName() {
