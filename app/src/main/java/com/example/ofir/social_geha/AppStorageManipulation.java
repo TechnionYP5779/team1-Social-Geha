@@ -1,29 +1,28 @@
 package com.example.ofir.social_geha;
 
 import android.content.Context;
+import android.util.Log;
 
 import java.io.File;
 
 public class AppStorageManipulation {
 
+
     public static void deleteAppData(Context context) {
-        try {
-            String packageName = context.getPackageName();
-            Runtime runtime = Runtime.getRuntime();
-            runtime.exec("pm clear "+packageName);
-        } catch (Exception e) {
-            e.printStackTrace();
+        File cache = context.getCacheDir();
+        File appDir = new File(cache.getParent());
+        if(appDir.exists()){
+            String[] children = appDir.list();
+            for(String s : children){
+                if(!s.equals("lib")){
+                    deleteDir(new File(appDir, s));
+                    Log.i("DELETE_USER", "File /data/data/APP_PACKAGE/" + s +" DELETED");
+                }
+            }
         }
     }
 
-    public static void deleteCache(Context context) {
-        try {
-            File dir = context.getCacheDir();
-            deleteDir(dir);
-        } catch (Exception e) { e.printStackTrace();}
-    }
-
-    private static boolean deleteDir(File dir) {
+    public static boolean deleteDir(File dir) {
         if (dir != null && dir.isDirectory()) {
             String[] children = dir.list();
             for (int i = 0; i < children.length; i++) {
@@ -32,11 +31,9 @@ public class AppStorageManipulation {
                     return false;
                 }
             }
-            return dir.delete();
-        } else if(dir!= null && dir.isFile()) {
-            return dir.delete();
-        } else {
-            return false;
         }
+
+        return dir.delete();
     }
+
 }

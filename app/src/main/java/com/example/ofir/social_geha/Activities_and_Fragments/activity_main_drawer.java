@@ -1,28 +1,26 @@
 package com.example.ofir.social_geha.Activities_and_Fragments;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
-import android.opengl.Visibility;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.ofir.social_geha.AppStorageManipulation;
 import com.example.ofir.social_geha.Firebase.Database;
@@ -139,10 +137,30 @@ public class activity_main_drawer extends AppCompatActivity
                         ft.replace(R.id.flMain,new EditInfoFragment(),EDIT_INFO_TAG);
                         ft.commit();
                 } else if (id == R.id.nav_delete_account){
-                        FirebaseFirestore.getInstance().collection("users").document(Database.getInstance().getLoggedInUserID()).delete();
-                        AppStorageManipulation.deleteAppData(getApplicationContext());
-                        Intent myIntent = new Intent(activity_main_drawer.this, Login.class);
-                        activity_main_drawer.this.startActivity(myIntent);
+                        AlertDialog.Builder mBuilder = new AlertDialog.Builder(this, R.style.AlertDialogCustomDark);
+                        mBuilder.setMessage("האם אתה בטוח שברצונך למחוק את החשבון?");
+
+                        mBuilder.setCancelable(false);
+                        mBuilder.setPositiveButton(R.string.agree, new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialogInterface, int which) {
+                                        FirebaseFirestore.getInstance().collection("users").document(Database.getInstance().getLoggedInUserID()).delete();
+                                        AppStorageManipulation.deleteAppData(getApplicationContext());
+                                        Intent intent = new Intent(activity_main_drawer.this, Login.class);
+                                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                                        startActivity(intent);
+                                }
+                        });
+
+                        mBuilder.setNegativeButton(R.string.dont_agree, new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialogInterface, int i) {
+                                        dialogInterface.dismiss();
+                                }
+                        });
+                        AlertDialog mDialog = mBuilder.create();
+                        mDialog.show();
+
                 }
 
                 DrawerLayout drawer = findViewById(R.id.drawer_layout);
