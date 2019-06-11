@@ -5,7 +5,7 @@ $( function() {
   
       var pass1="12345678";
   
-      password=prompt('Please enter your password to view this page',' ');
+      password=prompt('Please enter your password to view this page','');
       firebase.auth().signInWithEmailAndPassword("admin@admin.com", password).catch(function(error) {
             // Handle Errors here.
             var errorCode = error.code;
