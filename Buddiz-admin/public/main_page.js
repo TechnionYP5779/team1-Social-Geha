@@ -24,25 +24,10 @@ $( function() {
 	var nameRegex = /^[a-zA-Z] [a-zA-Z]$/;
 	var idRegex = /^\d{9}$/;
 	var phoneRegex = /^\+972\-5[0-9]\-\d{7}$/;
-	
 
-    function updateTips( t ) {
-      tips
-        .text( t )
-        .addClass( "ui-state-highlight" );
-      setTimeout(function() {
-        tips.removeClass( "ui-state-highlight", 1500 );
-      }, 500 );
-    }
  
     function checkRegexp( o, regexp, n ) {
-      if ( !( regexp.test( o.val() ) ) ) {
-        o.addClass( "ui-state-error" );
-        updateTips( n );
-        return false;
-      } else {
-        return true;
-      }
+		return (!(regexp.test(o.val())));
     }
 	
 	function hashCodeGenerator(string){
