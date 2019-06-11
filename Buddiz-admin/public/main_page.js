@@ -21,13 +21,13 @@ $( function() {
 		department = "",
 		userCode = "";
 		
-	var nameRegex = /^[a-zA-Z] [a-zA-Z]$/;
+	var nameRegex = /^[A-Z][a-zA-Z]* [A-Z][a-zA-Z]*$/;
 	var idRegex = /^\d{9}$/;
 	var phoneRegex = /^\+972\-5[0-9]\-\d{7}$/;
 
  
-    function checkRegexp( o, regexp, n ) {
-		return (!(regexp.test(o.val())));
+    function checkRegexp(obj, regexp) {
+		return regexp.test(obj);
     }
 	
 	function hashCodeGenerator(string){
@@ -50,16 +50,16 @@ $( function() {
  
 	function checkFieldsCorrectness(name, idNum, phone, kind, deps) {
 		var res = true;
-		if (idNum == "") {
-			document.forms["AddUser"].getElementsByClassName("add_id_error")[0].innerHTML = "Please enter a valid ID";
+		if (idNum == "" || !checkRegexp(idNum, idRegex)) {
+			document.forms["AddUser"].getElementsByClassName("add_id_error")[0].innerHTML = "Please enter a 9 digit ID";
 			res = false;
 		}
-		if (name == "") {
-			document.forms["AddUser"].getElementsByClassName("add_name_error")[0].innerHTML = "Please enter a valid name";
+		if (name == "" || !checkRegexp(name, nameRegex)) {
+			document.forms["AddUser"].getElementsByClassName("add_name_error")[0].innerHTML = "Please enter a valid name (first name and surname)";
 			res = false;
 		}
-		if (phone == "") {
-			document.forms["AddUser"].getElementsByClassName("add_phone_error")[0].innerHTML = "Please enter a valid phone number";
+		if (phone == "" || !checkRegexp(phone, phoneRegex)) {
+			document.forms["AddUser"].getElementsByClassName("add_phone_error")[0].innerHTML = "Please enter a valid phone number (eg. +972-52-5555555)";
 			res = false;
 		}
 		if (kind == "") {
@@ -73,12 +73,31 @@ $( function() {
 		return res;
 	}
 	
+	function checkEditFieldsCorrectness(name, phone) {
+		var res = true;
+		if (name !== "" && !checkRegexp(name, nameRegex)) {
+			document.forms["EditUser"].getElementsByClassName("edit_name_error")[0].innerHTML = "Please enter a valid name (first name and surname)";
+			res = false;
+		}
+		if (phone !== "" && !checkRegexp(phone, phoneRegex)) {
+			document.forms["EditUser"].getElementsByClassName("edit_phone_error")[0].innerHTML = "Please enter a valid phone number (eg. +972-52-5555555)";
+			res = false;
+		}
+		return res;
+	}
+	
 	function cleanErrorMessagesAdd() {
 		document.forms["AddUser"].getElementsByClassName("add_id_error")[0].innerHTML = "";
 		document.forms["AddUser"].getElementsByClassName("add_name_error")[0].innerHTML = "";
 		document.forms["AddUser"].getElementsByClassName("add_phone_error")[0].innerHTML = "";
 		document.forms["AddUser"].getElementsByClassName("add_kind_error")[0].innerHTML = "";
 		document.forms["AddUser"].getElementsByClassName("add_dep_error")[0].innerHTML = "";
+	}
+	
+	function cleanErrorMessagesEdit() {
+		document.forms["EditUser"].getElementsByClassName("edit_id_error")[0].innerHTML = "";
+		document.forms["EditUser"].getElementsByClassName("edit_name_error")[0].innerHTML = "";
+		document.forms["EditUser"].getElementsByClassName("edit_phone_error")[0].innerHTML = "";
 	}
  
     function addUser() {
@@ -139,30 +158,10 @@ $( function() {
 				$('#overlay, #overlay-back').fadeOut(500);
 			}
 		});
-
-		
-      // var valid = true;
-      //
-      // valid = valid && checkLength( name, "username", 3, 16 );
-      // valid = valid && checkLength( email, "email", 6, 80 );
-      // valid = valid && checkLength( password, "password", 5, 16 );
-      //
-      // valid = valid && checkRegexp( name, /^[a-z]([0-9a-z_\s])+$/i, "Username may consist of a-z, 0-9, underscores, spaces and must begin with a letter." );
-      // valid = valid && checkRegexp( email, emailRegex, "eg. ui@jquery.com" );
-      // valid = valid && checkRegexp( password, /^([0-9a-zA-Z])+$/, "Password field only allow : a-z 0-9" );
-      //
-      // if ( valid ) {
-      //   $( "#users tbody" ).append( "<tr>" +
-      //     "<td>" + name.val() + "</td>" +
-      //     "<td>" + email.val() + "</td>" +
-      //     "<td>" + password.val() + "</td>" +
-      //   "</tr>" );
-      //   dialog_add.dialog( "close" );
-      // }
-      // return valid;
     }
 	
 	function editUser() {
+	  cleanErrorMessagesEdit();
       var idNum = document.forms["EditUser"]["id_num"].value;
 	  if (idNum == "") {
 			document.forms["EditUser"].getElementsByClassName("edit_id_error")[0].innerHTML = "Please enter a valid ID";
@@ -170,72 +169,73 @@ $( function() {
 	  }
       var docRef = db.collection("adminAddedUsers").doc(idNum);
       docRef.get().then(function(doc) {
-      if (doc.exists) {
-		var nameBefore = doc.data().name;
-		console.log("Document data:", doc.data());
-		var changed = false;
-		var name = document.forms["EditUser"]["name"].value;
-		if (name !== ''){
-			changed = true;
-			docRef.update({
-				name: name
-			})
-		}
-		var phone = document.forms["EditUser"]["phone"].value;
-		if (phone !== '' ){
-			changed = true;
-			docRef.update({
-				phone: phone
-			})
-		}
-		var kind = document.forms["EditUser"]["kind"].value;
-		if (kind !== '' ){
-			changed = true;
-			docRef.update({
-				kind: kind
-			})
-		}
-		var departments = [];
-		if (document.forms["EditUser"]["adults-day"].checked) {
-			departments.push("adults_day_care");
-		}
-		if (document.forms["EditUser"]["adults-open"].checked) {
-			departments.push("adults_open_dep.");
-		}
-		if (document.forms["EditUser"]["adults-closed"].checked) {
-			departments.push("adults_closed_dep.");
-		}
-		if (document.forms["EditUser"]["minor-day"].checked) {
-			departments.push("minor_day_care");
-		}
-		if (document.forms["EditUser"]["minor-closed"].checked) {
-			departments.push("minor_closed_dep.");
-		}
-		if (departments.length != 0 ){
-			changed = true;
-			docRef.update({
-				departments: departments
-			})
-		}
-		console.log("changes: " + changed);
-		if (!changed) {
-			document.getElementById("user_control_message").innerHTML = "You didn't make any changes";
-			document.getElementById("user_control_message").style.color = "blue";
-		}
-		else {
-			var currentName = name !== "" ? name : nameBefore;
-			document.getElementById("user_control_message").innerHTML = currentName  + " was edited successfully";
-			document.getElementById("user_control_message").style.color = "#4cc113";
-		}
-		dialog_edit.dialog( "close" );
-		$('#overlay, #overlay-back').fadeOut(500);
-      } else {
-      // doc.data() will be undefined in this case
-            document.getElementById("user_control_message").innerHTML = "A user with id " + idNum + " does not exist";
-			document.getElementById("user_control_message").style.color = "red";
+		  if (doc.exists) {
+			var nameBefore = doc.data().name;
+			console.log("Document data:", doc.data());
+			var changed = false;
+			var name = document.forms["EditUser"]["name"].value;
+			var phone = document.forms["EditUser"]["phone"].value;
+			if (!checkEditFieldsCorrectness(name, phone)) return false;
+			if (name !== ''){
+				changed = true;
+				docRef.update({
+					name: name
+				})
+			}
+			if (phone !== '' ){
+				changed = true;
+				docRef.update({
+					phone: phone
+				})
+			}
+			var kind = document.forms["EditUser"]["kind"].value;
+			if (kind !== '' ){
+				changed = true;
+				docRef.update({
+					kind: kind
+				})
+			}
+			var departments = [];
+			if (document.forms["EditUser"]["adults-day"].checked) {
+				departments.push("adults_day_care");
+			}
+			if (document.forms["EditUser"]["adults-open"].checked) {
+				departments.push("adults_open_dep.");
+			}
+			if (document.forms["EditUser"]["adults-closed"].checked) {
+				departments.push("adults_closed_dep.");
+			}
+			if (document.forms["EditUser"]["minor-day"].checked) {
+				departments.push("minor_day_care");
+			}
+			if (document.forms["EditUser"]["minor-closed"].checked) {
+				departments.push("minor_closed_dep.");
+			}
+			if (departments.length != 0 ){
+				changed = true;
+				docRef.update({
+					departments: departments
+				})
+			}
+			console.log("changes: " + changed);
+			if (!changed) {
+				document.getElementById("user_control_message").innerHTML = "You didn't make any changes";
+				document.getElementById("user_control_message").style.color = "blue";
+			}
+			else {
+				var currentName = name !== "" ? name : nameBefore;
+				document.getElementById("user_control_message").innerHTML = currentName  + " was edited successfully";
+				document.getElementById("user_control_message").style.color = "#4cc113";
+			}
 			dialog_edit.dialog( "close" );
 			$('#overlay, #overlay-back').fadeOut(500);
-      }
+		  } else {
+		  // doc.data() will be undefined in this case
+				document.getElementById("user_control_message").innerHTML = "A user with id " + idNum + " does not exist";
+				document.getElementById("user_control_message").style.color = "red";
+				dialog_edit.dialog( "close" );
+				$('#overlay, #overlay-back').fadeOut(500);
+		  }
       }//).catch(function(error) {
          //      console.log("Error getting document:", error);
       //}
