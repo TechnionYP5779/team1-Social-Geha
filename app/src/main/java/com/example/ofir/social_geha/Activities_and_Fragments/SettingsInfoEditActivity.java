@@ -9,6 +9,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
 import com.example.ofir.social_geha.Activities_and_Fragments.FileHandlers.SharingsFileHandler;
+import com.example.ofir.social_geha.AdminGivenData;
 import com.example.ofir.social_geha.FictitiousIdentityGenerator;
 import com.example.ofir.social_geha.Firebase.Database;
 import com.example.ofir.social_geha.Person;
@@ -39,6 +40,7 @@ import static com.example.ofir.social_geha.Person.fromGenderEnumToGenderIndex;
 import static com.example.ofir.social_geha.Person.fromReligionToReligionIndex;
 import static com.example.ofir.social_geha.Person.fromStringToGenderEnum;
 import static com.example.ofir.social_geha.Person.fromStringToReligion;
+import static com.example.ofir.social_geha.Person.kindStringToKindEnum;
 import static com.example.ofir.social_geha.Person.languagesEnumToLanguageString;
 import static com.example.ofir.social_geha.Person.languagesStringToLanguageEnum;
 
@@ -206,10 +208,13 @@ public class SettingsInfoEditActivity extends AppCompatActivity {
 
 
                         List<Person.Language> spokenLanguages = languagesStringToLanguageEnum(languages);
+                        AdminGivenData adminGivenData = (AdminGivenData)getIntent().getSerializableExtra("adminGivenData");
+                        Person.Kind kind = kindStringToKindEnum(adminGivenData.getKind());
                         Person p = new Person(name, FictitiousIdentityGenerator.getAnonymousIdentity(
                                 fromStringToGenderEnum(gender, SettingsInfoEditActivity.this, false)),
                                 date, fromStringToGenderEnum(gender, SettingsInfoEditActivity.this, false), mReligion, spokenLanguages,
-                                Person.Kind.PAST_PATIENT, Database.getInstance().getLoggedInUserID(), bio, false, new ArrayList<Integer>());
+                                kind, Database.getInstance().getLoggedInUserID(), bio, false, new ArrayList<Integer>());
+                        p.setAdminGivenData(adminGivenData);
                         if (task.isSuccessful()) {
                             Database.getInstance().addUserPerson(p);
                             setResult(RESULT_OK);

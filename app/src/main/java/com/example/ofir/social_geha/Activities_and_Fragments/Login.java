@@ -14,11 +14,17 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.example.ofir.social_geha.AdminGivenData;
+import com.example.ofir.social_geha.Firebase.Database;
 import com.example.ofir.social_geha.R;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 
 public class Login extends AppCompatActivity {
     // ==================================
@@ -51,9 +57,40 @@ public class Login extends AppCompatActivity {
                 if (personal_code_txt.equals("")) { // missing personal code
                     Toast.makeText(Login.this, missing_fields_err, Toast.LENGTH_SHORT).show();
                 } else {
-                    Intent myIntent = new Intent(Login.this, SettingsInfoEditActivity.class);
-                    myIntent.putExtra("code", personal_code_txt);
-                    startActivityForResult(myIntent, REGISTER_RETURN_CODE);
+                    Log.d("YARIN", "onClick: DOING THIS");
+                    Database.getInstance().getAuth().signInWithEmailAndPassword("adminCode@admin.com", "adminadmin")
+                    .addOnSuccessListener(new OnSuccessListener<AuthResult>() {
+                        @Override
+                        public void onSuccess(AuthResult authResult) {
+                            Database.getInstance().getdb().collection("adminAddedUsers").whereEqualTo("user_code", personal_code_txt)
+                                    .get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                                @Override
+                                public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                                    Log.d("YARIN", "onClick: SUCCESS "+personal_code_txt);
+                                    Intent myIntent = new Intent(Login.this, SettingsInfoEditActivity.class);
+                                    for (DocumentSnapshot doc : queryDocumentSnapshots){
+                                        Log.d("YARIN", "onSuccess: RECORDED SOMETHING");
+                                    }
+                                    if(queryDocumentSnapshots.size() > 0){
+                                        AdminGivenData adminGivenData = queryDocumentSnapshots.getDocuments().get(0).toObject(AdminGivenData.class);
+                                        myIntent.putExtra("code", personal_code_txt);
+                                        myIntent.putExtra("adminGivenData", adminGivenData);
+                                        startActivityForResult(myIntent, REGISTER_RETURN_CODE);
+                                    }
+                                    else{
+                                        Toast.makeText(Login.this, "הקוד שברשותך לא רשום במערכת", Toast.LENGTH_SHORT).show();
+                                    }
+                                }
+                            }).addOnFailureListener(new OnFailureListener() {
+                                @Override
+                                public void onFailure(@NonNull Exception e) {
+                                    Log.d("YARIN", "onFailure: FAILED "+e.getMessage());
+                                }
+                            });
+
+                        }
+                    });
+
                 }
             }
         });

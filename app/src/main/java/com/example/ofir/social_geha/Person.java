@@ -44,6 +44,10 @@ public class Person {
     private Boolean availability;
     //List of personIDs to whom this person is willing to expose details to
     private List<Integer> whiteList;
+
+    //FROM ADMIN-SIDE
+    private AdminGivenData adminGivenData;
+
     // Immutable - Given at initialization
     // Pair(imageName in drawable, fictitious name)
     // ==================================
@@ -70,6 +74,14 @@ public class Person {
         this.description = description;
         this.availability = availability;
         this.whiteList = whiteList;
+    }
+
+    public void setAdminGivenData(AdminGivenData adminGivenData) {
+        this.adminGivenData = adminGivenData;
+    }
+
+    public AdminGivenData getAdminGivenData() {
+        return adminGivenData;
     }
 
     public String getRealName() {
@@ -157,6 +169,22 @@ public class Person {
 
     public void setUserID(String id) {
         this.userID = id;
+    }
+
+    public static Person.Kind kindStringToKindEnum(String kind) {
+        switch (kind) {
+            case "former_patient":
+                return Kind.PAST_PATIENT;
+            case "current_patient":
+                return Kind.PATIENT;
+            case "former_family_member":
+                return Kind.PAST_FAMILY_MEMBER;
+            case "current_family_member":
+                return Kind.FAMILY_MEMBER;
+            case "staff_member":
+                return Kind.STAFF;
+        }
+        return Kind.PAST_PATIENT;
     }
 
     public static List<Person.Language> languagesStringToLanguageEnum(String[] languages) {
