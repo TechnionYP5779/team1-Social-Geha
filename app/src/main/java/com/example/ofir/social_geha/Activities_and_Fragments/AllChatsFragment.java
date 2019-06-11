@@ -36,6 +36,7 @@ import com.google.firebase.firestore.DocumentChange;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.ListenerRegistration;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
@@ -57,6 +58,7 @@ public class AllChatsFragment extends Fragment {
     private static final String MESSAGES = "messages";
     private static final String USERS = "users";
     private Person p;
+    private ListenerRegistration mListener;
 
     public AllChatsFragment() {
     }
@@ -168,7 +170,6 @@ public class AllChatsFragment extends Fragment {
         //Create the list of objects
         ((activity_main_drawer) getActivity()).conversationList = new ArrayList<>();
         ((activity_main_drawer) getActivity()).allList = new ArrayList<>();
-        populateConversationsList();
 
         //Attach to adapter
         ((activity_main_drawer) getActivity()).mAdapter = new ChatListAdapter(getActivity(), R.layout.match_row_layout, ((activity_main_drawer) getActivity()).conversationList);
@@ -176,10 +177,10 @@ public class AllChatsFragment extends Fragment {
     }
 
 
-    private void populateConversationsList() {
+    private void setMessageListeners() {
         Log.d("SHAI", "IN POPULATE CONV LIST");
 
-        mFirestore.collection(MESSAGES).whereEqualTo("toPersonID", Database.getInstance().getLoggedInUserID())
+        mListener = mFirestore.collection(MESSAGES).whereEqualTo("toPersonID", Database.getInstance().getLoggedInUserID())
                 .addSnapshotListener((queryDocumentSnapshots, e) -> {
                     if (e != null) {
                         return;
@@ -351,8 +352,16 @@ public class AllChatsFragment extends Fragment {
     }
 
     @Override
+    public void onPause() {
+        super.onPause();
+        mListener.remove();
+    }
+
+
+    @Override
     public void onResume() {
         super.onResume();
+        setMessageListeners();
         updateList();
     }
 
