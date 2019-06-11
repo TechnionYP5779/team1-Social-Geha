@@ -16,6 +16,7 @@ import android.util.Log;
 import com.example.ofir.social_geha.Activities_and_Fragments.AllChatsActivity;
 import com.example.ofir.social_geha.Activities_and_Fragments.ChatActivity;
 import com.example.ofir.social_geha.Activities_and_Fragments.FileHandlers.ContactListFileHandler;
+import com.example.ofir.social_geha.Activities_and_Fragments.activity_main_drawer;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -96,7 +97,7 @@ public class GehaMessagingService extends FirebaseMessagingService {
             ContactListFileHandler contactHandler = new ContactListFileHandler(this);
             ContactListFileHandler.Contact contact = contactHandler.getContact(fromPersonID);
             if(contact == null) {
-                resultIntent = new Intent(this, AllChatsActivity.class);
+                resultIntent = new Intent(this, activity_main_drawer.class);
                 notificationBuilder.setContentTitle("משתמש חדש יצר איתך קשר")
                         .setContentText("לראותו/ה לחץ כאן");
             }

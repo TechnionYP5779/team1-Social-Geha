@@ -49,6 +49,8 @@ import java.util.Map;
 public class AllChatsFragment extends Fragment {
     private MessageFileHandler mFileHandler;
     private SharingsFileHandler sharingsFileHandler;
+    private ContactListFileHandler mContactsHandler;
+
     ListView mListView;
     TextView mEmptyView;
     private FirebaseFirestore mFirestore;
@@ -65,6 +67,7 @@ public class AllChatsFragment extends Fragment {
         View v = inflater.inflate(R.layout.fragment_all_chats, container, false);
         ((activity_main_drawer) getActivity()).setActionBarTitle("שיחות");
         mFileHandler = new MessageFileHandler(getActivity());
+        mContactsHandler = new ContactListFileHandler(getActivity());
         sharingsFileHandler = new SharingsFileHandler(getActivity());
         mFirestore = FirebaseFirestore.getInstance();
         mListView = v.findViewById(R.id.list);
@@ -214,7 +217,7 @@ public class AllChatsFragment extends Fragment {
                                 String realName = text.substring(text.indexOf('#') + 1);
                                 Log.d("SHAI", "got control message from " + message.getFromPersonID());
                                 Log.d("SHAI", "his/her realname is " + realName);
-                                new ContactListFileHandler(getActivity()).changeName(contactUID, realName);
+                                mContactsHandler.changeName(contactUID, realName);
 
                                 //for the full effect - swap the names in the lists
                                 //The contact must be in the list since a first message can not be an identity reveal one
@@ -237,7 +240,7 @@ public class AllChatsFragment extends Fragment {
                             } else if (text.substring(0, "NAME_CHANGE".length()).equals("NAME_CHANGE")) {
                                 String realName = text.substring(text.indexOf('#') + 1);
                                 Log.d("NAME_CHANGE", "received a name change from " + contactUID + " to change name to " + realName);
-                                new ContactListFileHandler(getActivity()).changeName(contactUID, realName);
+                                mContactsHandler.changeName(contactUID, realName);
 
                                 for (int i = 0; i < ((activity_main_drawer) getActivity()).conversationList.size(); i++) {
                                     if (((activity_main_drawer) getActivity()).conversationList.get(i).getUserID().equals(contactUID)) {
@@ -339,7 +342,7 @@ public class AllChatsFragment extends Fragment {
 
                         //since this person is not in the contactList we to update the file
                         Log.d("SHAI", "NEW CONTACT");
-                        new ContactListFileHandler(getActivity()).addContact(myContact);
+                        mContactsHandler.addContact(myContact);
                     }
                 });
             }

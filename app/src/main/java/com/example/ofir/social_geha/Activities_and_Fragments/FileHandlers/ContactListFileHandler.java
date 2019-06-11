@@ -78,7 +78,7 @@ public class ContactListFileHandler {
             inputStream.close();
             return contacts;
         } catch (Exception e) {
-            throw new RuntimeException("contact file reading failed " + e.getMessage() + "\n");
+            return new HashMap<String, Contact>();
         }
     }
 
