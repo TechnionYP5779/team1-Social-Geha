@@ -1,16 +1,16 @@
 $( function() {
-	var firebaseConfig = {
-	  apiKey: "AIzaSyBADn-vc_h9jP5njsQkPRiKmPu6uYwXk3Q",
-	  authDomain: "team1-social-geha.firebaseapp.com",
-	  databaseURL: "https://team1-social-geha.firebaseio.com",
-	  projectId: "team1-social-geha",
-	  storageBucket: "team1-social-geha.appspot.com",
-	  messagingSenderId: "813662253318",
-	  appId: "1:813662253318:web:b0186efd3138b553"
-	};
-	
-	firebase.initializeApp(firebaseConfig);
-	 
+//    var firebaseConfig = {
+//      apiKey: "AIzaSyBADn-vc_h9jP5njsQkPRiKmPu6uYwXk3Q",
+//      authDomain: "team1-social-geha.firebaseapp.com",
+//      databaseURL: "https://team1-social-geha.firebaseio.com",
+//      projectId: "team1-social-geha",
+//      storageBucket: "team1-social-geha.appspot.com",
+//      messagingSenderId: "813662253318",
+//      appId: "1:813662253318:web:b0186efd3138b553"
+//    };
+//
+//    firebase.initializeApp(firebaseConfig);
+//
 	const db = firebase.firestore();
 
     var dialog_add, dialog_search, dialog_delete, form_add, form_search, form_delete,
