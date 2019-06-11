@@ -16,11 +16,15 @@ $( function() {
     var dialog_add, dialog_search, dialog_delete, form_add, form_search, form_delete,
 		emailRegex = /^[a-zA-Z0-9.!#$%&'*+\/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/,
 		name = $( "#name" ),
-		allFields = $( [] ).add( name ),
 		phoneNumber = $("#phone"),
 		kind = $("#kind.value"),
 		department = "",
 		userCode = "";
+		
+	var nameRegex = /^[a-zA-Z] [a-zA-Z]$/;
+	var idRegex = /^\d{9}$/;
+	var phoneRegex = /^\+972\-5[0-9]\-\d{7}$/;
+	
 
     function updateTips( t ) {
       tips
@@ -29,17 +33,6 @@ $( function() {
       setTimeout(function() {
         tips.removeClass( "ui-state-highlight", 1500 );
       }, 500 );
-    }
- 
-    function checkLength( o, n, min, max ) {
-      if ( o.val().length > max || o.val().length < min ) {
-        o.addClass( "ui-state-error" );
-        updateTips( "Length of " + n + " must be between " +
-          min + " and " + max + "." );
-        return false;
-      } else {
-        return true;
-      }
     }
  
     function checkRegexp( o, regexp, n ) {
@@ -161,14 +154,9 @@ $( function() {
 				$('#overlay, #overlay-back').fadeOut(500);
 			}
 		});
-		
 
-        // firebase.database().ref('adminAddedUsers/' + 55555).set({
-            // companyName: "hello",
-            // contact: "hello",
-        // })
+		
       // var valid = true;
-      // allFields.removeClass( "ui-state-error" );
       //
       // valid = valid && checkLength( name, "username", 3, 16 );
       // valid = valid && checkLength( email, "email", 6, 80 );
@@ -361,7 +349,6 @@ $( function() {
       },
       close: function() {
         form_add[ 0 ].reset();
-        allFields.removeClass( "ui-state-error" );
 		$('#overlay, #overlay-back').fadeOut(500);
       }
     });
@@ -381,7 +368,6 @@ $( function() {
       },
       close: function() {
         form_edit[ 0 ].reset();
-        allFields.removeClass( "ui-state-error" );
 		$('#overlay, #overlay-back').fadeOut(500);
       }
     });
@@ -402,7 +388,6 @@ $( function() {
       close: function() {
         form_search[ 0 ].reset();
 		document.forms["FindUser"].getElementsByClassName("user_data_search")[0].innerHTML = "";
-        allFields.removeClass( "ui-state-error" );
 		$('#overlay, #overlay-back').fadeOut(500);
       }
     });
@@ -422,7 +407,6 @@ $( function() {
       },
       close: function() {
         form_delete[ 0 ].reset();
-        allFields.removeClass( "ui-state-error" );
 		$('#overlay, #overlay-back').fadeOut(500);
       }
     });
