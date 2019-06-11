@@ -42,14 +42,9 @@
         
         password=prompt('Please enter your password to view this page',' ');
         
-        if (password==pass1)
-        alert('Password Correct! Click OK to enter!');
-        else
-        {
-            window.location="google.com";
-        }
+        if (password !== pass1) window.location="google.com";
 
-    //-->
+		//-->
     </SCRIPT>
   <body>
 	  <div id="add-user-form" title="Add a User" class="add-user">		 
