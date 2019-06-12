@@ -112,7 +112,7 @@ public class AllChatsFragment extends Fragment {
             String uid = ((activity_main_drawer) getActivity()).conversationList.get(pos).getUserID();
             //cannot click once it's been shared
             //cannot click once it's been shared
-            Toast.makeText(getActivity(), sharingsFileHandler.getUIDs().toString(), Toast.LENGTH_LONG).show();
+            //Toast.makeText(getActivity(), sharingsFileHandler.getUIDs().toString(), Toast.LENGTH_LONG).show();
             for (String ID : sharingsFileHandler.getUIDs()) {
                 if (uid.equals(ID)) {
                     String toastText = "לא ניתן לבטל את שיתוף המידע עם " + ((activity_main_drawer) getActivity()).conversationList.get(pos).getName();
@@ -149,7 +149,7 @@ public class AllChatsFragment extends Fragment {
                 Database.getInstance().sendControlMessage(content, Database.getInstance().getLoggedInUserID(), ((activity_main_drawer) getActivity()).conversationList.get(pos).getUserID());
                 Toast.makeText(getActivity(), "שותף בהצלחה", Toast.LENGTH_SHORT).show();
                 dialog.dismiss();
-                Toast.makeText(getActivity(), "sharings = " + sharingsFileHandler.getUIDs().toString(), Toast.LENGTH_LONG).show();
+                //Toast.makeText(getActivity(), "sharings = " + sharingsFileHandler.getUIDs().toString(), Toast.LENGTH_LONG).show();
             });
 
             String are_you_sure_msg = "האם אתה בטוח שברצונך לשתף את זהותך עם " + ((activity_main_drawer) getActivity()).conversationList.get(pos).getName() + "?";

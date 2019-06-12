@@ -24,8 +24,14 @@ public class SharingsFileHandler {
         if (!mFile.exists()) {
             try {
                 mFile.createNewFile();
+                FileOutputStream outputStream = context.openFileOutput(filename, Context.MODE_PRIVATE);
+                ObjectOutputStream oos = new ObjectOutputStream(outputStream);
+                oos.writeObject(new ArrayList<String>());
+                oos.flush();
+                oos.close();
+                outputStream.close();
             } catch (IOException e) {
-                e.printStackTrace();
+                Log.d("TEST-CTOR", e.getClass().getSimpleName());
             }
         }
         this.context = context;
@@ -51,14 +57,21 @@ public class SharingsFileHandler {
     public ArrayList<String> getUIDs(){
         ArrayList<String> uids;
         try {
+            Log.d("TEST","1");
             FileInputStream inputStream = context.openFileInput(filename);
+            Log.d("TEST","2");
             ObjectInputStream ois = new ObjectInputStream(inputStream);
+            Log.d("TEST","3");
             uids = (ArrayList<String>)ois.readObject();
+            Log.d("TEST","4");
             ois.close();
+            Log.d("TEST","5");
             inputStream.close();
         } catch (Exception e) {
             //uids = new ArrayList<>();
             //uids.add(e.getMessage());
+            Log.d("TEST",e.getClass().getSimpleName());
+            Log.d("TEST",e.getMessage());
             throw new RuntimeException(e.getMessage());
         }
         return uids;

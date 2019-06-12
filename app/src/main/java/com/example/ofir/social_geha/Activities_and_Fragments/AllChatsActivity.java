@@ -126,7 +126,7 @@ public class AllChatsActivity extends AppCompatActivity {
                 Log.d("CLICK", "person I've shared with: " + ID);
                 if(uid.equals(ID)) {
                     String toastText = "לא ניתן לבטל את שיתוף המידע עם " + conversationList.get(pos).getName();
-                    Toast.makeText(AllChatsActivity.this, toastText, Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(AllChatsActivity.this, toastText, Toast.LENGTH_SHORT).show();
                     return true;
                 }
             }

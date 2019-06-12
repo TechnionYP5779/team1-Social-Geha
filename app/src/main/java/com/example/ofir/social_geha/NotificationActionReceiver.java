@@ -37,7 +37,7 @@ public class NotificationActionReceiver extends BroadcastReceiver {
 
     //DO NOTHING - OR WHATEVER YOU FIND FANCY
     public void decline(Context context, String fromPersonID){
-        Toast.makeText(context, "סירבת ל-" + fromPersonID, Toast.LENGTH_SHORT).show();
+        //Toast.makeText(context, "סירבת ל-" + fromPersonID, Toast.LENGTH_SHORT).show();
         //Database.getInstance().sendControlMessage("CHAT REJECT$", Database.getInstance().getLoggedInUserID(), fromPersonID);
     }
 }
