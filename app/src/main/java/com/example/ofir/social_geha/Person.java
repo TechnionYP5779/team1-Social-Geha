@@ -2,6 +2,7 @@ package com.example.ofir.social_geha;
 
 import android.content.Context;
 
+import com.example.ofir.social_geha.Identity.AnonymousIdentity;
 import com.google.firebase.firestore.Exclude;
 
 import java.util.ArrayList;

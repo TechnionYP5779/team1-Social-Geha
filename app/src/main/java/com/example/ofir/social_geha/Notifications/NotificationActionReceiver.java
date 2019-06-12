@@ -1,4 +1,4 @@
-package com.example.ofir.social_geha;
+package com.example.ofir.social_geha.Notifications;
 
 import android.app.NotificationManager;
 import android.content.BroadcastReceiver;

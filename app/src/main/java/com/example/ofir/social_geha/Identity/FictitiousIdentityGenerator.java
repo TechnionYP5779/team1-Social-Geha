@@ -1,4 +1,7 @@
-package com.example.ofir.social_geha;
+package com.example.ofir.social_geha.Identity;
+
+import com.example.ofir.social_geha.Identity.AnonymousIdentity;
+import com.example.ofir.social_geha.Person;
 
 public class FictitiousIdentityGenerator {
     private static String[] male_adjectives = {"שמח", "פרוותי", "חלקלק", "מעופף", "עגלגל", "זורח", "קופץ", "מבעבע", "מנוקד" , "אמיץ" , "פילוסופי", "רציונלי", "שנון" , "מדעי" , "נדיב" , "חייכן", "מהודר", "מרשים"};

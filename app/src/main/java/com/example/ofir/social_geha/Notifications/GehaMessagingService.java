@@ -1,6 +1,5 @@
-package com.example.ofir.social_geha;
+package com.example.ofir.social_geha.Notifications;
 
-import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -13,10 +12,10 @@ import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.TaskStackBuilder;
 import android.util.Log;
 
-import com.example.ofir.social_geha.Activities_and_Fragments.AllChatsActivity;
 import com.example.ofir.social_geha.Activities_and_Fragments.ChatActivity;
 import com.example.ofir.social_geha.Activities_and_Fragments.FileHandlers.ContactListFileHandler;
 import com.example.ofir.social_geha.Activities_and_Fragments.activity_main_drawer;
+import com.example.ofir.social_geha.R;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;

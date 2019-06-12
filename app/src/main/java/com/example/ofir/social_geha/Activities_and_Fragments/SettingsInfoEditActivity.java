@@ -3,14 +3,13 @@ package com.example.ofir.social_geha.Activities_and_Fragments;
 import android.app.DatePickerDialog;
 import android.app.ProgressDialog;
 import android.content.Intent;
-import android.provider.ContactsContract;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
 import com.example.ofir.social_geha.Activities_and_Fragments.FileHandlers.SharingsFileHandler;
 import com.example.ofir.social_geha.AdminGivenData;
-import com.example.ofir.social_geha.FictitiousIdentityGenerator;
+import com.example.ofir.social_geha.Identity.FictitiousIdentityGenerator;
 import com.example.ofir.social_geha.Firebase.Database;
 import com.example.ofir.social_geha.Person;
 import com.example.ofir.social_geha.R;
