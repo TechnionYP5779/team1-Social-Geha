@@ -31,13 +31,11 @@ public class NotificationActionReceiver extends BroadcastReceiver {
 
     //HERE - SEND CONTROL MESSAGE BACK to fromPersonID
     public void accept(Context context, String fromPersonID){
-        Toast.makeText(context, "אישרת ל-" + fromPersonID, Toast.LENGTH_SHORT).show();
+        Toast.makeText(context, "אישרת!" + fromPersonID, Toast.LENGTH_SHORT).show();
         Database.getInstance().sendControlMessage("CHAT ACCEPT$", Database.getInstance().getLoggedInUserID(), fromPersonID);
     }
 
     //DO NOTHING - OR WHATEVER YOU FIND FANCY
     public void decline(Context context, String fromPersonID){
-        //Toast.makeText(context, "סירבת ל-" + fromPersonID, Toast.LENGTH_SHORT).show();
-        //Database.getInstance().sendControlMessage("CHAT REJECT$", Database.getInstance().getLoggedInUserID(), fromPersonID);
     }
 }
