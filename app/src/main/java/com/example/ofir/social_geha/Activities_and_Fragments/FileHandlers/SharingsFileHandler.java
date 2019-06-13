@@ -1,24 +1,29 @@
 package com.example.ofir.social_geha.Activities_and_Fragments.FileHandlers;
 
 import android.content.Context;
-import android.util.Log;
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.io.Serializable;
 import java.util.ArrayList;
 
+/**
+ * A sharings is a situation where the user has shared their information with another party.
+ * The purpose of this class is to manage a file of sharings committed by the logged it user
+ */
 public class SharingsFileHandler {
 
-    private String filename = "sharings2";
+    private String filename = "sharings2"; //the name of the file in which the sharings are stored
     private File mFile;
     private Context context;
 
-
+    /**
+     * Constructor: If the file exists, opens it. Otherwise, creates it and writes an empty list to it.
+     *
+     * @param context - the context of the activity (or fragment) which accessed the file (necessary for file access in android)
+     */
     public SharingsFileHandler(Context context){
         mFile = new File(context.getFilesDir(), filename);
         if (!mFile.exists()) {
@@ -31,12 +36,19 @@ public class SharingsFileHandler {
                 oos.close();
                 outputStream.close();
             } catch (IOException e) {
-                Log.d("TEST-CTOR", e.getClass().getSimpleName());
+                throw new RuntimeException(e.getMessage());
             }
         }
         this.context = context;
     }
 
+    /**
+     * Adds a new entry to the list of persons with whom the user has shared his/her information.
+     * The addition is saved persistently in the file.
+     *
+     * @param uid - the of id of someone the user's information has been shared with
+     * @return the list of id's maintained by the file (after the addition)
+     */
     public ArrayList<String> addUID(String uid){
         ArrayList<String> uids = getUIDs();
         uids.add(uid);
@@ -54,49 +66,20 @@ public class SharingsFileHandler {
         return uids;
     }
 
+    /**
+     * @return the list of sharings recorded in the file
+     */
     public ArrayList<String> getUIDs(){
         ArrayList<String> uids;
         try {
-            Log.d("TEST","1");
             FileInputStream inputStream = context.openFileInput(filename);
-            Log.d("TEST","2");
             ObjectInputStream ois = new ObjectInputStream(inputStream);
-            Log.d("TEST","3");
             uids = (ArrayList<String>)ois.readObject();
-            Log.d("TEST","4");
             ois.close();
-            Log.d("TEST","5");
             inputStream.close();
         } catch (Exception e) {
-            //uids = new ArrayList<>();
-            //uids.add(e.getMessage());
-            Log.d("TEST",e.getClass().getSimpleName());
-            Log.d("TEST",e.getMessage());
             throw new RuntimeException(e.getMessage());
         }
         return uids;
     }
-
-//    public static class UID implements Serializable {
-//        private static final long serialVersionUID = 1L;
-//        private String uid;
-//
-//        public UID(String u){
-//            uid = u;
-//        }
-//
-//
-//        public String getUID() {
-//            return uid;
-//        }
-//
-//        public void setUID(String uid) {
-//            this.uid = uid;
-//        }
-//
-//        @Override
-//        public String toString() {
-//            return  "##"+ uid +"##";
-//        }
-//    }
 }
