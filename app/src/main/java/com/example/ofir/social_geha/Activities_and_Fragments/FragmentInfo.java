@@ -9,7 +9,9 @@ import android.view.ViewGroup;
 import com.example.ofir.social_geha.Activities_and_Fragments.activity_main_drawer;
 import com.example.ofir.social_geha.R;
 
-
+/**
+ * This class does nothing except display an info page
+ */
 public class FragmentInfo extends Fragment {
     public FragmentInfo() { }
 

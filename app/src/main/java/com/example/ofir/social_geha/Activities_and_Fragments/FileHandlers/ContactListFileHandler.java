@@ -53,10 +53,12 @@ public class ContactListFileHandler {
      * Changes the (real) name of a contact in the contact-list
      * @param uid - the id of the contact whose name we wish to change
      * @param realname - the new name we'd like to install in the contact-list
+     * @implSpec  - nothing is done if the person does not exist
      */
     public void changeName(String uid, String realname) {
         HashMap<String, Contact> contacts = getContacts();
         Contact contact = contacts.get(uid);
+        if(contact == null) return;
         contact.setRealName(realname);
         addContact(contact);
     }
@@ -72,9 +74,8 @@ public class ContactListFileHandler {
     public void changeLastChatViewDate(String uid, Date date) {
 
         HashMap<String, Contact> contacts = getContacts();
-        if(!contacts.containsKey(uid))
-            return;
         Contact contact = contacts.get(uid);
+        if(contact == null) return;
         contact.setLastChatViewDate(date);
         addContact(contact);
     }

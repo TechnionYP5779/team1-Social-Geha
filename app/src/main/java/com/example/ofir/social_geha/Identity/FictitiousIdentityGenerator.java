@@ -1,8 +1,10 @@
 package com.example.ofir.social_geha.Identity;
 
-import com.example.ofir.social_geha.Identity.AnonymousIdentity;
 import com.example.ofir.social_geha.Person;
 
+/**
+ * A utility class used to generate anonymous identities for users
+ */
 public class FictitiousIdentityGenerator {
     private static String[] male_adjectives = {"שמח", "פרוותי", "חלקלק", "מעופף", "עגלגל", "זורח", "קופץ", "מבעבע", "מנוקד" , "אמיץ" , "פילוסופי", "רציונלי", "שנון" , "מדעי" , "נדיב" , "חייכן", "מהודר", "מרשים"};
     private static String[] male_animals ={"דוב", "נשר", "סרטן נזיר", "סוס", "תמנון", "ינשוף", "אבו נפחא", "כלב ים", "חסילון", "דיונון", "תרנגול הודו"};
@@ -14,7 +16,12 @@ public class FictitiousIdentityGenerator {
 
     private static String[] colors = {"#CD950C", "#6495ED", "#B22222", "#BB5E87", "#B0E0E6", "#BA55D3", "#458B00", "#00FA9A", "#8B008B", "#FFC0CB", "#F4A460"};
 
-    public static AnonymousIdentity getAnonymousIdentity(Person.Gender gender){
+    /**
+     *
+     * @param gender - the gender of the identity we wish to generate: either MALE, FEMALE, or UNDISCLOSED (because Buddiz supports non-binary people!)
+     * @return a new, randomized, anonymous identity
+     */
+    public static AnonymousIdentity generateAnonymousIdentity(Person.Gender gender){
         String randomPicture;
         String name;
         int randomColor = (int)(Math.random()*colors.length);

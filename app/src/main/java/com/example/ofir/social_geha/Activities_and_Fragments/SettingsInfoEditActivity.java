@@ -3,7 +3,6 @@ package com.example.ofir.social_geha.Activities_and_Fragments;
 import android.app.DatePickerDialog;
 import android.app.ProgressDialog;
 import android.content.Intent;
-import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
@@ -13,19 +12,13 @@ import com.example.ofir.social_geha.Identity.FictitiousIdentityGenerator;
 import com.example.ofir.social_geha.Firebase.Database;
 import com.example.ofir.social_geha.Person;
 import com.example.ofir.social_geha.R;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.firestore.DocumentSnapshot;
 
-import android.content.DialogInterface;
 import android.support.v7.app.AlertDialog;
 import android.text.InputType;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -198,7 +191,7 @@ public class SettingsInfoEditActivity extends AppCompatActivity {
                     List<Person.Language> spokenLanguages = languagesStringToLanguageEnum(languages);
                     AdminGivenData adminGivenData = (AdminGivenData)getIntent().getSerializableExtra("adminGivenData");
                     Person.Kind kind = kindStringToKindEnum(adminGivenData.getKind());
-                    Person p = new Person(name, FictitiousIdentityGenerator.getAnonymousIdentity(
+                    Person p = new Person(name, FictitiousIdentityGenerator.generateAnonymousIdentity(
                             fromStringToGenderEnum(gender, SettingsInfoEditActivity.this, false)),
                             date, fromStringToGenderEnum(gender, SettingsInfoEditActivity.this, false), mReligion, spokenLanguages,
                             kind, Database.getInstance().getLoggedInUserID(), bio, false, new ArrayList<Integer>());
