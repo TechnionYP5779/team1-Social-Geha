@@ -93,12 +93,6 @@ public class AllChatsActivity extends AppCompatActivity {
 
                 });
 
-//        if(this.p == null) {
-//            Log.d("SHAI", "logged in person IS null");
-//        } else {
-//            Log.d("SHAI", "logged in person ISN'T null");
-//        }
-
         loadList();
 
         mListView.setOnItemClickListener((parent, view, position, id) -> {
@@ -126,19 +120,9 @@ public class AllChatsActivity extends AppCompatActivity {
                 Log.d("CLICK", "person I've shared with: " + ID);
                 if(uid.equals(ID)) {
                     String toastText = "לא ניתן לבטל את שיתוף המידע עם " + conversationList.get(pos).getName();
-                    //Toast.makeText(AllChatsActivity.this, toastText, Toast.LENGTH_SHORT).show();
                     return true;
                 }
             }
-
-//            Map<String, ContactListFileHandler.Contact> contactMap = new ContactListFileHandler(AllChatsActivity.this).getContacts();
-//            for (Map.Entry<String, ContactListFileHandler.Contact> c : contactMap.entrySet()) {
-//                if (c.getValue().getUid().equals(uid) && !c.getValue().getRealName().equals(ContactListFileHandler.Contact.UNKNOWN_NAME)) {
-//                    String toastText = "לא ניתן לבטל את שיתוף המידע עם " + c.getValue().getRealName();
-//                    Toast.makeText(AllChatsActivity.this, toastText, Toast.LENGTH_SHORT).show();
-//                    return true;
-//                }
-//            }
 
             AlertDialog.Builder builder = new AlertDialog.Builder(AllChatsActivity.this);
             LayoutInflater inflater = getLayoutInflater();
@@ -234,85 +218,80 @@ public class AllChatsActivity extends AppCompatActivity {
         Log.d("SHAI", "IN POPULATE CONV LIST");
 
         mListener = mFirestore.collection(MESSAGES).whereEqualTo("toPersonID", Database.getInstance().getLoggedInUserID())
-                .addSnapshotListener(new EventListener<QuerySnapshot>() {
-                    @Override
-                    public void onEvent(@javax.annotation.Nullable QuerySnapshot queryDocumentSnapshots, @javax.annotation.Nullable FirebaseFirestoreException e) {
-                        if (e != null) {
-                            return;
-                        }
+                .addSnapshotListener((queryDocumentSnapshots, e) -> {
+                    if (e != null) {
+                        return;
+                    }
 
-                        for (DocumentChange doc : queryDocumentSnapshots.getDocumentChanges()) {
-                            if (doc.getType() == DocumentChange.Type.ADDED) {
-                                Message message = doc.getDocument().toObject(Message.class); //added message
-                                mFirestore.collection(MESSAGES).document(doc.getDocument().getId()).delete();
-                                // decrypt regular messages
-                                String contactUID = message.getFromPersonID();
-                                if (message.getShown()) {
-                                    KeyFileHandler keyFileHandler = new KeyFileHandler(AllChatsActivity.this, contactUID);
-                                    AES aes = new AES(keyFileHandler.getKey());
-                                    message.setMessage(aes.decrypt(message.getMessage()));
-                                }
+                    for (DocumentChange doc : queryDocumentSnapshots.getDocumentChanges()) {
+                        if (doc.getType() == DocumentChange.Type.ADDED) {
+                            Message message = doc.getDocument().toObject(Message.class); //added message
+                            mFirestore.collection(MESSAGES).document(doc.getDocument().getId()).delete();
+                            // decrypt regular messages
+                            String contactUID = message.getFromPersonID();
+                            if (message.getShown()) {
+                                KeyFileHandler keyFileHandler = new KeyFileHandler(AllChatsActivity.this, contactUID);
+                                AES aes = new AES(keyFileHandler.getKey());
+                                message.setMessage(aes.decrypt(message.getMessage()));
+                            }
 
-//                                if(message.getMessage() == null || message.getMessage().equals("CHAT REQUEST$")
-//                                        || message.getMessage().equals("CHAT ACCEPT$") || message.getMessage().equals("CHAT REJECT$")) continue;
-                                mFileHandler.writeMessage(message); //non shown messages will be ignored anyway but may as well write them
+                            mFileHandler.writeMessage(message); //non shown messages will be ignored anyway but may as well write them
 
-                                if (message.getShown()) {
-                                    continue;
-                                }
+                            if (message.getShown()) {
+                                continue;
+                            }
 
-                                //it's a control message - our business
-                                String text = message.getMessage();
+                            //it's a control message - our business
+                            String text = message.getMessage();
 
-                                /* self message*/
-                                if (contactUID.equals(Database.getInstance().getLoggedInUserID()))
-                                    continue;
+                            /* self message*/
+                            if (contactUID.equals(Database.getInstance().getLoggedInUserID()))
+                                continue;
 
-                                /*a control message but not an identity reveal*/
-                                if (text.substring(0, "IDENTITY".length()).equals("IDENTITY")) {
-                                    String realName = text.substring(text.indexOf('#') + 1);
-                                    Log.d("SHAI", "got control message from " + message.getFromPersonID());
-                                    Log.d("SHAI", "his/her realname is " + realName);
-                                    new ContactListFileHandler(AllChatsActivity.this).changeName(contactUID, realName);
+                            /*a control message but not an identity reveal*/
+                            if (text.substring(0, "IDENTITY".length()).equals("IDENTITY")) {
+                                String realName = text.substring(text.indexOf('#') + 1);
+                                Log.d("SHAI", "got control message from " + message.getFromPersonID());
+                                Log.d("SHAI", "his/her realname is " + realName);
+                                new ContactListFileHandler(AllChatsActivity.this).changeName(contactUID, realName);
 
-                                    //for the full effect - swap the names in the lists
-                                    //The contact must be in the list since a first message can not be an identity reveal one
-                                    for (int i = 0; i < conversationList.size(); i++) {
-                                        if (conversationList.get(i).getUserID().equals(contactUID)) {
-                                            conversationList.get(i).setRealName(realName);
-                                        }
-                                    }
-
-                                    for (int i = 0; i < allList.size(); i++) {
-                                        if (allList.get(i).getUserID().equals(contactUID)) {
-                                            allList.get(i).setRealName(realName);
-                                        }
-                                    }
-                                    // a message we should ignore because it's not an identity reveal - to the next change
-                                } else if (text.substring(0, "AES".length()).equals("AES")) {
-                                    KeyFileHandler keyFileHandler = new KeyFileHandler(AllChatsActivity.this, contactUID);
-                                    keyFileHandler.writeKey(AES.stringToKey(text.substring("AES".length())));
-                                    Log.d("AES_READ", "received key from " + contactUID + " and the key is " + text.substring("AES".length()));
-                                } else if (text.substring(0, "NAME_CHANGE".length()).equals("NAME_CHANGE")) {
-                                    String realName = text.substring(text.indexOf('#') + 1);
-                                    for (int i = 0; i < conversationList.size(); i++) {
-                                        if (conversationList.get(i).getUserID().equals(contactUID)) {
-                                            conversationList.get(i).setRealName(realName);
-                                        }
-                                    }
-
-                                    for (int i = 0; i < allList.size(); i++) {
-                                        if (allList.get(i).getUserID().equals(contactUID)) {
-                                            allList.get(i).setRealName(realName);
-                                        }
+                                //for the full effect - swap the names in the lists
+                                //The contact must be in the list since a first message can not be an identity reveal one
+                                for (int i = 0; i < conversationList.size(); i++) {
+                                    if (conversationList.get(i).getUserID().equals(contactUID)) {
+                                        conversationList.get(i).setRealName(realName);
                                     }
                                 }
 
+                                for (int i = 0; i < allList.size(); i++) {
+                                    if (allList.get(i).getUserID().equals(contactUID)) {
+                                        allList.get(i).setRealName(realName);
+                                    }
+                                }
+                                // a message we should ignore because it's not an identity reveal - to the next change
+                            } else if (text.substring(0, "AES".length()).equals("AES")) {
+                                KeyFileHandler keyFileHandler = new KeyFileHandler(AllChatsActivity.this, contactUID);
+                                keyFileHandler.writeKey(AES.stringToKey(text.substring("AES".length())));
+                                Log.d("AES_READ", "received key from " + contactUID + " and the key is " + text.substring("AES".length()));
+                            } else if (text.substring(0, "NAME_CHANGE".length()).equals("NAME_CHANGE")) {
+                                String realName = text.substring(text.indexOf('#') + 1);
+                                for (int i = 0; i < conversationList.size(); i++) {
+                                    if (conversationList.get(i).getUserID().equals(contactUID)) {
+                                        conversationList.get(i).setRealName(realName);
+                                    }
+                                }
+
+                                for (int i = 0; i < allList.size(); i++) {
+                                    if (allList.get(i).getUserID().equals(contactUID)) {
+                                        allList.get(i).setRealName(realName);
+                                    }
+                                }
                             }
 
                         }
-                        updateList();
+
                     }
+                    updateList();
                 });
     }
 
@@ -374,36 +353,33 @@ public class AllChatsActivity extends AppCompatActivity {
                 Log.d("SHAI", "got shown message from unknown contact " + entry.getKey());
                 //new message from someone we do not know
                 Task<QuerySnapshot> personQueryTask = mFirestore.collection(USERS).whereEqualTo("userID", entry.getKey()).get();
-                personQueryTask.addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        QuerySnapshot person = task.getResult();
-                        Log.d("COOLTEST", "get user Complete");
+                personQueryTask.addOnCompleteListener(task -> {
+                    QuerySnapshot person = task.getResult();
+                    Log.d("COOLTEST", "get user Complete");
 
-                        if (!person.isEmpty()) {
-                            Person myPerson = person.toObjects(Person.class).get(0);
-                            Log.d("COOLTEST", "got user: " + myPerson.getDescription());
-                            ContactListFileHandler.Contact myContact = new ContactListFileHandler.Contact(myPerson.getUserID(), ContactListFileHandler.Contact.UNKNOWN_NAME,
-                                    myPerson.getDescription(), myPerson.getAnonymousIdentity(), new Date(Long.MIN_VALUE));
-                            ChatEntry chatEntry = new ChatEntry(myContact, entry.getValue().getMessage(), entry.getValue().getUnreadCount()); //contact & message might have been updated
+                    if (!person.isEmpty()) {
+                        Person myPerson = person.toObjects(Person.class).get(0);
+                        Log.d("COOLTEST", "got user: " + myPerson.getDescription());
+                        ContactListFileHandler.Contact myContact = new ContactListFileHandler.Contact(myPerson.getUserID(), ContactListFileHandler.Contact.UNKNOWN_NAME,
+                                myPerson.getDescription(), myPerson.getAnonymousIdentity(), new Date(Long.MIN_VALUE));
+                        ChatEntry chatEntry = new ChatEntry(myContact, entry.getValue().getMessage(), entry.getValue().getUnreadCount()); //contact & message might have been updated
 
-                            int j = listContains(conversationList, chatEntry.getUserID());
-                            if (j != -1) {
-                                conversationList.remove(chatEntry);
-                                allList.remove(chatEntry);
+                        int j = listContains(conversationList, chatEntry.getUserID());
+                        if (j != -1) {
+                            conversationList.remove(chatEntry);
+                            allList.remove(chatEntry);
 
-                                conversationList.set(j, chatEntry);
-                                allList.set(j, chatEntry);
-                            } else {
-                                conversationList.add(chatEntry);
-                                allList.add(chatEntry);
-                            }
-                            mAdapter.notifyDataSetChanged();
-
-                            //since this person is not in the contactList we to update the file
-                            Log.d("SHAI", "NEW CONTACT");
-                            new ContactListFileHandler(AllChatsActivity.this).addContact(myContact);
+                            conversationList.set(j, chatEntry);
+                            allList.set(j, chatEntry);
+                        } else {
+                            conversationList.add(chatEntry);
+                            allList.add(chatEntry);
                         }
+                        mAdapter.notifyDataSetChanged();
+
+                        //since this person is not in the contactList we to update the file
+                        Log.d("SHAI", "NEW CONTACT");
+                        new ContactListFileHandler(AllChatsActivity.this).addContact(myContact);
                     }
                 });
             }

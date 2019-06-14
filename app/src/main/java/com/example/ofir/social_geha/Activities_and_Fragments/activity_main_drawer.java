@@ -141,23 +141,15 @@ public class activity_main_drawer extends AppCompatActivity
                         mBuilder.setMessage("האם אתה בטוח שברצונך למחוק את החשבון?");
 
                         mBuilder.setCancelable(false);
-                        mBuilder.setPositiveButton(R.string.agree, new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialogInterface, int which) {
-                                        FirebaseFirestore.getInstance().collection("users").document(Database.getInstance().getLoggedInUserID()).delete();
-                                        AppStorageManipulation.deleteAppData(getApplicationContext());
-                                        Intent intent = new Intent(activity_main_drawer.this, Login.class);
-                                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                                        startActivity(intent);
-                                }
+                        mBuilder.setPositiveButton(R.string.agree, (dialogInterface, which) -> {
+                                FirebaseFirestore.getInstance().collection("users").document(Database.getInstance().getLoggedInUserID()).delete();
+                                AppStorageManipulation.deleteAppData(getApplicationContext());
+                                Intent intent = new Intent(activity_main_drawer.this, Login.class);
+                                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                                startActivity(intent);
                         });
 
-                        mBuilder.setNegativeButton(R.string.dont_agree, new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialogInterface, int i) {
-                                        dialogInterface.dismiss();
-                                }
-                        });
+                        mBuilder.setNegativeButton(R.string.dont_agree, (dialogInterface, i) -> dialogInterface.dismiss());
                         AlertDialog mDialog = mBuilder.create();
                         mDialog.show();
 
@@ -180,48 +172,42 @@ public class activity_main_drawer extends AppCompatActivity
 
         public void loadData() {
                 Database.getInstance().getdb().collection("users").whereEqualTo("userID", Database.getInstance().getLoggedInUserID()).get()
-                        .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                                @Override
-                                public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                                        if (task.isSuccessful()) {
-                                                for (QueryDocumentSnapshot doc : task.getResult()) {
-                                                        p = doc.toObject(Person.class);
-                                                        anonymousName.setText(p.getAnonymousIdentity().getName());
-                                                        readlName.setText(p.getRealName());
+                        .addOnCompleteListener(task -> {
+                                if (task.isSuccessful()) {
+                                        for (QueryDocumentSnapshot doc : task.getResult()) {
+                                                p = doc.toObject(Person.class);
+                                                anonymousName.setText(p.getAnonymousIdentity().getName());
+                                                readlName.setText(p.getRealName());
 
-                                                        // Display user image as profile pic
-                                                        int default_image = activity_main_drawer.this.getResources().getIdentifier("@drawable/image_fail", null, activity_main_drawer.this.getPackageName());
-                                                        ImageLoader image_loader = ImageLoader.getInstance();
-                                                        image_loader.init(ImageLoaderConfiguration.createDefault(activity_main_drawer.this));
-                                                        DisplayImageOptions options = new DisplayImageOptions.Builder().cacheInMemory(true)
-                                                                .cacheOnDisc(true).resetViewBeforeLoading(true)
-                                                                .showImageForEmptyUri(default_image)
-                                                                .showImageOnFail(default_image)
-                                                                .showImageOnLoading(default_image).build();
-                                                        int image_id = activity_main_drawer.this.getResources().getIdentifier("@drawable/" + p.getAnonymousIdentity().getImageName(), null, activity_main_drawer.this.getPackageName());
-                                                        final String photoString = "drawable://" + image_id;
-                                                        Log.i("PROFILE_PICTURE", photoString);
-                                                        image_loader.displayImage(photoString, profile_pic, options); //display no_bg image
-                                                        profile_pic.setCircleBackgroundColor(Color.parseColor("#6ebae1"));
+                                                // Display user image as profile pic
+                                                int default_image = activity_main_drawer.this.getResources().getIdentifier("@drawable/image_fail", null, activity_main_drawer.this.getPackageName());
+                                                ImageLoader image_loader = ImageLoader.getInstance();
+                                                image_loader.init(ImageLoaderConfiguration.createDefault(activity_main_drawer.this));
+                                                DisplayImageOptions options = new DisplayImageOptions.Builder().cacheInMemory(true)
+                                                        .cacheOnDisc(true).resetViewBeforeLoading(true)
+                                                        .showImageForEmptyUri(default_image)
+                                                        .showImageOnFail(default_image)
+                                                        .showImageOnLoading(default_image).build();
+                                                int image_id = activity_main_drawer.this.getResources().getIdentifier("@drawable/" + p.getAnonymousIdentity().getImageName(), null, activity_main_drawer.this.getPackageName());
+                                                final String photoString = "drawable://" + image_id;
+                                                Log.i("PROFILE_PICTURE", photoString);
+                                                image_loader.displayImage(photoString, profile_pic, options); //display no_bg image
+                                                profile_pic.setCircleBackgroundColor(Color.parseColor("#6ebae1"));
 
-                                                        //make sure the profile picture clicks and zooms
-                                                        final ImageView viewStart = profile_pic;
-                                                        profile_pic.setOnClickListener(new View.OnClickListener() {
-                                                                @Override
-                                                                public void onClick(View v) {
-                                                                        Intent intent = new Intent(activity_main_drawer.this, ZoomedPictureActivity.class);
-                                                                        String transitionName = getString(R.string.transition_string);
-                                                                        ActivityOptionsCompat options =
-                                                                                ActivityOptionsCompat.makeSceneTransitionAnimation(activity_main_drawer.this,
-                                                                                        viewStart,   // Starting view
-                                                                                        transitionName    // The String
-                                                                                );
-                                                                        intent.putExtra("EXTRA_IMAGE_URL", photoString);
-                                                                        intent.putExtra("EXTRA_IMAGE_COLOR", p.getAnonymousIdentity().imageColor); //pass the color to the zoom animation
-                                                                        ActivityCompat.startActivity(activity_main_drawer.this, intent, options.toBundle());
-                                                                }
-                                                        });
-                                                }
+                                                //make sure the profile picture clicks and zooms
+                                                final ImageView viewStart = profile_pic;
+                                                profile_pic.setOnClickListener(v -> {
+                                                        Intent intent = new Intent(activity_main_drawer.this, ZoomedPictureActivity.class);
+                                                        String transitionName = getString(R.string.transition_string);
+                                                        ActivityOptionsCompat options1 =
+                                                                ActivityOptionsCompat.makeSceneTransitionAnimation(activity_main_drawer.this,
+                                                                        viewStart,   // Starting view
+                                                                        transitionName    // The String
+                                                                );
+                                                        intent.putExtra("EXTRA_IMAGE_URL", photoString);
+                                                        intent.putExtra("EXTRA_IMAGE_COLOR", p.getAnonymousIdentity().imageColor); //pass the color to the zoom animation
+                                                        ActivityCompat.startActivity(activity_main_drawer.this, intent, options1.toBundle());
+                                                });
                                         }
                                 }
                         });

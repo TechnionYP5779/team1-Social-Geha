@@ -71,7 +71,7 @@ public class MatchesListAdapter extends ArrayAdapter<Person> {
             holder.name = convertView.findViewById(R.id.row_name);
             holder.description = convertView.findViewById(R.id.row_description);
             holder.image = convertView.findViewById(R.id.row_image);
-            holder.chat_message_layout = (RelativeLayout) convertView.findViewById(R.id.chat_message_layout);
+            holder.chat_message_layout = convertView.findViewById(R.id.chat_message_layout);
             holder.pick_arrow = convertView.findViewById(R.id.pick_arrow);
 
             convertView.setTag(holder);

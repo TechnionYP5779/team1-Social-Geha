@@ -65,18 +65,15 @@ public class FilterMatchesActivity extends AppCompatActivity {
         tabIndicator.setupWithViewPager(screenPager);
 
         // next button click Listner
-        btnNext.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                position = screenPager.getCurrentItem();
-                if (position < mList.size()) {
-                    position++;
-                }
-
-                showScreen(position);
-                screenPager.setCurrentItem(position);
-
+        btnNext.setOnClickListener(v -> {
+            position = screenPager.getCurrentItem();
+            if (position < mList.size()) {
+                position++;
             }
+
+            showScreen(position);
+            screenPager.setCurrentItem(position);
+
         });
 
 
@@ -97,12 +94,9 @@ public class FilterMatchesActivity extends AppCompatActivity {
         });
 
         // skip button click listener
-        tvSkip.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                showScreen(mList.size() - 1);
-                screenPager.setCurrentItem(mList.size());
-            }
+        tvSkip.setOnClickListener(v -> {
+            showScreen(mList.size() - 1);
+            screenPager.setCurrentItem(mList.size());
         });
     }
 

@@ -95,22 +95,19 @@ public class ChatActivity extends AppCompatActivity {
         final View viewStart = image_holder;
         final String imageURL = mAnonymousOtherPhotoUrl;
         final String imageColor = mAnonymousOtherPhotoColor;
-        image_holder.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(ChatActivity.this, ZoomedPictureActivity.class);
-                String transitionName = getString(R.string.transition_string);
-                ActivityOptionsCompat options =
-                        ActivityOptionsCompat.makeSceneTransitionAnimation(ChatActivity.this,
-                                viewStart,   // Starting view
-                                transitionName    // The String
-                        );
-                intent.putExtra("EXTRA_IMAGE_URL", imageURL);
-                intent.putExtra("EXTRA_IMAGE_COLOR", imageColor);
+        image_holder.setOnClickListener(v -> {
+            Intent intent = new Intent(ChatActivity.this, ZoomedPictureActivity.class);
+            String transitionName = getString(R.string.transition_string);
+            ActivityOptionsCompat options1 =
+                    ActivityOptionsCompat.makeSceneTransitionAnimation(ChatActivity.this,
+                            viewStart,   // Starting view
+                            transitionName    // The String
+                    );
+            intent.putExtra("EXTRA_IMAGE_URL", imageURL);
+            intent.putExtra("EXTRA_IMAGE_COLOR", imageColor);
 
-                //Start the Intent
-                ActivityCompat.startActivity(ChatActivity.this, intent, options.toBundle());
-            }
+            //Start the Intent
+            ActivityCompat.startActivity(ChatActivity.this, intent, options1.toBundle());
         });
 
         // HANDLE THE CHAT
@@ -144,41 +141,38 @@ public class ChatActivity extends AppCompatActivity {
     private void setMessageListeners() {
         mListener = mFirestore.collection(MESSAGES).whereEqualTo("toPersonID", mLoggedInPersonId)
                 .whereEqualTo("fromPersonID", mOtherPersonId)
-                .addSnapshotListener(new EventListener<QuerySnapshot>() {
-                    @Override
-                    public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
-                        if (e != null) {
-                            Log.d("COOLTEST", "Error: " + e.getMessage());
-                            return;
-                        }
-
-                        for (DocumentChange doc : queryDocumentSnapshots.getDocumentChanges()) {
-                            if (doc.getType() == DocumentChange.Type.ADDED) {
-                                String message_text = doc.getDocument().getString("message");
-                                Log.d("COOLTEST1", "Chat got:" + message_text);
-
-                                if(message_text == null || message_text.equals("CHAT REQUEST$") || message_text.equals("CHAT ACCEPT$") || message_text.equals("CHAT REJECT$")) {
-                                    Log.d("NONONONO", "IM DELETING");
-                                    mFirestore.collection(MESSAGES).document(doc.getDocument().getId()).delete();
-                                    continue;
-                                }
-
-                                Log.d("COOLTEST", "Content: " + message_text);
-                                Log.d("POPO", "onEvent: DOES THIS");
-                                Message message = doc.getDocument().toObject(Message.class);
-
-                                //we're actually decrypting this message => must be not null
-                                if (aes == null)
-                                    throw new AssertionError("AES should not be null");
-                                message.setMessage(aes.decrypt(message.getMessage()));
-                                mFirestore.collection(MESSAGES).document(doc.getDocument().getId()).delete();
-                                if (message.getShown())
-                                    messageList.add(message);
-                                fileHandler.writeMessage(message);
-                            }
-                        }
-                        updateMessageList();
+                .addSnapshotListener((queryDocumentSnapshots, e) -> {
+                    if (e != null) {
+                        Log.d("COOLTEST", "Error: " + e.getMessage());
+                        return;
                     }
+
+                    for (DocumentChange doc : queryDocumentSnapshots.getDocumentChanges()) {
+                        if (doc.getType() == DocumentChange.Type.ADDED) {
+                            String message_text = doc.getDocument().getString("message");
+                            Log.d("COOLTEST1", "Chat got:" + message_text);
+
+                            if(message_text == null || message_text.equals("CHAT REQUEST$") || message_text.equals("CHAT ACCEPT$") || message_text.equals("CHAT REJECT$")) {
+                                Log.d("NONONONO", "IM DELETING");
+                                mFirestore.collection(MESSAGES).document(doc.getDocument().getId()).delete();
+                                continue;
+                            }
+
+                            Log.d("COOLTEST", "Content: " + message_text);
+                            Log.d("POPO", "onEvent: DOES THIS");
+                            Message message = doc.getDocument().toObject(Message.class);
+
+                            //we're actually decrypting this message => must be not null
+                            if (aes == null)
+                                throw new AssertionError("AES should not be null");
+                            message.setMessage(aes.decrypt(message.getMessage()));
+                            mFirestore.collection(MESSAGES).document(doc.getDocument().getId()).delete();
+                            if (message.getShown())
+                                messageList.add(message);
+                            fileHandler.writeMessage(message);
+                        }
+                    }
+                    updateMessageList();
                 });
     }
 

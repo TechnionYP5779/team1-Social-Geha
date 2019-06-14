@@ -45,20 +45,12 @@ public class SplashActivity extends AppCompatActivity {
         }
         else{
             FirebaseInstanceId.getInstance().getInstanceId()
-                    .addOnCompleteListener(new OnCompleteListener<InstanceIdResult>() {
-                        @Override
-                        public void onComplete(@NonNull Task<InstanceIdResult> task) {
-                            if (task.isSuccessful()) {
-                                GehaMessagingService.storeToken(Database.getInstance().getAuth(), Database.getInstance().getdb(), task.getResult().getToken());
-                            }
+                    .addOnCompleteListener(task -> {
+                        if (task.isSuccessful()) {
+                            GehaMessagingService.storeToken(Database.getInstance().getAuth(), Database.getInstance().getdb(), task.getResult().getToken());
                         }
                     });
-            new Handler().postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    moveToHomeScreen();
-                }
-            }, splashTimeOut);
+            new Handler().postDelayed(() -> moveToHomeScreen(), splashTimeOut);
         }
     }
 

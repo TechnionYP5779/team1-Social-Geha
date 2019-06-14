@@ -47,12 +47,9 @@ public class Signup extends AppCompatActivity {
         passwordVerify = findViewById(R.id.password_verify);
         signup = findViewById(R.id.signup_button);
 
-        signup.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(isValid()){
-                    register(username.getText().toString(), password.getText().toString(), code);
-                }
+        signup.setOnClickListener(v -> {
+            if(isValid()){
+                register(username.getText().toString(), password.getText().toString(), code);
             }
         });
 
@@ -122,18 +119,15 @@ public class Signup extends AppCompatActivity {
         String email = username.concat("@geha-technion.temp.com");
         progressDialog.show();
         auth.createUserWithEmailAndPassword(email, password)
-                .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        progressDialog.dismiss();
-                        if (task.isSuccessful()) {
-                            Database.getInstance().addUser(username, personalCode, Database.getInstance().getLoggedInUserID());
-                            setResult(RESULT_OK);
-                            finish();
-                            Toast.makeText(Signup.this, "נרשמת", Toast.LENGTH_SHORT).show();
-                        } else {
-                            Toast.makeText(Signup.this, "שם המשתמש כבר תפוס!", Toast.LENGTH_SHORT).show();
-                        }
+                .addOnCompleteListener(task -> {
+                    progressDialog.dismiss();
+                    if (task.isSuccessful()) {
+                        Database.getInstance().addUser(username, personalCode, Database.getInstance().getLoggedInUserID());
+                        setResult(RESULT_OK);
+                        finish();
+                        Toast.makeText(Signup.this, "נרשמת", Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(Signup.this, "שם המשתמש כבר תפוס!", Toast.LENGTH_SHORT).show();
                     }
                 });
     }

@@ -3,13 +3,10 @@ package com.example.ofir.social_geha.Activities_and_Fragments;
 import android.content.Intent;
 import android.graphics.PorterDuff;
 import android.os.Bundle;
-import android.os.Looper;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -33,8 +30,10 @@ import java.util.ArrayList;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import static com.example.ofir.social_geha.Activities_and_Fragments.activity_main_drawer.ALL_CHATS_TAG;
-
+/**
+ * This class maintains the match-list screen. The list starts out empty and people who have agreed to chat are added to it
+ * If within a certain amount of time no one agrees to chat, then the in-house counsel is suggested
+ */
 public class AvailableMatches extends AppCompatActivity {
 
     ListView listView;
@@ -57,20 +56,16 @@ public class AvailableMatches extends AppCompatActivity {
         progressBar = findViewById(R.id.progressBar);
         progressBarTitle = findViewById(R.id.progressBar_title);
         listView = findViewById(R.id.available_matches);
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Object o = listView.getItemAtPosition(position);
-                Person person = (Person) o; //As you are using Default String Adapter
-                Intent myIntent = new Intent(AvailableMatches.this, ChatActivity.class);
-                myIntent.putExtra("EXTRA_PHOTO_URL", person.getAnonymousIdentity().getImageName());
-                myIntent.putExtra("EXTRA_PHOTO_COLOR", person.getAnonymousIdentity().getImageColor());
-                myIntent.putExtra("EXTRA_NAME", person.getAnonymousIdentity().getName());
-                myIntent.putExtra("EXTRA_PERSON_ID", person.getUserID());
-                myIntent.putExtra("EXTRA_INITIATOR", true);
-                AvailableMatches.this.startActivity(myIntent);
-                //Toast.makeText(getBaseContext(),person.getPersonID(),Toast.LENGTH_SHORT).show();
-            }
+        listView.setOnItemClickListener((parent, view, position, id) -> {
+            Object o = listView.getItemAtPosition(position);
+            Person person = (Person) o; //As you are using Default String Adapter
+            Intent myIntent = new Intent(AvailableMatches.this, ChatActivity.class);
+            myIntent.putExtra("EXTRA_PHOTO_URL", person.getAnonymousIdentity().getImageName());
+            myIntent.putExtra("EXTRA_PHOTO_COLOR", person.getAnonymousIdentity().getImageColor());
+            myIntent.putExtra("EXTRA_NAME", person.getAnonymousIdentity().getName());
+            myIntent.putExtra("EXTRA_PERSON_ID", person.getUserID());
+            myIntent.putExtra("EXTRA_INITIATOR", true);
+            AvailableMatches.this.startActivity(myIntent);
         });
 
         showItems(true);
@@ -111,8 +106,6 @@ public class AvailableMatches extends AppCompatActivity {
                                                     if (task.isSuccessful()) {
                                                         for (QueryDocumentSnapshot doc : task.getResult()) {
                                                             Person p = doc.toObject(Person.class);
-
-                                                            Log.d("WOO AH!", "added " + p.getRealName() + " to matchlist");
                                                             approved_matches_list.add(p);
                                                             adapter.notifyDataSetChanged();
                                                             if(!someApproved){ // First match so show list
@@ -197,11 +190,6 @@ public class AvailableMatches extends AppCompatActivity {
                 .sendRequestsToMatches(f.getKind(), f.getGender(), f.getReligion(), f.getLanguages()
                         , f.getLower_bound(), f.getUpper_bound() /*, possibles_list, adapter*/);
 
-//        for (Person p : possibles_list) {
-//            //send chat request
-//            Database.getInstance().sendControlMessage("CHAT REQUEST$", Database.getInstance().getLoggedInUserID(), p.getUserID());
-//        }
-
         //sent messages to all - now we wait for response
         new Timer().schedule(new StaffSearch(), 30000); //send the staff a request in 5 seconds
         new Timer().schedule(new AbortSearch(), 60000); //abort the search in 10 seconds
@@ -209,29 +197,24 @@ public class AvailableMatches extends AppCompatActivity {
 
     class StaffSearch extends TimerTask {
         public void run() {
-            runOnUiThread(new Runnable() {
-                public void run() {
-                    String toast_txt = "טרם נמצאו אנשים מתאימים"+"\n"+"פונה אל אנשי הצוות במקום";
-                    progressBarTitle.setText(toast_txt);
-                    if(someApproved) return;
-                    Database.getInstance().sendRequestsToStaff();
-                }
+            runOnUiThread(() -> {
+                String toast_txt = "טרם נמצאו אנשים מתאימים"+"\n"+"פונה אל אנשי הצוות במקום";
+                progressBarTitle.setText(toast_txt);
+                if(someApproved) return;
+                Database.getInstance().sendRequestsToStaff();
             });
         }
     }
 
     class AbortSearch extends TimerTask {
         public void run() {
-            runOnUiThread(new Runnable() {
-                public void run() {
-                    if(someApproved) return;
+            runOnUiThread(() -> {
+                if(someApproved) return;
 
-                    Toast.makeText(AvailableMatches.this, "אני מצטער, לא מצאנו לך אנשים לשוחח עימם.", Toast.LENGTH_LONG).show();
-                    progressBar.setVisibility(View.GONE);
-                    progressBarTitle.setVisibility(View.GONE);
-                    listView.setVisibility(View.GONE);
-                    //onBackPressed();
-                }
+                Toast.makeText(AvailableMatches.this, "אני מצטער, לא מצאנו לך אנשים לשוחח עימם.", Toast.LENGTH_LONG).show();
+                progressBar.setVisibility(View.GONE);
+                progressBarTitle.setVisibility(View.GONE);
+                listView.setVisibility(View.GONE);
             });
         }
     }
