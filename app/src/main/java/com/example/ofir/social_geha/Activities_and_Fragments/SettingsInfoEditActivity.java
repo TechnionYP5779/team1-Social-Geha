@@ -282,7 +282,7 @@ public class SettingsInfoEditActivity extends AppCompatActivity {
     }
 
     private void setBdayButton() {
-        bdayButton = (Button) findViewById(R.id.bday_button);
+        bdayButton = findViewById(R.id.bday_button);
 
         calendar = Calendar.getInstance();
         year = calendar.get(Calendar.YEAR);
@@ -299,7 +299,7 @@ public class SettingsInfoEditActivity extends AppCompatActivity {
     }
 
     private void setUpNameButton() {
-        nameButton = (Button) findViewById(R.id.name_button);
+        nameButton = findViewById(R.id.name_button);
         nameButton.setOnClickListener(v -> {
             AlertDialog.Builder mBuilder = new AlertDialog.Builder(SettingsInfoEditActivity.this, R.style.AlertDialogCustomWhite);
             mBuilder.setTitle(R.string.settings_info_edit_name_btn);
@@ -321,7 +321,7 @@ public class SettingsInfoEditActivity extends AppCompatActivity {
     }
 
     private void setUpLangButton() {
-        langButton = (Button) findViewById(R.id.language_button);
+        langButton = findViewById(R.id.language_button);
         languagesAll = getResources().getStringArray(R.array.languages);
         languagesAll_BooleanSelection = new boolean[languagesAll.length];
 

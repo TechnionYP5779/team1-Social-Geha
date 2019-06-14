@@ -40,7 +40,7 @@ public class SplashActivity extends AppCompatActivity {
         progressBar.startAnimation(logo_animation);
 
 
-        if (!Database.getInstance().isLoggedIn()) {
+        if (Database.getInstance().noLoggedInUser()) {
             promptLogin();
         }
         else{

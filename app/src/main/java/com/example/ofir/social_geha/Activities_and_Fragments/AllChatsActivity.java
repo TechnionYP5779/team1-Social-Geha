@@ -67,7 +67,7 @@ public class AllChatsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_all_chats);
 
-        if (!Database.getInstance().isLoggedIn()) {
+        if (Database.getInstance().noLoggedInUser()) {
             promptLogin();
         }
 

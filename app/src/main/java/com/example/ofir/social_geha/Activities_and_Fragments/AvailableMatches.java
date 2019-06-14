@@ -3,7 +3,6 @@ package com.example.ofir.social_geha.Activities_and_Fragments;
 import android.content.Intent;
 import android.graphics.PorterDuff;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 import android.view.View;
@@ -17,14 +16,9 @@ import com.example.ofir.social_geha.Firebase.Database;
 import com.example.ofir.social_geha.Firebase.Message;
 import com.example.ofir.social_geha.Person;
 import com.example.ofir.social_geha.R;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentChange;
-import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
-import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 import java.util.Timer;
@@ -42,7 +36,7 @@ public class AvailableMatches extends AppCompatActivity {
     MatchesListAdapter adapter;
     TextView progressBarTitle;
     private FirebaseFirestore mFirestore;
-    private static final String MESSAGES = "messages";
+    private static final String MESSAGES_DB = "messages";
     private boolean someApproved = false;
 
 
@@ -56,6 +50,8 @@ public class AvailableMatches extends AppCompatActivity {
         progressBar = findViewById(R.id.progressBar);
         progressBarTitle = findViewById(R.id.progressBar_title);
         listView = findViewById(R.id.available_matches);
+
+        //setup a listener such that clicking a match will move us to the chat screen with them
         listView.setOnItemClickListener((parent, view, position, id) -> {
             Object o = listView.getItemAtPosition(position);
             Person person = (Person) o; //As you are using Default String Adapter
@@ -72,60 +68,54 @@ public class AvailableMatches extends AppCompatActivity {
         // ------ PROGRESS BAR START
 
         mFirestore = FirebaseFirestore.getInstance();
-        //set listener to listen to accepts and add these people to matchesList
-        mFirestore.collection(MESSAGES).whereEqualTo("toPersonID", Database.getInstance().getLoggedInUserID())
-                .addSnapshotListener(new EventListener<QuerySnapshot>() {
-                    @Override
-                    public void onEvent(@javax.annotation.Nullable QuerySnapshot queryDocumentSnapshots, @javax.annotation.Nullable FirebaseFirestoreException e) {
-                        if (e != null) {
-                            return;
-                        }
+        //set listener to receive "CHAT ACCEPT" messages and add these people to matchesList
+        mFirestore.collection(MESSAGES_DB).whereEqualTo("toPersonID", Database.getInstance().getLoggedInUserID())
+                .addSnapshotListener((queryDocumentSnapshots, e) -> {
+                    if (e != null || queryDocumentSnapshots == null) {
+                        return;
+                    }
 
-                        for (DocumentChange doc : queryDocumentSnapshots.getDocumentChanges()) {
-                            if (doc.getType() == DocumentChange.Type.ADDED) {
-                                Message message = doc.getDocument().toObject(Message.class); //added message
-                                mFirestore.collection(MESSAGES).document(doc.getDocument().getId()).delete();
-                                // decrypt regular messages
-                                String contactUID = message.getFromPersonID();
-                                if (message.getShown()) {
-                                    continue;
-                                }
+                    for (DocumentChange doc : queryDocumentSnapshots.getDocumentChanges()) {
+                        if (doc.getType() == DocumentChange.Type.ADDED) {
+                            Message message = doc.getDocument().toObject(Message.class); //added message
+                            mFirestore.collection(MESSAGES_DB).document(doc.getDocument().getId()).delete();
 
-                                /* self message*/
-                                if (contactUID.equals(Database.getInstance().getLoggedInUserID()))
-                                    continue;
+                            /* self message or a text message (not a control message) - we ignore*/
+                            if (message.getShown() || message.getFromPersonID().equals(Database.getInstance().getLoggedInUserID()))
+                                continue;
 
-                                String text = message.getMessage();
-                                String senderUID = message.getFromPersonID();
-                                if (text.substring(0, "CHAT ACCEPT$".length()).equals("CHAT ACCEPT$")) {
-                                    //got new accepted chat message from p
-                                    Database.getInstance().getdb().collection("users").whereEqualTo("userID", senderUID).get()
-                                            .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                                                @Override
-                                                public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                                                    if (task.isSuccessful()) {
-                                                        for (QueryDocumentSnapshot doc : task.getResult()) {
-                                                            Person p = doc.toObject(Person.class);
-                                                            approved_matches_list.add(p);
-                                                            adapter.notifyDataSetChanged();
-                                                            if(!someApproved){ // First match so show list
-                                                                showItems(false);
-                                                            }
-                                                            someApproved = true;
-                                                        }
+                            String text = message.getMessage();
+                            String senderUID = message.getFromPersonID();
+                            if (text.substring(0, "CHAT ACCEPT$".length()).equals("CHAT ACCEPT$")) {
+                                //got new accepted chat message from p, we read p's information and add them to the list
+                                Database.getInstance().getdb().collection("users").whereEqualTo("userID", senderUID).get()
+                                        .addOnCompleteListener(task -> {
+                                            if (task.getResult() != null && task.isSuccessful()) {
+                                                for (QueryDocumentSnapshot doc1 : task.getResult()) {
+                                                    Person p = doc1.toObject(Person.class);
+                                                    approved_matches_list.add(p);
+                                                    adapter.notifyDataSetChanged();
+                                                    if(!someApproved){ // First match so show list
+                                                        showItems(false);
                                                     }
+                                                    someApproved = true;
                                                 }
-                                    });
-                                }
+                                            }
+                                        });
                             }
                         }
                     }
-
                 });
 
-
         loadToolbar();
-        loadList();
+
+        //Create the list of objects
+        approved_matches_list = new ArrayList<>();
+
+        //Attach to adapter
+        adapter = new MatchesListAdapter(this, R.layout.match_row_layout, approved_matches_list);
+        listView.setAdapter(adapter);
+
         filterUsers(filterParams);
 
     }
@@ -139,6 +129,10 @@ public class AvailableMatches extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    /**
+     * Implements the navigation back when the back button is pressed
+     * @return true
+     */
     @Override
     public boolean onSupportNavigateUp() {
         onBackPressed();
@@ -149,29 +143,29 @@ public class AvailableMatches extends AppCompatActivity {
     //          PRIVATE FUNCTIONS
     // ==================================
 
-    private void loadList() {
-        //Create the list of objects
-        approved_matches_list = new ArrayList<>();
-
-        //Attach to adapter
-        adapter = new MatchesListAdapter(this, R.layout.match_row_layout, approved_matches_list);
-        listView.setAdapter(adapter);
-    }
-
+    /**
+     * Initialize and load the actionbar
+     */
     private void loadToolbar() {
         android.support.v7.widget.Toolbar toolbar = findViewById(R.id.toolbar_top);
         setSupportActionBar(toolbar);
-        getSupportActionBar().setTitle("");
 
         // add back arrow to toolbar
         if (getSupportActionBar() != null) {
+            getSupportActionBar().setTitle("");
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             getSupportActionBar().setDisplayShowHomeEnabled(true);
         }
 
-        toolbar.getNavigationIcon().setColorFilter(this.getColor(R.color.white), PorterDuff.Mode.SRC_ATOP);
+        if(toolbar.getNavigationIcon() != null) {
+            toolbar.getNavigationIcon().setColorFilter(this.getColor(R.color.white), PorterDuff.Mode.SRC_ATOP);
+        }
     }
 
+    /**
+     * makes the progress bar visible if @param progress_bar_shown, and hides it otherwise.
+     * @param progress_bar_shown - whether or not to show the views
+     */
     private void showItems(boolean progress_bar_shown) {
         if (progress_bar_shown) {
             progressBar.setVisibility(View.VISIBLE);
@@ -184,17 +178,27 @@ public class AvailableMatches extends AppCompatActivity {
         }
     }
 
+    /**
+     * The function finds users that are available to chat & match the criteria. Then, it sends a request to all of them.
+     * After 30 seconds, the staff is queried.
+     * After 60 seconds, the search is aborted.
+     *
+     * @param f - parameters according to which we should filter
+     */
     private void filterUsers(FilterParameters f) {
-        // query users
+        // query users to find appropriate matches and send them a chat request
         Database.getInstance()
                 .sendRequestsToMatches(f.getKind(), f.getGender(), f.getReligion(), f.getLanguages()
                         , f.getLower_bound(), f.getUpper_bound() /*, possibles_list, adapter*/);
 
         //sent messages to all - now we wait for response
-        new Timer().schedule(new StaffSearch(), 30000); //send the staff a request in 5 seconds
-        new Timer().schedule(new AbortSearch(), 60000); //abort the search in 10 seconds
+        new Timer().schedule(new StaffSearch(), 30000); //send the staff a request in 30 seconds
+        new Timer().schedule(new AbortSearch(), 60000); //abort the search in 60 seconds
     }
 
+    /**
+     * This class can be given to a timer to make sure that after an X amount of time, we search for the staff counsel
+     */
     class StaffSearch extends TimerTask {
         public void run() {
             runOnUiThread(() -> {
@@ -206,6 +210,9 @@ public class AvailableMatches extends AppCompatActivity {
         }
     }
 
+    /**
+     * This class can be given to a timer to make the match search stop with an X amount of time
+     */
     class AbortSearch extends TimerTask {
         public void run() {
             runOnUiThread(() -> {
