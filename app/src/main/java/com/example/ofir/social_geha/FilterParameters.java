@@ -1,11 +1,12 @@
 package com.example.ofir.social_geha;
 
-import android.util.Range;
-
 import java.io.Serializable;
 import java.util.EnumSet;
-import java.util.Set;
 
+/***
+ * A POJO to send to the filterUsers function
+ * Given these parameters all the matching mentors receive a conversation request
+ */
 public class FilterParameters implements Serializable {
     private EnumSet<Person.Language> languages;
     private Person.Kind kind;
@@ -14,6 +15,9 @@ public class FilterParameters implements Serializable {
     private Integer lower_bound;
     private Integer upper_bound;
 
+    /**
+     * The class constructor
+     */
     public FilterParameters(EnumSet<Person.Language> languages, Person.Kind kind, Person.Gender gender,
                             Person.Religion religion, Integer lower, Integer upper) {
         this.languages = languages;
@@ -24,6 +28,7 @@ public class FilterParameters implements Serializable {
         this.upper_bound = upper;
     }
 
+    /// Languages getter and setter
     public EnumSet<Person.Language> getLanguages() {
         return languages;
     }
@@ -32,6 +37,7 @@ public class FilterParameters implements Serializable {
         this.languages = languages;
     }
 
+    /// Kind (what is the type of the user) getter and setter
     public Person.Kind getKind() {
         return kind;
     }
@@ -40,6 +46,7 @@ public class FilterParameters implements Serializable {
         this.kind = kind;
     }
 
+    /// Gender getter and setter
     public Person.Gender getGender() {
         return gender;
     }
@@ -48,6 +55,7 @@ public class FilterParameters implements Serializable {
         this.gender = gender;
     }
 
+    /// Religion getter and setter
     public Person.Religion getReligion() {
         return religion;
     }
@@ -56,6 +64,7 @@ public class FilterParameters implements Serializable {
         this.religion = religion;
     }
 
+    /// Lower Bound (The minimum age) getter and setter
     public Integer getLower_bound() {
         return lower_bound;
     }
@@ -64,6 +73,7 @@ public class FilterParameters implements Serializable {
         this.lower_bound = lower_bound;
     }
 
+    /// Upper Bound (The maximum age) getter and setter
     public Integer getUpper_bound() {
         return upper_bound;
     }
