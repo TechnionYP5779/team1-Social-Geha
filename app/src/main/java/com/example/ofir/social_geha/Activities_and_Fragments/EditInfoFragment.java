@@ -102,7 +102,12 @@ public class EditInfoFragment extends Fragment {
         return v;
     }
 
-
+    /**
+     * Given a person p, the loaded fields (such as, name, bday etc.. will be already loaded and
+     * initialized in the class fields.
+     *
+     * @param p the given preson
+     */
     private void updateFieldsAccordingToPerson(Person p) {
         selectedLanguages = languagesEnumToLanguageString(p.getSpokenLanguages());
         for (int i = 0; i < languagesAll.length; i++) {
@@ -130,6 +135,10 @@ public class EditInfoFragment extends Fragment {
         religion = allReligions[religion_index];
     }
 
+
+    /**
+     * If the user already existed, calls updateFieldsAccordingToPerson to load his data
+     */
     private void setUpFieldValues() {
         Database.getInstance().getdb().collection("users").document(Database.getInstance().getLoggedInUserID()).get()
                 .addOnCompleteListener(task -> {
@@ -140,6 +149,9 @@ public class EditInfoFragment extends Fragment {
                 });
     }
 
+    /**
+     * When clicking done, the data will be written
+     */
     private void setUpDoneButton(View v_parent) {
         doneButton = v_parent.findViewById(R.id.done_button);
         doneButton.setOnClickListener(v -> {
@@ -165,12 +177,25 @@ public class EditInfoFragment extends Fragment {
         });
     }
 
+    /**
+     * Writes the given paramets to the user's db info
+     *
+     * @param givenName
+     * @param calendar
+     * @param gender
+     * @param religion
+     * @param langs
+     * @param bio
+     */
     private void updateDBWithUserInfo(String givenName, Calendar calendar, String gender, String religion, String[] langs, String bio) {
         currentPerson.setBirthDate(calendar.getTimeInMillis()).setDescription(bio).setRealName(givenName).setGender(fromStringToGenderEnum(gender, getActivity(), false))
                 .setReligion(fromStringToReligion(religion, false)).setSpokenLanguages(languagesStringToLanguageEnum(langs));
         Database.getInstance().addUserPerson(currentPerson);
     }
 
+    /**
+     * Button handler set up
+     */
     private void setUpBioButton(View v) {
         bioButton = v.findViewById(R.id.bio_button);
         bioButton.setOnClickListener(v1 -> {
@@ -193,6 +218,9 @@ public class EditInfoFragment extends Fragment {
         });
     }
 
+    /**
+     * Button handler set up
+     */
     private void setUpReligionButton(View v) {
         allReligions = getResources().getStringArray(R.array.religious_preferences);
         religionButton = v.findViewById(R.id.religion_button);
@@ -214,6 +242,9 @@ public class EditInfoFragment extends Fragment {
 
     }
 
+    /**
+     * Button handler set up
+     */
     private void setUpGenderButton(View v) {
         allGenders = getResources().getStringArray(R.array.gender_preferences);
         genderButton = v.findViewById(R.id.gender_button);
@@ -235,6 +266,9 @@ public class EditInfoFragment extends Fragment {
 
     }
 
+    /**
+     * Button handler set up
+     */
     private void setBdayButton(View v) {
         bdayButton = v.findViewById(R.id.bday_button);
 
@@ -252,6 +286,9 @@ public class EditInfoFragment extends Fragment {
         bdayButton.setOnClickListener(v1 -> datePickerDialog.show());
     }
 
+    /**
+     * Button handler set up
+     */
     private void setUpNameButton(View v) {
         nameButton = v.findViewById(R.id.name_button);
         nameButton.setOnClickListener(v1 -> {
@@ -274,6 +311,9 @@ public class EditInfoFragment extends Fragment {
         });
     }
 
+    /**
+     * Button handler set up
+     */
     private void setUpLangButton(View v) {
         langButton = v.findViewById(R.id.language_button);
         languagesAll = getResources().getStringArray(R.array.languages);
@@ -317,6 +357,11 @@ public class EditInfoFragment extends Fragment {
         });
     }
 
+    /**
+     * Aux function to check all fields filled
+     *
+     * @return Whether all fields were filled
+     */
     private boolean checkAllFilled() {
         String error = "";
         if (selectedLanguages.size() == 0)
