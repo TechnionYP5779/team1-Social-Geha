@@ -12,6 +12,14 @@ $( function() {
 //    firebase.initializeApp(firebaseConfig);
 //
 	const db = firebase.firestore();
+	var user = firebase.auth().currentUser;
+	if (!user) {
+		// No user is signed in.
+		window.location = "index.html";
+	}
+	else {
+		document.getElementById("overlay-back-loading").style.display = "none";
+	}
 
     var dialog_add, dialog_search, dialog_delete, form_add, form_search, form_delete,
 		emailRegex = /^[a-zA-Z0-9.!#$%&'*+\/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/,
@@ -447,4 +455,4 @@ $( function() {
 		dialog_delete.dialog( "open" );
 		$('#overlay, #overlay-back').fadeIn(500);
     });
-  });
+});
