@@ -8,10 +8,20 @@ import java.security.Signature;
 
 import javax.crypto.Cipher;
 
+/***
+ * Class used to encrypt messages using an asymmetric encryption method
+ * This class supports the use of signatures and verifications of them
+ * The class itself is not yet integrated into the main app, so use with caution
+ */
 public class RSA {
     private PublicKey publicKey;
     private PrivateKey privateKey;
 
+    /***
+     * Creates a new instance of AES encrypt/decrypt
+     * A version which only encrypts is not yet implemented
+     * @param keySize Starting from 1024 and above (2048 is a standard)
+     */
     public RSA(int keySize) {
         KeyPair keyPair = genKeys(keySize);
         this.privateKey = keyPair.getPrivate();
@@ -60,11 +70,7 @@ public class RSA {
         }
     }
 
-    //TODO: read keys from file
-//    public RSA(String directory){
-//
-//    }
-
+    /// Service method to create a new pair of keys
     private static KeyPair genKeys(int keySize) {
         try {
             KeyPairGenerator rsaGen = KeyPairGenerator.getInstance("RSA");
