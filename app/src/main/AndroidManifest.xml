@@ -23,9 +23,6 @@
         <activity
             android:name=".Activities_and_Fragments.Login"
             android:screenOrientation="portrait" />
-        <activity
-            android:name=".Activities_and_Fragments.Signup"
-            android:screenOrientation="portrait" />
         <activity android:name=".Activities_and_Fragments.AvailableMatches" />
         <activity
             android:name=".Activities_and_Fragments.FilterMatchesActivity"
