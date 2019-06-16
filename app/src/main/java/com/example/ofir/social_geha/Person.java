@@ -12,10 +12,15 @@ import java.util.Objects;
 
 import static com.example.ofir.social_geha.Person.Language.ENGLISH;
 
+/***
+ * The core class to describe any user of the app
+ * This class is a fancy POJO (because it can be reconstructed by Firebase)
+ */
 public class Person {
-    // ==================================
-    //          CLASS VARIABLES
-    // ==================================
+    /**
+     * Field enums
+     */
+
     public enum Gender {
         MALE, FEMALE, UNDISCLOSED
     }
@@ -28,37 +33,35 @@ public class Person {
         RELIGIOUS, TRADITIONAL, SECULAR, ARABIC, UNDISCLOSED
     }
 
+    /**
+     * The kind of user
+     */
     public enum Kind {
         PATIENT, FAMILY_MEMBER, PAST_PATIENT, PAST_FAMILY_MEMBER, STAFF
     }
 
     private String personID;
+    // the real name of the user (e.g., John Smith)
     private String realName;
+    // the anonymous identity of the user, including the picture (e.g., Fancy Cat)
     private AnonymousIdentity anonymousIdentity;
     private long birthDate;
     private Gender gender;
     private Religion religion;
     private List<Language> spokenLanguages;
     private Kind kind;
+    // the unique identifier
     private String userID;
+    // the user's bio (visible when looking at a user before starting a conversation)
     private String description;
+    // whether the user wishes to accept new conversation requests
     private Boolean availability;
-    //List of personIDs to whom this person is willing to expose details to
     private List<Integer> whiteList;
 
     //FROM ADMIN-SIDE
     private AdminGivenData adminGivenData;
 
-    // Immutable - Given at initialization
-    // Pair(imageName in drawable, fictitious name)
-    // ==================================
-    //          CONSTRUCTORS
-    // ==================================
-
-
-    public Person() {
-
-    }
+    public Person() {}
 
     public Person(String realName, AnonymousIdentity anonymousIdentity,
                   long birthDate, Gender gender, Religion religion,
@@ -77,6 +80,7 @@ public class Person {
         this.whiteList = whiteList;
     }
 
+    /// the admin data getter and setter
     public void setAdminGivenData(AdminGivenData adminGivenData) {
         this.adminGivenData = adminGivenData;
     }
@@ -85,12 +89,24 @@ public class Person {
         return adminGivenData;
     }
 
+    /// person's real name getter and setter
     public String getRealName() {
         return realName;
     }
 
+    public Person setRealName(String realName) {
+        this.realName = realName;
+        return this;
+    }
+
+    /// anonymous id getter and setter
     public AnonymousIdentity getAnonymousIdentity() {
         return anonymousIdentity;
+    }
+
+    public Person setAnonymousIdentity(AnonymousIdentity anonymousIdentity) {
+        this.anonymousIdentity = anonymousIdentity;
+        return this;
     }
 
     @Exclude
@@ -100,44 +116,97 @@ public class Person {
         return date;
     }
 
+    /// gender getter and setter
     public Gender getGender() {
         return gender;
     }
 
+    public Person setGender(Gender gender) {
+        this.gender = gender;
+        return this;
+    }
+
+    // religion getter and setter
     public Religion getReligion() {
         return religion;
     }
 
+    public Person setReligion(Religion religion) {
+        this.religion = religion;
+        return this;
+    }
+
+    /// spoken languages getter and setter
     public List<Language> getSpokenLanguages() {
         return spokenLanguages;
     }
 
+    public Person setSpokenLanguages(List<Language> spokenLanguages) {
+        this.spokenLanguages = spokenLanguages;
+        return this;
+    }
+
+    /// kind getter and setter
     public Kind getKind() {
         return kind;
     }
 
+    public Person setKind(Kind kind) {
+        this.kind = kind;
+        return this;
+    }
+
+    /// user id getter and setter
     public String getUserID() {
         return userID;
     }
 
+    // should be used only if absolutely necessary since this is a unique identifier
+    public void setUserID(String id) {
+        this.userID = id;
+    }
+
+    /// user's bio getter and setter
     public String getDescription() {
         return description;
     }
 
+    public Person setDescription(String description) {
+        this.description = description;
+        return this;
+    }
+
+    /// birth date getter and setter (long is the result of Calendar.getTimeInMillis)
     public long getBirthDate() {
         return birthDate;
     }
 
+    public Person setBirthDate(long birthDate) {
+        this.birthDate = birthDate;
+        return this;
+    }
+
+    /// availability getter and setter
     public Boolean getAvailability() {
         return availability;
     }
 
+    public Person setAvailability(Boolean newAvail) {
+        availability = newAvail;
+        return this;
+    }
 
-    // ==================================
-    //          MODIFIERS & UTILITY METHODS
-    // ==================================
+    public Person setPersonID(String personID) {
+        this.personID = personID;
+        return this;
+    }
 
+    public Person setWhiteList(List<Integer> whiteList) {
+        this.whiteList = whiteList;
+        return this;
+    }
 
+    /// equality functions
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -167,11 +236,7 @@ public class Person {
         return whiteList.contains(userID);
     }
 
-
-    public void setUserID(String id) {
-        this.userID = id;
-    }
-
+    /// translate String to Kind
     public static Person.Kind kindStringToKindEnum(String kind) {
         switch (kind) {
             case "former_patient":
@@ -188,6 +253,7 @@ public class Person {
         return Kind.PAST_PATIENT;
     }
 
+    /// translate String to Language
     public static List<Person.Language> languagesStringToLanguageEnum(String[] languages) {
         List<Person.Language> mLanguages = new ArrayList<>();
         for (String l : languages) {
@@ -215,6 +281,7 @@ public class Person {
         return mLanguages;
     }
 
+    /// translate Language to String
     public static List<String> languagesEnumToLanguageString(List<Person.Language> languages) {
         List<String> mLanguages = new ArrayList<>();
         for (Person.Language l : languages) {
@@ -242,7 +309,13 @@ public class Person {
         return mLanguages;
     }
 
-
+    /***
+     * Translate String to Religion
+     * @param religion the string with the religion description
+     * @param canBeNull whether the result can be null in the current context
+     *                  otherwise Religion.UNDISCLOSED is returned
+     * @return the corresponding Religion value
+     */
     public static Religion fromStringToReligion(String religion, boolean canBeNull) {
         if (religion != null) {
             switch (religion) {
@@ -261,6 +334,7 @@ public class Person {
         return Person.Religion.UNDISCLOSED;
     }
 
+    /// translate String to Gender
     public static Gender fromStringToGenderEnum(String gender, Context mContext, boolean canBeNull) {
         String[] allGenders = mContext.getResources().getStringArray(R.array.gender_preferences);
         if (gender.equals(allGenders[0])) {
@@ -268,11 +342,12 @@ public class Person {
                 return null;
             return Gender.UNDISCLOSED;
         }
-        if (gender.equals(allGenders[1]))
+        else if (gender.equals(allGenders[1]))
             return Gender.MALE;
         return Gender.FEMALE;
     }
 
+    /// translate Gender to Integer
     public static int fromGenderEnumToGenderIndex(Gender gender, Context mContext) {
         String[] allGenders = mContext.getResources().getStringArray(R.array.gender_preferences);
         switch (gender) {
@@ -286,6 +361,7 @@ public class Person {
         return -1;
     }
 
+    /// translate Religion to Integer
     public static int fromReligionToReligionIndex(Religion religion) {
         switch (religion) {
             case UNDISCLOSED:
@@ -301,60 +377,5 @@ public class Person {
 
         }
         return -1;
-    }
-
-    public Person setPersonID(String personID) {
-        this.personID = personID;
-        return this;
-    }
-
-    public Person setRealName(String realName) {
-        this.realName = realName;
-        return this;
-    }
-
-    public Person setAnonymousIdentity(AnonymousIdentity anonymousIdentity) {
-        this.anonymousIdentity = anonymousIdentity;
-        return this;
-    }
-
-    public Person setBirthDate(long birthDate) {
-        this.birthDate = birthDate;
-        return this;
-    }
-
-    public Person setGender(Gender gender) {
-        this.gender = gender;
-        return this;
-    }
-
-    public Person setReligion(Religion religion) {
-        this.religion = religion;
-        return this;
-    }
-
-    public Person setSpokenLanguages(List<Language> spokenLanguages) {
-        this.spokenLanguages = spokenLanguages;
-        return this;
-    }
-
-    public Person setKind(Kind kind) {
-        this.kind = kind;
-        return this;
-    }
-
-    public Person setDescription(String description) {
-        this.description = description;
-        return this;
-    }
-
-    public Person setWhiteList(List<Integer> whiteList) {
-        this.whiteList = whiteList;
-        return this;
-    }
-
-    public Person setAvailability(Boolean newAvail) {
-        availability = newAvail;
-        return this;
     }
 }
