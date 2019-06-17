@@ -379,6 +379,9 @@ public class EditInfoFragment extends Fragment {
         if (bio == null || bio.equals(""))
             error = "אנא מלא משפט קצר אודותיך";
 
+        if (year == 0 || year > Calendar.getInstance().get(Calendar.YEAR) )
+            error = "תאריך לידה לא ולידי";
+
         if (!error.equals("")) {
             Toast.makeText(getActivity(), error, Toast.LENGTH_SHORT).show();
             return false;
