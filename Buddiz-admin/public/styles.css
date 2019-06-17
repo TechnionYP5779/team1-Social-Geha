@@ -80,7 +80,7 @@ body {
 }
 
 #card, #text {
-	width: 80%;
+	width: 90%;
 	padding: 20px;
 }
 
@@ -105,6 +105,25 @@ body {
 /* Add a background color on hover */
 .btn-group-passwd button:hover {
   background-color: #98417e;
+}
+
+.header_style {
+	width: 100%;
+}
+
+.header_style button {
+  background-color: #7F125E;
+  border: 1px solid #b2709e;
+  color: white;
+  padding: 5px 12px;
+  cursor: pointer;
+  float: left;
+  font-family: 'Titillium Web', sans-serif;
+  text-transform: uppercase; 
+  text-decoration: none;
+  font-weight: 700;
+  font-size: 15px;
+  margin-right: 3%;
 }
 
 .btn-group {

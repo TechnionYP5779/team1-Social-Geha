@@ -12,14 +12,22 @@ $( function() {
 //    firebase.initializeApp(firebaseConfig);
 //
 	const db = firebase.firestore();
-	var user = firebase.auth().currentUser;
+	if (document.cookie != "") {
+		// User is signed in.
+		document.getElementById("overlay-back-loading").style.display = "none";
+	} else {
+	  // No user is signed in.
+	  window.location = "index.html";
+	}
+	
+	/*var user = firebase.auth().currentUser;
 	if (!user) {
 		// No user is signed in.
 		window.location = "index.html";
 	}
 	else {
 		document.getElementById("overlay-back-loading").style.display = "none";
-	}
+	}*/
 
     var dialog_add, dialog_search, dialog_delete, form_add, form_search, form_delete,
 		emailRegex = /^[a-zA-Z0-9.!#$%&'*+\/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/,
@@ -454,5 +462,15 @@ $( function() {
 		document.forms["DeleteUser"].getElementsByClassName("delete_id_error")[0].innerHTML = "";
 		dialog_delete.dialog( "open" );
 		$('#overlay, #overlay-back').fadeIn(500);
+    });
+	
+	$( "#logout" ).button().on( "click", function() {
+		firebase.auth().signOut().then(function() {
+			// Sign-out successful.
+			document.cookie = "username=; expires=Thu, 01 Jan 1970 00:00:00 UTC";
+			window.location = "index.html";
+		}).catch(function(error) {
+			// An error happened.
+		});
     });
 });
