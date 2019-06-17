@@ -12,6 +12,8 @@ public class AnonymousIdentity implements Serializable {
     public String imageName;
     public String imageColor;
 
+    public AnonymousIdentity(){}
+
     AnonymousIdentity(String n, String im, String col) {
         name = n;
         imageName = im;
