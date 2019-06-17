@@ -1,7 +1,6 @@
 package com.example.ofir.social_geha.Activities_and_Fragments;
 
 import android.content.Context;
-import android.content.res.Resources;
 import android.graphics.Color;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -12,10 +11,8 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.example.ofir.social_geha.Firebase.Message;
 import com.example.ofir.social_geha.Person;
 import com.example.ofir.social_geha.R;
-import com.github.angads25.toggle.widget.DayNightSwitch;
 import com.nostra13.universalimageloader.cache.memory.impl.WeakMemoryCache;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
@@ -23,17 +20,23 @@ import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.nostra13.universalimageloader.core.assist.ImageScaleType;
 import com.nostra13.universalimageloader.core.display.FadeInBitmapDisplayer;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
 
 public class MatchesListAdapter extends ArrayAdapter<Person> {
+    //=====================================================
+    //                    CLASS VARIABLES
+    //=====================================================
     private Context mContext;
     private int mResource;
-    private int lastPosition = -1;
 
+    //=====================================================
+    //                    INNER CLASS
+    // Represents an item in list. The class contains views for
+    // each match item in list.
+    //=====================================================
     private static class ViewHolder{
         TextView name;
         TextView description;
@@ -42,13 +45,21 @@ public class MatchesListAdapter extends ArrayAdapter<Person> {
         ImageView pick_arrow;
     }
 
-
+    //=====================================================
+    //              FUNCTIONS
+    //=====================================================
+    // C'TOR
+    //=====================================================
     public MatchesListAdapter(Context ctxt, int resource, ArrayList<Person> objects){
         super(ctxt, resource, objects);
         this.mContext = ctxt;
         this.mResource = resource;
     }
 
+    //=====================================================
+    // This functions sets the views in X to contain the data of person X.
+    // X - the position in list
+    //=====================================================
     public View getView(int position, View convertView, ViewGroup parent){
         setupImageLoader();
 
@@ -81,11 +92,7 @@ public class MatchesListAdapter extends ArrayAdapter<Person> {
         }
 
 
-//        Animation animation = AnimationUtils.loadAnimation(mContext,
-//                (position > lastPosition) ? R.anim.load_down_anim : R.anim.load_up_anim);
-//        result.startAnimation(animation);
-        lastPosition = position;
-
+        int lastPosition = position;
         int default_image = mContext.getResources().getIdentifier("@drawable/image_fail", null, mContext.getPackageName() );
         ImageLoader image_loader = ImageLoader.getInstance();
         DisplayImageOptions options = new DisplayImageOptions.Builder().cacheInMemory(true)
@@ -105,8 +112,10 @@ public class MatchesListAdapter extends ArrayAdapter<Person> {
         return convertView;
     }
 
+    //=====================================================
+    // UNIVERSAL IMAGE LOADER SETUP
+    //=====================================================
     private void setupImageLoader(){
-        // UNIVERSAL IMAGE LOADER SETUP
         DisplayImageOptions defaultOptions = new DisplayImageOptions.Builder()
                 .cacheOnDisc(true).cacheInMemory(true)
                 .imageScaleType(ImageScaleType.EXACTLY)
