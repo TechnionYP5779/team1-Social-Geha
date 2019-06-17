@@ -1,4 +1,5 @@
 $(function() {
+	// If the user is not logged in, and tried to enter this page, he is emmediately redirected to the login page.
 	const db = firebase.firestore();
 	if (hashCodeGenerator(document.cookie) == "586086846") {
 		// User is signed in.
@@ -8,22 +9,23 @@ $(function() {
 		window.location = "index.html";
 	}
 
-    var dialog_add, dialog_search, dialog_delete, form_add, form_search, form_delete,
-		name = $( "#name" ),
-		phoneNumber = $("#phone"),
-		kind = $("#kind.value"),
-		department = "",
-		userCode = "";
-		
+    var dialog_add, dialog_search, dialog_delete, form_add, form_search, form_delete;
+
+	// Regexps for input validation.
 	var nameRegex = /^[A-Z][a-zA-Z]* ([A-Z][a-zA-Z]* *)+$/;
 	var idRegex = /^\d{9}$/;
 	var phoneRegex = /^\+972\-5[0-9]\-\d{7}$/;
 
- 
+	/**
+	 * Checks if the string is compatible with the regex.
+	 */
     function checkRegexp(obj, regexp) {
 		return regexp.test(obj);
     }
 	
+	/**
+	 * Hash function
+	 */
 	function hashCodeGenerator(string){
 	    var hash = 0;
 	    if (string.length == 0) return hash;
@@ -35,6 +37,13 @@ $(function() {
 	    return hash;
 	}
 	
+	/**
+	 * Generated the user code out of his name, kind and id - using several hash functions and encryption.
+	 * @param name - the name of the user
+	 * @param id - the id of the user
+	 * @param kind - the kind of the user
+	 * @param salt - a randomly chosen string
+	 */
 	function generateCode(name, id, kind, salt) {
 		var encodedString = btoa(name.concat(salt, id, kind));
 		var code = btoa(hashCodeGenerator(encodedString));
@@ -42,6 +51,14 @@ $(function() {
 		return code;
 	}
  
+	/**
+	 * Validates that all the fields were filled correctly by the user.
+	 * @param name - the name of the user
+	 * @param idNum - the id of the user
+	 * @param phone - the phone number of the user
+	 * @param kind - the kind of the user
+	 * @param deps - an array that contains all the departments that the user was in.
+	 */
 	function checkFieldsCorrectness(name, idNum, phone, kind, deps) {
 		var res = true;
 		if (idNum == "" || !checkRegexp(idNum, idRegex)) {
@@ -66,7 +83,12 @@ $(function() {
 		}
 		return res;
 	}
-	
+
+	/**
+	 * Validates that all the fields were filled correctly by the user in the edit form.
+	 * @param name - the name of the user
+	 * @param phone - the phone number of the user
+	 */
 	function checkEditFieldsCorrectness(name, phone) {
 		var res = true;
 		if (name !== "" && !checkRegexp(name, nameRegex)) {
@@ -79,7 +101,10 @@ $(function() {
 		}
 		return res;
 	}
-	
+
+	/**
+	 * Cleans all the error messages in the 'add' form. To be used before each check.
+	 */
 	function cleanErrorMessagesAdd() {
 		document.forms["AddUser"].getElementsByClassName("add_id_error")[0].innerHTML = "";
 		document.forms["AddUser"].getElementsByClassName("add_name_error")[0].innerHTML = "";
@@ -87,13 +112,20 @@ $(function() {
 		document.forms["AddUser"].getElementsByClassName("add_kind_error")[0].innerHTML = "";
 		document.forms["AddUser"].getElementsByClassName("add_dep_error")[0].innerHTML = "";
 	}
-	
+
+	/**
+	 * Cleans all the error messages in the 'edit' form. To be used before each check.
+	 */
 	function cleanErrorMessagesEdit() {
 		document.forms["EditUser"].getElementsByClassName("edit_id_error")[0].innerHTML = "";
 		document.forms["EditUser"].getElementsByClassName("edit_name_error")[0].innerHTML = "";
 		document.forms["EditUser"].getElementsByClassName("edit_phone_error")[0].innerHTML = "";
 	}
- 
+
+	/**
+	 * Adds a user to the DB.
+	 * Reads the input from the form, checks its validity, and adds the user to the DB if everything is correct.
+	 */
     function addUser() {
 		cleanErrorMessagesAdd();
 		var name = document.forms["AddUser"]["name"].value;
@@ -146,7 +178,11 @@ $(function() {
 			}
 		});
     }
-	
+
+	/**
+	 * Edits a user in the DB.
+	 * Reads the input from the edit form, checks its validity, and if something was changed, changes the corresponding firlds in the DB.
+	 */
 	function editUser() {
 		cleanErrorMessagesEdit();
 		var idNum = document.forms["EditUser"]["id_num"].value;
@@ -223,7 +259,11 @@ $(function() {
 			}
 		});
     }
-	
+
+	/**
+	 * Finds a user that exists in the DB.
+	 * Retrieves a user by her id number, and shows her details to the admin.
+	 */
 	function findUser() {
 		var idNum = document.forms["FindUser"]["id_num"].value;
 		document.forms["FindUser"].getElementsByClassName("user_data_search")[0].innerHTML = "";
@@ -267,7 +307,10 @@ $(function() {
 			console.log("Error getting document:", error);
 		});
 	}
-	
+
+	/**
+	 * Deletes a user that exists in the DB by her id.
+	 */
 	function deleteUser() {
 		var idNum = document.forms["DeleteUser"]["id_num"].value;
 		if (idNum == "") {
@@ -296,6 +339,10 @@ $(function() {
 		dialog_delete.dialog( "close" );
 		$('#overlay, #overlay-back').fadeOut(500);
 	}
+ 
+	/***************************************************************
+							Forms - Dialogs
+	***************************************************************/
  
     dialog_add = $( "#add-user-form" ).dialog({
 		autoOpen: false,
@@ -393,6 +440,10 @@ $(function() {
 		event.preventDefault();
 		deleteUser();
     });
+ 
+ 	/***********************************************************
+						Buttons Functionality
+	************************************************************/
  
     $( "#add-user" ).button().on( "click", function() {
 		form_add[ 0 ].reset();

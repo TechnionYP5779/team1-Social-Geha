@@ -1,4 +1,7 @@
 $( function() {
+	/**
+	 * Hash function
+	 */
 	function hashCodeGenerator(string){
 	    var hash = 0;
 	    if (string.length == 0) return hash;
@@ -9,7 +12,12 @@ $( function() {
 	    }
 	    return hash;
 	}
-	
+
+	/**
+	 * Login Function
+	 * Checks the credentials with Firebase.
+	 * If the password is correct, the user is redirected to the functions page.
+	 */
 	$( "#proceed" ).button().on( "click", function() {
 		document.forms["Login"].getElementsByClassName("passwd_error")[0].innerHTML = "";
 		var passwd = document.forms["Login"]["passwd"].value;
@@ -30,8 +38,7 @@ $( function() {
 			var errorMessage = error.message;
 			console.log(errorMessage);
 			cor = false;
-			document.forms["Login"].getElementsByClassName("passwd_error")[0].innerHTML = "Wrong Password!";
-			
+			document.forms["Login"].getElementsByClassName("passwd_error")[0].innerHTML = "Wrong Password!";	
 		});
     });
 });
