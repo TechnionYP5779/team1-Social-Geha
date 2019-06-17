@@ -39,9 +39,17 @@ import java.util.ArrayList;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
+//=====================================================
+//         MAIN ACTIVITY OF THE APPLICATION
+//            This class is the base activity for each
+//            used fragment.
+//=====================================================
 public class activity_main_drawer extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
+        //=====================================================
+        //              CLASS VARIABLES
+        //=====================================================
         // FRAGMENT TAGS
         public static String ALL_CHATS_TAG = "ALL_CHATS_FRAGMENT";
         public static String EDIT_INFO_TAG = "EDIT_INFO_FRAGMENT";
@@ -60,6 +68,9 @@ public class activity_main_drawer extends AppCompatActivity
         public ChatListAdapter mAdapter;
 
 
+        //=====================================================
+        //                      FUNCTIONS
+        //=====================================================
         @Override
         protected void onCreate(Bundle savedInstanceState) {
                 super.onCreate(savedInstanceState);
@@ -75,7 +86,6 @@ public class activity_main_drawer extends AppCompatActivity
                 toggle.syncState();
 
                 navigationView = findViewById(R.id.nav_view);
-
                 navigationView.setNavigationItemSelectedListener(this);
 
                 View headView = navigationView.getHeaderView(0);
@@ -107,7 +117,6 @@ public class activity_main_drawer extends AppCompatActivity
                 }
         }
 
-
         @Override
         public boolean onOptionsItemSelected(MenuItem item) {
                 // Handle action bar item clicks here. The action bar will
@@ -116,6 +125,9 @@ public class activity_main_drawer extends AppCompatActivity
                 return super.onOptionsItemSelected(item);
         }
 
+        //=====================================================
+        // Handles clicks in menu, by redirecting to matching screen.
+        //=====================================================
         @Override
         public boolean onNavigationItemSelected(MenuItem item) {
                 // Handle navigation view item clicks here.
@@ -160,6 +172,10 @@ public class activity_main_drawer extends AppCompatActivity
                 return true;
         }
 
+        //=====================================================
+        // Gets position and checks the item matching in the navigationView accordingly.
+        // This function also hides the search icon if needed.
+        //=====================================================
         public void selectNavigationDrawer(int position){
                 if(position == R.id.nav_inbox){
                         mSearch.setVisible(true);
@@ -170,6 +186,10 @@ public class activity_main_drawer extends AppCompatActivity
                 navigationView.setCheckedItem(position);
         }
 
+        //=====================================================
+        // This function loads the data of the user to the navigation drawer.
+        // It's extracting from FB the anonymous name and image and the real name.
+        //=====================================================
         public void loadData() {
                 Database.getInstance().getdb().collection("users").whereEqualTo("userID", Database.getInstance().getLoggedInUserID()).get()
                         .addOnCompleteListener(task -> {
@@ -213,6 +233,10 @@ public class activity_main_drawer extends AppCompatActivity
                         });
         }
 
+        //=====================================================
+        // A listener that handles text written in the search.
+        // This function filters people according to anonymous levels.
+        //=====================================================
         @Override
         public boolean onCreateOptionsMenu(Menu menu) {
                 getMenuInflater().inflate(R.menu.toolbar_menu_search, menu);
