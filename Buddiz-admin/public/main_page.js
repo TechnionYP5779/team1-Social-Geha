@@ -1,43 +1,21 @@
-$( function() {
-//    var firebaseConfig = {
-//      apiKey: "AIzaSyBADn-vc_h9jP5njsQkPRiKmPu6uYwXk3Q",
-//      authDomain: "team1-social-geha.firebaseapp.com",
-//      databaseURL: "https://team1-social-geha.firebaseio.com",
-//      projectId: "team1-social-geha",
-//      storageBucket: "team1-social-geha.appspot.com",
-//      messagingSenderId: "813662253318",
-//      appId: "1:813662253318:web:b0186efd3138b553"
-//    };
-//
-//    firebase.initializeApp(firebaseConfig);
-//
+$(function() {
 	const db = firebase.firestore();
-	if (document.cookie != "") {
+	if (hashCodeGenerator(document.cookie) == "586086846") {
 		// User is signed in.
 		document.getElementById("overlay-back-loading").style.display = "none";
 	} else {
-	  // No user is signed in.
-	  window.location = "index.html";
-	}
-	
-	/*var user = firebase.auth().currentUser;
-	if (!user) {
 		// No user is signed in.
 		window.location = "index.html";
 	}
-	else {
-		document.getElementById("overlay-back-loading").style.display = "none";
-	}*/
 
     var dialog_add, dialog_search, dialog_delete, form_add, form_search, form_delete,
-		emailRegex = /^[a-zA-Z0-9.!#$%&'*+\/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/,
 		name = $( "#name" ),
 		phoneNumber = $("#phone"),
 		kind = $("#kind.value"),
 		department = "",
 		userCode = "";
 		
-	var nameRegex = /^[A-Z][a-zA-Z]* [A-Z][a-zA-Z]*$/;
+	var nameRegex = /^[A-Z][a-zA-Z]* ([A-Z][a-zA-Z]* *)+$/;
 	var idRegex = /^\d{9}$/;
 	var phoneRegex = /^\+972\-5[0-9]\-\d{7}$/;
 
@@ -161,13 +139,6 @@ $( function() {
 					departments:departments,
 					user_code:userCode                 
 				});
-
-				console.log(name);
-				console.log(idNum);
-				console.log(phone);
-				console.log(kind);
-				console.log(departments);
-				console.log(userCode);
 				document.getElementById("user_control_message").innerHTML = name + " was added successfully.<br/>" + name + "'s user code for Buddiz: " + userCode;
 				document.getElementById("user_control_message").style.color = "#4cc113";
 				dialog_add.dialog( "close" );
@@ -177,85 +148,80 @@ $( function() {
     }
 	
 	function editUser() {
-	  cleanErrorMessagesEdit();
-      var idNum = document.forms["EditUser"]["id_num"].value;
-	  if (idNum == "") {
+		cleanErrorMessagesEdit();
+		var idNum = document.forms["EditUser"]["id_num"].value;
+		if (idNum == "") {
 			document.forms["EditUser"].getElementsByClassName("edit_id_error")[0].innerHTML = "Please enter a valid ID";
 			return false;
-	  }
-      var docRef = db.collection("adminAddedUsers").doc(idNum);
-      docRef.get().then(function(doc) {
-		  if (doc.exists) {
-			var nameBefore = doc.data().name;
-			console.log("Document data:", doc.data());
-			var changed = false;
-			var name = document.forms["EditUser"]["name"].value;
-			var phone = document.forms["EditUser"]["phone"].value;
-			if (!checkEditFieldsCorrectness(name, phone)) return false;
-			if (name !== ''){
-				changed = true;
-				docRef.update({
-					name: name
-				})
-			}
-			if (phone !== '' ){
-				changed = true;
-				docRef.update({
-					phone: phone
-				})
-			}
-			var kind = document.forms["EditUser"]["kind"].value;
-			if (kind !== '' ){
-				changed = true;
-				docRef.update({
-					kind: kind
-				})
-			}
-			var departments = [];
-			if (document.forms["EditUser"]["adults-day"].checked) {
-				departments.push("adults_day_care");
-			}
-			if (document.forms["EditUser"]["adults-open"].checked) {
-				departments.push("adults_open_dep.");
-			}
-			if (document.forms["EditUser"]["adults-closed"].checked) {
-				departments.push("adults_closed_dep.");
-			}
-			if (document.forms["EditUser"]["minor-day"].checked) {
-				departments.push("minor_day_care");
-			}
-			if (document.forms["EditUser"]["minor-closed"].checked) {
-				departments.push("minor_closed_dep.");
-			}
-			if (departments.length != 0 ){
-				changed = true;
-				docRef.update({
-					departments: departments
-				})
-			}
-			console.log("changes: " + changed);
-			if (!changed) {
-				document.getElementById("user_control_message").innerHTML = "You didn't make any changes";
-				document.getElementById("user_control_message").style.color = "blue";
-			}
-			else {
-				var currentName = name !== "" ? name : nameBefore;
-				document.getElementById("user_control_message").innerHTML = currentName  + " was edited successfully";
-				document.getElementById("user_control_message").style.color = "#4cc113";
-			}
-			dialog_edit.dialog( "close" );
-			$('#overlay, #overlay-back').fadeOut(500);
-		  } else {
-		  // doc.data() will be undefined in this case
+		}
+		var docRef = db.collection("adminAddedUsers").doc(idNum);
+		docRef.get().then(function(doc) {
+			if (doc.exists) {
+				var nameBefore = doc.data().name;
+				var changed = false;
+				var name = document.forms["EditUser"]["name"].value;
+				var phone = document.forms["EditUser"]["phone"].value;
+				if (!checkEditFieldsCorrectness(name, phone)) return false;
+				if (name !== ''){
+					changed = true;
+					docRef.update({
+						name: name
+					})
+				}
+				if (phone !== '' ){
+					changed = true;
+					docRef.update({
+						phone: phone
+					})
+				}
+				var kind = document.forms["EditUser"]["kind"].value;
+				if (kind !== '' ){
+					changed = true;
+					docRef.update({
+						kind: kind
+					})
+				}
+				var departments = [];
+				if (document.forms["EditUser"]["adults-day"].checked) {
+					departments.push("adults_day_care");
+				}
+				if (document.forms["EditUser"]["adults-open"].checked) {
+					departments.push("adults_open_dep.");
+				}
+				if (document.forms["EditUser"]["adults-closed"].checked) {
+					departments.push("adults_closed_dep.");
+				}
+				if (document.forms["EditUser"]["minor-day"].checked) {
+					departments.push("minor_day_care");
+				}
+				if (document.forms["EditUser"]["minor-closed"].checked) {
+					departments.push("minor_closed_dep.");
+				}
+				if (departments.length != 0 ){
+					changed = true;
+					docRef.update({
+						departments: departments
+					})
+				}
+				if (!changed) {
+					document.getElementById("user_control_message").innerHTML = "You didn't make any changes";
+					document.getElementById("user_control_message").style.color = "blue";
+				}
+				else {
+					var currentName = name !== "" ? name : nameBefore;
+					document.getElementById("user_control_message").innerHTML = currentName  + " was edited successfully";
+					document.getElementById("user_control_message").style.color = "#4cc113";
+				}
+				dialog_edit.dialog( "close" );
+				$('#overlay, #overlay-back').fadeOut(500);
+			} else {
+				// doc.data() will be undefined in this case
 				document.getElementById("user_control_message").innerHTML = "A user with id " + idNum + " does not exist";
 				document.getElementById("user_control_message").style.color = "red";
 				dialog_edit.dialog( "close" );
 				$('#overlay, #overlay-back').fadeOut(500);
-		  }
-      }//).catch(function(error) {
-         //      console.log("Error getting document:", error);
-      //}
-	  );
+			}
+		});
     }
 	
 	function findUser() {
@@ -269,36 +235,34 @@ $( function() {
         var docRef = db.collection("adminAddedUsers").doc(idNum);
         var deparments,name,id,phone,kind,departments,user_code;
         docRef.get().then(function(doc) {
-          if (doc.exists) {
-            console.log("Document data:", doc.data());
-            deparments = doc.data().departments;
-		    name = doc.data().name;
-            console.log(name);
+			if (doc.exists) {
+				deparments = doc.data().departments;
+				name = doc.data().name;
 
-            id = doc.data().idNum;
-            phone = doc.data().phone;
-            kind = doc.data().kind;
-            departments = doc.data().departments;
-            user_code = doc.data().user_code;
-			kind = kind.split('_').join(' ');
-			
-			var deps_string = "";
-			for (i = 0; i < departments.length - 1; i++) {
-				deps_string += deparments[i].split('_').join(' ');
-				deps_string += ", ";
+				id = doc.data().idNum;
+				phone = doc.data().phone;
+				kind = doc.data().kind;
+				departments = doc.data().departments;
+				user_code = doc.data().user_code;
+				kind = kind.split('_').join(' ');
+
+				var deps_string = "";
+				for (i = 0; i < departments.length - 1; i++) {
+					deps_string += deparments[i].split('_').join(' ');
+					deps_string += ", ";
+				}
+				deps_string += deparments[departments.length - 1].split('_').join(' ');
+
+				document.forms["FindUser"].getElementsByClassName("user_data_search")[0].innerHTML = name + "'s phone number is: " + "<b>" + phone + "</b>.<br/>"
+					+ "User code for Buddiz: " + "<b>" + user_code + "</b><br/>"
+					+ name + " is a " + "<b>" + kind + "</b>.<br/>"
+					+ name + " is able to help with " + "<b>" + deps_string + "</b><br/>";
+
+			} else {
+				// doc.data() will be undefined in this case
+				document.forms["FindUser"].getElementsByClassName("user_data_search")[0].innerHTML = "No such user!";
+				return true;
 			}
-			deps_string += deparments[departments.length - 1].split('_').join(' ');
-
-			document.forms["FindUser"].getElementsByClassName("user_data_search")[0].innerHTML = name + "'s phone number is: " + "<b>" + phone + "</b>.<br/>"
-				+ "User code for Buddiz: " + "<b>" + user_code + "</b><br/>"
-				+ name + " is a " + "<b>" + kind + "</b>.<br/>"
-				+ name + " is able to help with " + "<b>" + deps_string + "</b><br/>";
-
-          } else {
-              // doc.data() will be undefined in this case
-              document.forms["FindUser"].getElementsByClassName("user_data_search")[0].innerHTML = "No such user!";
-			  return true;
-          }
 	    }).catch(function(error) {
 			console.log("Error getting document:", error);
 		});
@@ -329,107 +293,105 @@ $( function() {
 				document.getElementById("user_control_message").style.color = "red";
 			}
 		});
-		
-		
 		dialog_delete.dialog( "close" );
 		$('#overlay, #overlay-back').fadeOut(500);
 	}
  
     dialog_add = $( "#add-user-form" ).dialog({
-      autoOpen: false,
-      height: 400,
-      width: 350,
-      modal: true,
-      buttons: {
-        "Add this user": addUser,
-        Cancel: function() {
-		  form_add[ 0 ].reset();
-          dialog_add.dialog( "close" );
-		  $('#overlay, #overlay-back').fadeOut(500);
-        }
-      },
-      close: function() {
-        form_add[ 0 ].reset();
-		$('#overlay, #overlay-back').fadeOut(500);
-      }
+		autoOpen: false,
+		height: 400,
+		width: 350,
+		modal: true,
+		buttons: {
+			"Add this user": addUser,
+			Cancel: function() {
+				form_add[ 0 ].reset();
+				dialog_add.dialog( "close" );
+				$('#overlay, #overlay-back').fadeOut(500);
+			}
+		},
+		close: function() {
+			form_add[ 0 ].reset();
+			$('#overlay, #overlay-back').fadeOut(500);
+		}
     });
 	
 	dialog_edit = $( "#edit-user-form" ).dialog({
-      autoOpen: false,
-      height: 400,
-      width: 350,
-      modal: true,
-      buttons: {
-        "Edit this user's data": editUser,
-        Cancel: function() {
-          form_edit[ 0 ].reset();
-          dialog_edit.dialog( "close" );
-		  $('#overlay, #overlay-back').fadeOut(500);
-        }
-      },
-      close: function() {
-        form_edit[ 0 ].reset();
-		$('#overlay, #overlay-back').fadeOut(500);
-      }
+		autoOpen: false,
+		height: 400,
+		width: 350,
+		modal: true,
+		buttons: {
+			"Edit this user's data": editUser,
+			Cancel: function() {
+				form_edit[ 0 ].reset();
+				dialog_edit.dialog( "close" );
+				$('#overlay, #overlay-back').fadeOut(500);
+			}
+		},
+		close: function() {
+			form_edit[ 0 ].reset();
+			$('#overlay, #overlay-back').fadeOut(500);
+		}
     });
 	
 	dialog_search = $( "#search-user-form" ).dialog({
-      autoOpen: false,
-      height: 400,
-      width: 350,
-      modal: true,
-      buttons: {
-        "Find this user": findUser,
-        Cancel: function() {	
-          form_search[ 0 ].reset();
-          dialog_search.dialog( "close" );
-		  $('#overlay, #overlay-back').fadeOut(500);
-        }
-      },
-      close: function() {
-        form_search[ 0 ].reset();
-		document.forms["FindUser"].getElementsByClassName("user_data_search")[0].innerHTML = "";
-		$('#overlay, #overlay-back').fadeOut(500);
-      }
+		autoOpen: false,
+		height: 400,
+		width: 350,
+		modal: true,
+		buttons: {
+			"Find this user": findUser,
+			Cancel: function() {	
+				form_search[ 0 ].reset();
+				dialog_search.dialog( "close" );
+				$('#overlay, #overlay-back').fadeOut(500);
+			}
+		},
+		close: function() {
+			form_search[ 0 ].reset();
+			document.forms["FindUser"].getElementsByClassName("user_data_search")[0].innerHTML = "";
+			$('#overlay, #overlay-back').fadeOut(500);
+		}
     });
 	
 	dialog_delete = $( "#delete-user-form" ).dialog({
-      autoOpen: false,
-      height: 400,
-      width: 350,
-      modal: true,
-      buttons: {
-        "Delete this user": deleteUser,
-        Cancel: function() {
-		  form_delete[ 0 ].reset();
-          dialog_delete.dialog( "close" );
-		  $('#overlay, #overlay-back').fadeOut(500);
-        }
-      },
-      close: function() {
-        form_delete[ 0 ].reset();
-		$('#overlay, #overlay-back').fadeOut(500);
-      }
+		autoOpen: false,
+		height: 400,
+		width: 350,
+		modal: true,
+		buttons: {
+			"Delete this user": deleteUser,
+			Cancel: function() {
+				form_delete[ 0 ].reset();
+				dialog_delete.dialog( "close" );
+				$('#overlay, #overlay-back').fadeOut(500);
+			}
+		},
+		close: function() {
+			form_delete[ 0 ].reset();
+			$('#overlay, #overlay-back').fadeOut(500);
+		}
     });
  
     form_add = dialog_add.find( "form" ).on( "submit", function( event ) {
-      event.preventDefault();
-      addUser();
+		event.preventDefault();
+		addUser();
     });
 	
 	form_edit = dialog_edit.find( "form" ).on( "submit", function( event ) {
-      event.preventDefault();
-      editUser();
+		event.preventDefault();
+		editUser();
     });
 	
 	form_search = dialog_search.find( "form" ).on( "submit", function( event ) {
-      event.preventDefault();
-      findUser();
+		event.preventDefault();
+		findUser();
     });
 	
 	form_delete = dialog_delete.find( "form" ).on( "submit", function( event ) {
-      event.preventDefault();
-      deleteUser();
+		event.preventDefault();
+		deleteUser();
     });
  
     $( "#add-user" ).button().on( "click", function() {

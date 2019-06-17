@@ -1,51 +1,49 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Buddiz</title>
-	<link rel="shortcut icon" href="AppLogo.PNG">
-	<script src="https://code.jquery.com/jquery-1.12.4.js"></script>
-	<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
-	<!-- Insert these scripts at the bottom of the HTML, but before you use any Firebase services -->
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<title>Buddiz</title>
+		<link rel="shortcut icon" href="AppLogo.PNG">
+		<script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+		<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+		<!-- Insert these scripts at the bottom of the HTML, but before you use any Firebase services -->
 
-	<!-- Firebase App (the core Firebase SDK) is always required and must be listed first -->
-	<script src="/__/firebase/6.1.0/firebase-app.js"></script>
+		<!-- Firebase App (the core Firebase SDK) is always required and must be listed first -->
+		<script src="/__/firebase/6.1.0/firebase-app.js"></script>
 
-	<!-- Add Firebase products that you want to use -->
-	<script src="/__/firebase/6.1.0/firebase-auth.js"></script>
-	<script src="/__/firebase/6.1.0/firebase-firestore.js"></script>
-	
-     <script src="/__/firebase/init.js"></script>
-    <script type="text/javascript" src="login.js"></script>
+		<!-- Add Firebase products that you want to use -->
+		<script src="/__/firebase/6.1.0/firebase-auth.js"></script>
+		<script src="/__/firebase/6.1.0/firebase-firestore.js"></script>
+		
+		 <script src="/__/firebase/init.js"></script>
+		<script type="text/javascript" src="login.js"></script>
 
-	<link rel="stylesheet" href="styles.css">
-	<link rel="stylesheet"
-		href="https://fonts.googleapis.com/css?family=Titillium+Web&display=swap">
-	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-  </head>
+		<link rel="stylesheet" href="styles.css">
+		<link rel="stylesheet"
+			href="https://fonts.googleapis.com/css?family=Titillium+Web&display=swap">
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+	</head>
 
 
-  <body>
-    <div id="card_passwd">
-		<div id ="text">
-		    <h1>Welcome to BUDDIZ! <img src="AppLogo.PNG" width="50px" style="dir: rtl"></a></h1>
-			<form name="Login">
-				<fieldset>
-				  <label for="passwd" class="form-label">Please enter your password in order to log in</label><br/>
-				  <input type="password" name="passwd" id="passwd" value="" class="passwd ui-widget-content ui-corner-all"><br/>
-				  <text class="passwd_error" style="color:red"></text>
-				  
-				  <!-- Allow form submission with keyboard without duplicating the dialog button -->
-				  <input type="submit" tabindex="-1" style="position:absolute; top:-1000px">
-				</fieldset>
-			</form>
-			<div class="btn-group-passwd">
-				<button id="proceed"><i class="fa fa-check"></i> Proceed</button>
+	<body>
+		<div id="card_passwd">
+			<div id ="text">
+				<h1>Welcome to BUDDIZ! <img src="AppLogo.PNG" width="50px" style="dir: rtl"></a></h1>
+				<form name="Login">
+					<fieldset>
+					  <label for="passwd" class="form-label">Please enter your password in order to log in</label><br/><br/>
+					  <input type="password" name="passwd" id="passwd" value="" class="passwd ui-widget-content ui-corner-all"><br/>
+					  <text class="passwd_error" style="color:red"></text>
+					  
+					  <!-- Allow form submission with keyboard without duplicating the dialog button -->
+					  <input type="submit" tabindex="-1" style="position:absolute; top:-1000px">
+					</fieldset>
+				</form>
+				<div class="btn-group-passwd">
+					<button id="proceed"><i class="fa fa-check"></i> Proceed</button>
+				</div>
 			</div>
 		</div>
-	</div>
-
-
-  </body>
+	</body>
 </html>
