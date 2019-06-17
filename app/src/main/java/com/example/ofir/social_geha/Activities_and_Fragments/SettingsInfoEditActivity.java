@@ -224,6 +224,8 @@ public class SettingsInfoEditActivity extends AppCompatActivity {
                     List<Person.Language> spokenLanguages = languagesStringToLanguageEnum(languages);
                     AdminGivenData adminGivenData = (AdminGivenData) getIntent().getSerializableExtra("adminGivenData");
                     Person.Kind kind = kindStringToKindEnum(adminGivenData.getKind());
+                    Log.d("OFIR extracted kind:", kind.toString());
+                    Log.d("OFIR given kind:",adminGivenData.getKind());
                     Person p = new Person(name, FictitiousIdentityGenerator.generateAnonymousIdentity(
                             fromStringToGenderEnum(gender, SettingsInfoEditActivity.this, false)),
                             date, fromStringToGenderEnum(gender, SettingsInfoEditActivity.this, false), mReligion, spokenLanguages,

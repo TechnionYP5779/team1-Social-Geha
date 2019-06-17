@@ -238,6 +238,7 @@ public class Person {
 
     /// translate String to Kind
     public static Person.Kind kindStringToKindEnum(String kind) {
+        kind = kind.toLowerCase();
         switch (kind) {
             case "former_patient":
                 return Kind.PAST_PATIENT;
