@@ -1,9 +1,7 @@
 package com.example.ofir.social_geha.Activities_and_Fragments;
 
-import android.provider.ContactsContract;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,15 +16,27 @@ import java.util.Date;
 import java.util.List;
 
 public class MessageListAdapter extends RecyclerView.Adapter {
-
+    // ==================================
+    //          CLASS VARIABLES
+    // ==================================
     private List<Message> messageList;
     private static final int VIEW_TYPE_MESSAGE_SENT = 1;
     private static final int VIEW_TYPE_MESSAGE_RECEIVED = 2;
 
+    // ==================================
+    //             FUNCTIONS
+    // ==================================
+    //             C'TOR
+    // ==================================
     public MessageListAdapter(List<Message> messageList){
         this.messageList = messageList;
     }
 
+    // ==================================
+    // This functions gets a date parameter (Date)
+    // and returns a string matching that date in the format of:
+    // HH:MM
+    // ==================================
     private static String getHourStringFromDate(Date date){
         if(date == null)
             return "NULL DATE";
@@ -46,10 +56,14 @@ public class MessageListAdapter extends RecyclerView.Adapter {
         return sb.toString();
     }
 
+    // ==================================
+    //            INNER CLASS
+    // this class represents an item in message list
+    // ==================================
     public class ViewHolder extends RecyclerView.ViewHolder {
         private View mView;
-        public TextView messageText;
-        public TextView messageTime;
+        TextView messageText;
+        TextView messageTime;
 
 
         public ViewHolder(@NonNull View itemView) {
@@ -66,6 +80,11 @@ public class MessageListAdapter extends RecyclerView.Adapter {
         }
     }
 
+    // ==================================
+    // this function gets a position of a message in list, and returns:
+    // VIEW_TYPE_MESSAGE_SENT - if the message was sent by the user.
+    // VIEW_TYPE_MESSAGE_RECEIVED - if the message was received by the user.
+    // ==================================
     @Override
     public int getItemViewType(int position) {
         if (messageList.get(position).getFromPersonID().equals(Database.getInstance().getLoggedInUserID())) {
@@ -76,7 +95,9 @@ public class MessageListAdapter extends RecyclerView.Adapter {
         }
     }
 
+    // ==================================
     // Inflates the appropriate layout according to the ViewType.
+    // ==================================
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view;

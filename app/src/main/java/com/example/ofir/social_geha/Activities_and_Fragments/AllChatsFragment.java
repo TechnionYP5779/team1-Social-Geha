@@ -7,6 +7,7 @@ import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -66,8 +67,6 @@ public class AllChatsFragment extends Fragment {
         mFirestore = FirebaseFirestore.getInstance();
         mListView = v.findViewById(R.id.list);
         mEmptyView = v.findViewById(R.id.emptyView);
-        FloatingActionButton fab = v.findViewById(R.id.new_conversation_fab);
-        fab.setOnClickListener(v1 -> startActivity(new Intent(getActivity(), FilterMatchesActivity.class)));
 
         //find the current person in the DB
         Database.getInstance().getdb().collection("users").whereEqualTo("userID", Database.getInstance().getLoggedInUserID()).get()
@@ -75,14 +74,25 @@ public class AllChatsFragment extends Fragment {
                     if (task.isSuccessful()) {
                         for (QueryDocumentSnapshot doc : task.getResult()) {
                             p = doc.toObject(Person.class);
+                            FloatingActionButton fab = v.findViewById(R.id.new_conversation_fab);
+                            // For current patient or family member, we want to enable new conversation
+                            // and disable toggle
+                            if(p.getKind() != Person.Kind.PATIENT && p.getKind() != Person.Kind.FAMILY_MEMBER){
+                                setupToggle(v, true);
+                                fab.hide();
+                            }
+                            else{ // vice-versa
+                                fab.show();
+                                fab.setOnClickListener(v1 -> startActivity(new Intent(getActivity(), FilterMatchesActivity.class)));
+                                setupToggle(v, false);
+                            }
+
                         }
                     }
 
                 });
 
-        setupToggle(v);
         loadList();
-
         //makes sure that when a chat item is pressed, we're transferred to the appropriate chat with this person
         mListView.setOnItemClickListener((parent, view, position, id) -> {
             Object o = mListView.getItemAtPosition(position);
@@ -383,10 +393,18 @@ public class AllChatsFragment extends Fragment {
     /**
      * Setup the availability toggle
      */
-    private void setupToggle(View v) {
+    private void setupToggle(View v, Boolean show) {
         DayNightSwitch dayNightSwitch = v.findViewById(R.id.toggle_availability);
         TextView textView = v.findViewById(R.id.description_availability);
         ConstraintLayout constraintLayout = v.findViewById(R.id.constraint_layout_availability);
+
+        if(!show){
+            constraintLayout.setVisibility(View.GONE);
+            return;
+        }
+        else{
+            constraintLayout.setVisibility(View.VISIBLE);
+        }
 
         dayNightSwitch.setOnToggledListener((toggleableView, isOn) -> {
             TransitionDrawable transition = (TransitionDrawable) constraintLayout.getBackground();

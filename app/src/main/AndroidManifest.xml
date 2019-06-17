@@ -28,7 +28,6 @@
             android:name=".Activities_and_Fragments.FilterMatchesActivity"
             android:noHistory="true"
             android:screenOrientation="portrait" />
-        <activity android:name=".Activities_and_Fragments.AllChatsActivity"></activity>
         <activity
             android:name=".Activities_and_Fragments.ChatActivity"
             android:parentActivityName=".Activities_and_Fragments.activity_main_drawer" />

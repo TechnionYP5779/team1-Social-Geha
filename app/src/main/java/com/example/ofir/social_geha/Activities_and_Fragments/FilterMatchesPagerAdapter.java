@@ -3,7 +3,6 @@ package com.example.ofir.social_geha.Activities_and_Fragments;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v4.view.PagerAdapter;
-import android.util.Range;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,6 +24,9 @@ import java.util.List;
 
 public class FilterMatchesPagerAdapter extends PagerAdapter {
 
+    //=====================================================
+    //              CLASS VARIABLES
+    //=====================================================
     private Context mContext ;
     private List<ScreenItem> mListScreen;
     private View layoutScreen;
@@ -38,16 +40,22 @@ public class FilterMatchesPagerAdapter extends PagerAdapter {
     Integer lower_bound = null;
     Integer upper_bound = null;
 
+    //=====================================================
+    //              Functions
+    //=====================================================
+    // C'tor
     FilterMatchesPagerAdapter(Context mContext, List<ScreenItem> mListScreen) {
         this.mContext = mContext;
         this.mListScreen = mListScreen;
     }
 
-
+    //=====================================================
+    // This functions instantiates the views. (For example sets the right image)
+    // It handles the new position screen data and calls showScreen with it(FilterMatchesActivity).
+    //=====================================================
     @NonNull
     @Override
     public Object instantiateItem(@NonNull ViewGroup container, int position) {
-
         LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         layoutScreen = inflater.inflate(R.layout.activity_filter_match,null);
 
@@ -133,7 +141,11 @@ public class FilterMatchesPagerAdapter extends PagerAdapter {
         container.removeView((View)object);
     }
 
-    public void showScreen(int position){
+    //=====================================================
+    // This function shows the right views according to the position
+    // For example, in the last screen we want to see the languages checkboxes.
+    //=====================================================
+    private void showScreen(int position){
         if(position == mListScreen.size() - 1){ // languages tab
             layoutScreen.findViewById(R.id.person_preferences).setVisibility(View.GONE);
             layoutScreen.findViewById(R.id.general_information).setVisibility(View.GONE);
@@ -153,7 +165,10 @@ public class FilterMatchesPagerAdapter extends PagerAdapter {
         }
     }
 
-    public void updatePersonInfo(){
+    //=====================================================
+    // This function updates the languages_preference variable to contain only selected values.
+    //=====================================================
+    void updatePersonInfo(){
         kind_preference = Kind.PAST_PATIENT; // TODO - fix that
         languages_preference = new ArrayList<>();
 

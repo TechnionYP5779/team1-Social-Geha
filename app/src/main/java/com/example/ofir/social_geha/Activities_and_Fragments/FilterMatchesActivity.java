@@ -23,6 +23,9 @@ import java.util.List;
 
 public class FilterMatchesActivity extends AppCompatActivity {
 
+    //=====================================================
+    //              CLASS VARIABLES
+    //=====================================================
     private ViewPager screenPager;
     FilterMatchesPagerAdapter introViewPagerAdapter;
     TabLayout tabIndicator;
@@ -31,7 +34,9 @@ public class FilterMatchesActivity extends AppCompatActivity {
     TextView tvSkip;
     List<ScreenItem> mList;
 
-
+    //=====================================================
+    //              FUNCTIONS
+    //=====================================================
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -100,6 +105,10 @@ public class FilterMatchesActivity extends AppCompatActivity {
         });
     }
 
+    //=====================================================
+    //          Updates UI based on page position.
+    //  If we are in the last screen, no need for 'Skip' or 'Next' Button.
+    //=====================================================
     private void showScreen(int position) {
         if (position == mList.size() - 1) { // at the languages window
             btnNext.setVisibility(View.GONE);
@@ -112,15 +121,16 @@ public class FilterMatchesActivity extends AppCompatActivity {
         }
     }
 
+    //=====================================================
+    // This function initiates the search for people matching the criterias supplied,
+    // by sending an extra (type FilterParameters) to AvailableMatches and starts the intent.
+    // This is also the click listener of the end button.
+    //=====================================================
     public void findMatch(View view) {
         introViewPagerAdapter.updatePersonInfo();
         // from list to enumset
         EnumSet<Person.Language> temp = EnumSet.noneOf(Person.Language.class); // make an empty enumset
         temp.addAll(introViewPagerAdapter.languages_preference); // add varargs to it
-
-
-        Log.d("PEOPLE FOUND", "========== " + introViewPagerAdapter.gender_preference + "===========");
-
         Intent myIntent = new Intent(FilterMatchesActivity.this, AvailableMatches.class);
         myIntent.setFlags(myIntent.getFlags() | Intent.FLAG_ACTIVITY_NO_HISTORY);
         FilterParameters filterObj = new FilterParameters(temp, introViewPagerAdapter.kind_preference,
