@@ -37,7 +37,7 @@ public class NotificationActionReceiver extends BroadcastReceiver {
 
     //HERE - SEND CONTROL MESSAGE BACK to fromPersonID, to approve the user's chat request
     public void accept(Context context, String fromPersonID){
-        Toast.makeText(context, "אישרת!" + fromPersonID, Toast.LENGTH_SHORT).show();
+        Toast.makeText(context, "אישרת!", Toast.LENGTH_SHORT).show();
         Database.getInstance().sendControlMessage("CHAT ACCEPT$", Database.getInstance().getLoggedInUserID(), fromPersonID);
     }
 

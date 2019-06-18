@@ -91,6 +91,7 @@ public class GehaMessagingService extends FirebaseMessagingService {
             handleIntent(notificationBuilder, clickAction, remoteMessage);
         }
         NotificationManager notificationManager = (NotificationManager)getSystemService(Context.NOTIFICATION_SERVICE);
+        notificationManager.cancelAll();
         notificationManager.notify(unique_id, notificationBuilder.build());
     }
 
