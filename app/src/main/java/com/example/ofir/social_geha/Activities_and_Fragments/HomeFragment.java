@@ -21,6 +21,10 @@ public class HomeFragment extends Fragment {
     public HomeFragment() { }
 
 
+
+    /**
+     * Loads the button to start a conversation - DEPRECATED
+     */
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
