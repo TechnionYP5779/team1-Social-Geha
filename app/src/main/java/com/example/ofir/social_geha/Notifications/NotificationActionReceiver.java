@@ -10,7 +10,8 @@ import com.example.ofir.social_geha.Firebase.Database;
 
 /**
  * A utility broadcast receiver (runs in background) used to handle notification's actions, even when
- * the app is closed.
+ * the app is closed. Used when the user asks for other users to start a chat with them, and they have
+ * to agree or disagree to the chat.
  */
 public class NotificationActionReceiver extends BroadcastReceiver {
     @Override
