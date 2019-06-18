@@ -406,6 +406,8 @@ public class AllChatsFragment extends Fragment {
             constraintLayout.setVisibility(View.VISIBLE);
         }
 
+        dayNightSwitch.setOn(p.getAvailability());
+
         dayNightSwitch.setOnToggledListener((toggleableView, isOn) -> {
             TransitionDrawable transition = (TransitionDrawable) constraintLayout.getBackground();
             if (isOn) {
