@@ -8,8 +8,13 @@ import android.widget.Toast;
 
 import com.example.ofir.social_geha.Firebase.Database;
 
+/**
+ * A utility broadcast receiver (runs in background) used to handle notification's actions, even when
+ * the app is closed.
+ */
 public class NotificationActionReceiver extends BroadcastReceiver {
     @Override
+    //When pressed on the action act accordingly
     public void onReceive(Context context, Intent intent) {
         String action = intent.getStringExtra("action");
         String fromPersonID = intent.getStringExtra("fromPerson");
@@ -29,7 +34,7 @@ public class NotificationActionReceiver extends BroadcastReceiver {
 
     }
 
-    //HERE - SEND CONTROL MESSAGE BACK to fromPersonID
+    //HERE - SEND CONTROL MESSAGE BACK to fromPersonID, to approve the user's chat request
     public void accept(Context context, String fromPersonID){
         Toast.makeText(context, "אישרת!" + fromPersonID, Toast.LENGTH_SHORT).show();
         Database.getInstance().sendControlMessage("CHAT ACCEPT$", Database.getInstance().getLoggedInUserID(), fromPersonID);
