@@ -41,6 +41,10 @@ import javax.crypto.SecretKey;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
+
+/*
+This class is responsible for the Chat part of the app.
+ */
 public class ChatActivity extends AppCompatActivity {
     private static final String MESSAGES = "messages";
     private EditText mMessageEdit;
@@ -137,7 +141,7 @@ public class ChatActivity extends AppCompatActivity {
         mFirestore = FirebaseFirestore.getInstance();
     }
 
-
+    // This function sets a listener for receiving messages from the server
     private void setMessageListeners() {
         mListener = mFirestore.collection(MESSAGES).whereEqualTo("toPersonID", mLoggedInPersonId)
                 .whereEqualTo("fromPersonID", mOtherPersonId)
@@ -176,6 +180,8 @@ public class ChatActivity extends AppCompatActivity {
                 });
     }
 
+
+    //This function updates the messages shown in the UI.
     public void updateMessageList() {
         messageList.clear();
         for (Message msg : fileHandler.getMessages()) {
@@ -193,15 +199,19 @@ public class ChatActivity extends AppCompatActivity {
     public void onPause() {
         super.onPause();
         new ContactListFileHandler(this).changeLastChatViewDate(mOtherPersonId, new Date());
+        // on activity pause stop listening for new messages from this activity
         mListener.remove();
     }
 
     @Override
     public void onResume(){
         super.onResume();
+        // on activity resume start listening for new messages from this activity
         setMessageListeners();
     }
 
+
+    //This function is called when the send button is pressed
     public void onSendButtonClick(View v) {
         //only tackles shown message
         String message = mMessageEdit.getText().toString();

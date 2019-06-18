@@ -42,10 +42,19 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
 
 public class ChatListAdapter extends ArrayAdapter<ChatEntry> {
+    //=====================================================
+    //                    CLASS VARIABLES
+    //=====================================================
     private Context mContext;
     private int mResource;
     private int lastPosition = -1;
 
+
+    //=====================================================
+    //                    INNER CLASS
+    // Represents an item in list. The class contains views for
+    // each match item in list.
+    //=====================================================
     private static class ViewHolder{
         TextView name;
         TextView description;
@@ -63,6 +72,10 @@ public class ChatListAdapter extends ArrayAdapter<ChatEntry> {
         this.mResource = resource;
     }
 
+    //=====================================================
+    // This functions sets the views in X to contain the data of person X.
+    // X - the position in list
+    //=====================================================
     public View getView(int position, View convertView, ViewGroup parent){
         setupImageLoader();
 
@@ -136,6 +149,10 @@ public class ChatListAdapter extends ArrayAdapter<ChatEntry> {
         return convertView;
     }
 
+    //=====================================================
+    // This function sets up the onClick Listener of the
+    // Profile image.
+    //=====================================================
     private void setUpOnClick(final ViewHolder holder) {
 //        final ImageView img = holder.image;
         holder.image.setOnClickListener(new View.OnClickListener() {
@@ -167,7 +184,9 @@ public class ChatListAdapter extends ArrayAdapter<ChatEntry> {
         });
 
     }
-
+    //=====================================================
+    // This function extracts the time of day from a Date object.
+    //=====================================================
     private static String getHourStringFromDate(Date date){
         if(date == null)
             return "NULL DATE";
@@ -187,6 +206,9 @@ public class ChatListAdapter extends ArrayAdapter<ChatEntry> {
         return sb.toString();
     }
 
+    //=====================================================
+    // UNIVERSAL IMAGE LOADER SETUP
+    //=====================================================
     private void setupImageLoader(){
         // UNIVERSAL IMAGE LOADER SETUP
         DisplayImageOptions defaultOptions = new DisplayImageOptions.Builder()

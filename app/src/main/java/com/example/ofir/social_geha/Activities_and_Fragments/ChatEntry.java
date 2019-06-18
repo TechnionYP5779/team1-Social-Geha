@@ -7,6 +7,11 @@ import java.util.Date;
 
 import static com.example.ofir.social_geha.Activities_and_Fragments.FileHandlers.ContactListFileHandler.Contact.UNKNOWN_NAME;
 
+
+/**
+ * This class is used when presenting the entries in the recent conversations
+ * list of the AllChatsFragment.
+ */
 public class ChatEntry {
 
     private int unreadCount;

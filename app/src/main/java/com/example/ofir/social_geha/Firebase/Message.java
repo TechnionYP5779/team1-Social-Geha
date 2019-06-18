@@ -6,6 +6,9 @@ import com.google.firebase.firestore.ServerTimestamp;
 import java.io.Serializable;
 import java.util.Date;
 
+
+/* This class represents a message to be saved on the FireStore database
+ */
 public class Message implements Serializable {
     private static final long serialVersionUID = 1L;
     private boolean shown;
@@ -14,6 +17,8 @@ public class Message implements Serializable {
     private String toPersonID;
     private @ServerTimestamp Date messageDate;
 
+
+    //DO NOT REMOVE: this is required for saving on FireStore
     public Message(){
 
     }

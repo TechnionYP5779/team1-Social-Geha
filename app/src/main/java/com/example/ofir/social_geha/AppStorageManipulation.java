@@ -5,9 +5,11 @@ import android.util.Log;
 
 import java.io.File;
 
+
+// This class contains static methods which allow deletion of app related caches an memory
 public class AppStorageManipulation {
 
-
+    // This function deletes all of the user data from the phone
     public static void deleteAppData(Context context) {
         File cache = context.getCacheDir();
         File appDir = new File(cache.getParent());
@@ -22,6 +24,7 @@ public class AppStorageManipulation {
         }
     }
 
+    // This function deletes a given directory from the user's phone
     public static boolean deleteDir(File dir) {
         if (dir != null && dir.isDirectory()) {
             String[] children = dir.list();
