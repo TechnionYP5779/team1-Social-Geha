@@ -53,15 +53,18 @@ public class Login extends AppCompatActivity {
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                //if a personal code was inputted, check if it exists on the admin side
                 String personal_code_txt = personal_code.getText().toString();
                 if (personal_code_txt.equals("")) { // missing personal code
                     Toast.makeText(Login.this, missing_fields_err, Toast.LENGTH_SHORT).show();
                 } else {
                     Log.d("YARIN", "onClick: DOING THIS");
+                    //login as admin
                     Database.getInstance().getAuth().signInWithEmailAndPassword("adminCode@admin.com", "adminadmin")
                     .addOnSuccessListener(new OnSuccessListener<AuthResult>() {
                         @Override
                         public void onSuccess(AuthResult authResult) {
+                            //find the personal code
                             Database.getInstance().getdb().collection("adminAddedUsers").whereEqualTo("user_code", personal_code_txt)
                                     .get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
                                 @Override
@@ -71,12 +74,14 @@ public class Login extends AppCompatActivity {
                                     for (DocumentSnapshot doc : queryDocumentSnapshots){
                                         Log.d("YARIN", "onSuccess: RECORDED SOMETHING");
                                     }
+                                    // found something, allow registration
                                     if(queryDocumentSnapshots.size() > 0){
                                         AdminGivenData adminGivenData = queryDocumentSnapshots.getDocuments().get(0).toObject(AdminGivenData.class);
                                         myIntent.putExtra("code", personal_code_txt);
                                         myIntent.putExtra("adminGivenData", adminGivenData);
                                         startActivityForResult(myIntent, REGISTER_RETURN_CODE);
                                     }
+                                    //not found, notify user
                                     else{
                                         Toast.makeText(Login.this, "הקוד שברשותך לא רשום במערכת", Toast.LENGTH_SHORT).show();
                                     }
