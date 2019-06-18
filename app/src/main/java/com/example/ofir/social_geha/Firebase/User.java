@@ -1,5 +1,10 @@
 package com.example.ofir.social_geha.Firebase;
 
+/**
+ * DEPRECATED
+ * Encapsulates the concept of a user.
+ * This class is a fancy POJO (because it can be reconstructed by Firebase)
+ */
 public class User {
     private String name;
     private String personalCode;
